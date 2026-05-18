@@ -22,13 +22,13 @@ const packages = [
     },
     {
         id: 3,
-        title: 'Rocky Mountain Trek',
-        location: 'Banff, Canada',
-        price: '$3,100',
+        title: 'Aguas  turquesas, Cangallo',
+        location: ' Cangallo-Ayacucho, Peru',
+        price: 'S/. 250.00',
         label: 'Limited Availability',
         rating: '4.7',
-        description: 'Premium 10-day guided tour through Jasper and Banff with luxury lodge stays.',
-        image: 'https://images.unsplash.com/photo-1519817650390-64a93db511d0?auto=format&fit=crop&w=900&q=80'
+        description: 'Premium 1-day guided tour through Lins and Banff with luxury lodge stays.',
+        image: 'https://wsrv.nl/?url=https://denomades.s3.us-west-2.amazonaws.com/blog/wp-content/uploads/2019/07/18142626/aguasturquesasOK.jpg&w=1200&fit=cover&q=75&output=webp&h=675'
     }
 ];
 
@@ -53,14 +53,14 @@ const highlights = [
 export default function Welcome({ auth }) {
     return (
         <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
-            <Head title="Inicio - VoyageEase" />
+            <Head title="Inicio - ESKY TRIPS" />
 
             <div className="relative overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(30,58,138,0.35),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(219,39,119,0.20),_transparent_28%)] pointer-events-none"></div>
 
                 <header className="relative z-10 container mx-auto px-6 py-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <div className="flex items-center justify-between">
-                        <div className="text-2xl font-bold tracking-tight text-white">VoyageEase</div>
+                        <div className="text-2xl font-bold tracking-tight text-white">ESKY TRIPS</div>
                         <button className="inline-flex items-center justify-center rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 lg:hidden">
                             <span className="mr-2">Menu</span>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-4 w-4">
@@ -69,11 +69,13 @@ export default function Welcome({ auth }) {
                         </button>
                     </div>
 
-                    <nav className="hidden lg:flex items-center gap-8 text-sm text-slate-300">
-                        <a href="#" className="hover:text-white transition-colors">Destinations</a>
-                        <a href="#packages" className="hover:text-white transition-colors">Paquetes</a>
-                        <a href="#" className="hover:text-white transition-colors">Ofertas</a>
-                        <a href="#" className="hover:text-white transition-colors">Business Travel</a>
+                    <nav className="hidden lg:flex items-center gap-4 text-slate-300">
+                        <div className="inline-flex items-center gap-3 rounded-3xl bg-slate-900/60 px-3 py-2 shadow-lg shadow-black/40">
+                            <a href="#" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Destinations</a>
+                            <a href="#packages" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Paquetes</a>
+                            <a href="#" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Ofertas</a>
+                            <a href="#" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Business Travel</a>
+                        </div>
                     </nav>
 
                     <div className="hidden lg:flex items-center gap-4">
@@ -88,10 +90,10 @@ export default function Welcome({ auth }) {
                             </svg>
                         </button>
                         <div className="inline-flex items-center gap-3 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-200">
-                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=64&q=80" alt="Usuario" className="h-8 w-8 rounded-full object-cover" />
+                            <img src="https://scontent.flim14-1.fna.fbcdn.net/v/t39.30808-6/491260195_1161932805943417_6436027430883532513_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_ohc=hkvoTmlp-2kQ7kNvwE0kRcz&_nc_oc=AdoCRM2O5kdUKYhKjnBbeJtXIXaNlElbVH0sDBonGwMWlNVCKYX88i_p10CRgCkfaDE&_nc_zt=23&_nc_ht=scontent.flim14-1.fna&_nc_gid=yL2FXDqW25_3uuj-UHXtAQ&_nc_ss=7b289&oh=00_Af5iuiaKg5Be6OZ9zF7xb9U1jEiGV2JI53XuO1F-4iUTRA&oe=6A10F011" alt="Usuario" className="h-8 w-8 rounded-full object-cover" />
                             <div className="hidden sm:block text-left">
-                                <p className="text-sm font-semibold text-white">Alex Mercer</p>
-                                <p className="text-xs text-slate-400">Gold Member</p>
+                                <p className="text-sm font-semibold text-white">Osito</p>
+                                <p className="text-xs text-slate-400">Gold Member FUSCH</p>
                             </div>
                         </div>
                     </div>
@@ -236,18 +238,61 @@ export default function Welcome({ auth }) {
                 </section>
             </main>
 
-            <footer className="border-t border-slate-800 bg-slate-950/95 py-10 text-slate-400">
-                <div className="container mx-auto px-6 flex flex-col gap-4 text-sm md:flex-row md:items-center md:justify-between">
+            <footer className="border-t border-slate-800 bg-slate-950/95 py-12 text-slate-400">
+                <div className="container mx-auto px-6 grid gap-8 md:grid-cols-3">
                     <div>
-                        <p className="font-semibold text-white">VoyageEase</p>
-                        <p>Setting the standard for premium travel logistics since 2012.</p>
+                        <p className="font-semibold text-white text-lg">ESKY TRIPS</p>
+                        <p className="mt-2 text-sm text-slate-400">Setting the standard for premium travel logistics since 2012.</p>
+
+                        <div className="mt-4 flex items-center gap-3 text-slate-300">
+                            <a href="#" className="p-2 rounded-full bg-slate-900/60 hover:bg-slate-800 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M18 2h4v4" />
+                                </svg>
+                            </a>
+                            <a href="#" className="p-2 rounded-full bg-slate-900/60 hover:bg-slate-800 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 12.79A9 9 0 1111.21 3" />
+                                </svg>
+                            </a>
+                            <a href="#" className="p-2 rounded-full bg-slate-900/60 hover:bg-slate-800 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M22 12v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2h6" />
+                                </svg>
+                            </a>
+                        </div>
                     </div>
-                    <div className="flex flex-wrap gap-6">
-                        <a href="#" className="hover:text-white">Destinos</a>
-                        <a href="#packages" className="hover:text-white">Paquetes</a>
-                        <a href="#" className="hover:text-white">Contacto</a>
+
+                    <div className="flex justify-between md:col-span-1">
+                        <div>
+                            <h4 className="text-sm font-semibold text-white mb-3">Explorar</h4>
+                            <ul className="space-y-2 text-sm">
+                                <li><a href="#" className="hover:text-white">Destinos</a></li>
+                                <li><a href="#packages" className="hover:text-white">Paquetes</a></li>
+                                <li><a href="#" className="hover:text-white">Ofertas</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="text-sm font-semibold text-white mb-3">Soporte</h4>
+                            <ul className="space-y-2 text-sm">
+                                <li><a href="#" className="hover:text-white">Preguntas frecuentes</a></li>
+                                <li><a href="#" className="hover:text-white">Contacto</a></li>
+                                <li><a href="#" className="hover:text-white">Política de privacidad</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 className="text-sm font-semibold text-white mb-3">Suscríbete</h4>
+                        <p className="text-sm text-slate-400 mb-4">Recibe nuestras mejores ofertas y guías de viaje en tu correo.</p>
+                        <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
+                            <input aria-label="Correo" type="email" placeholder="Tu email" className="flex-1 rounded-full bg-slate-900/80 border border-slate-800 px-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none" />
+                            <button className="rounded-full bg-sky-500 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-400 transition">Suscribir</button>
+                        </form>
                     </div>
                 </div>
+
+                <div className="mt-8 border-t border-slate-800 pt-6 text-sm text-slate-500 text-center">© 2026 VoyageEase. Todos los derechos reservados.</div>
             </footer>
         </div>
     );
