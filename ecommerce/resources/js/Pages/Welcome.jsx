@@ -1,132 +1,251 @@
 import { Link, Head } from '@inertiajs/react';
 
+const packages = [
+    {
+        id: 1,
+        title: 'Bali Spiritual Retreat',
+        location: 'Ubud, Indonesia',
+        price: '$1,299',
+        label: 'Editor’s Pick',
+        rating: '4.9',
+        description: 'Immerse yourself in the heart of Bali with private yoga, rice-terrace views and wellness rituals.',
+        image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80'
+    },
+    {
+        id: 2,
+        title: 'Santorini Romance',
+        location: 'Oia, Greece',
+        price: '$2,450',
+        rating: '4.8',
+        description: '5 nights in a luxury cliffside villa with private infinity pool and sunset sailing.',
+        image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80'
+    },
+    {
+        id: 3,
+        title: 'Rocky Mountain Trek',
+        location: 'Banff, Canada',
+        price: '$3,100',
+        label: 'Limited Availability',
+        rating: '4.7',
+        description: 'Premium 10-day guided tour through Jasper and Banff with luxury lodge stays.',
+        image: 'https://images.unsplash.com/photo-1519817650390-64a93db511d0?auto=format&fit=crop&w=900&q=80'
+    }
+];
+
+const highlights = [
+    {
+        id: 1,
+        title: 'Encrypted Security',
+        detail: 'Enterprise-grade PCI DSS compliance for all global transactions.',
+    },
+    {
+        id: 2,
+        title: '24/7 Concierge',
+        detail: 'Priority support line for active travelers, anywhere in the world.',
+    },
+    {
+        id: 3,
+        title: 'Flexible Payments',
+        detail: 'Split payments across multiple cards or choose financing options.',
+    },
+];
+
 export default function Welcome({ auth }) {
-    const products = [
-        {
-            id: 1,
-            name: "Lumina Sneakers",
-            category: "Calzado",
-            price: "$199",
-            image: "/images/sneaker.png",
-            color: "from-purple-500 to-indigo-600"
-        },
-        {
-            id: 2,
-            name: "Aura Chronograph",
-            category: "Accesorios",
-            price: "$349",
-            image: "/images/watch.png",
-            color: "from-blue-500 to-cyan-500"
-        },
-        {
-            id: 3,
-            name: "Sonic Bass Pro",
-            category: "Electrónica",
-            price: "$249",
-            image: "/images/headphones.png",
-            color: "from-emerald-400 to-teal-500"
-        }
-    ];
-
     return (
-        <div className="min-h-screen bg-neutral-950 text-white font-sans selection:bg-indigo-500 selection:text-white relative overflow-hidden">
-            <Head title="Inicio - Vibe Store" />
-            
-            {/* Background Effects */}
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/30 blur-[120px] rounded-full mix-blend-screen pointer-events-none"></div>
-            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/30 blur-[120px] rounded-full mix-blend-screen pointer-events-none"></div>
+        <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
+            <Head title="Inicio - VoyageEase" />
 
-            {/* Navbar */}
-            <nav className="relative z-10 container mx-auto px-6 py-6 flex justify-between items-center backdrop-blur-md border-b border-white/5 sticky top-0">
-                <div className="text-3xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">
-                    VIBE.
-                </div>
-                
-                <div className="hidden md:flex space-x-8 text-sm font-medium text-neutral-300">
-                    <a href="#" className="hover:text-white transition-colors duration-300">Novedades</a>
-                    <a href="#" className="hover:text-white transition-colors duration-300">Hombre</a>
-                    <a href="#" className="hover:text-white transition-colors duration-300">Mujer</a>
-                    <a href="#" className="hover:text-white transition-colors duration-300">Colecciones</a>
-                </div>
+            <div className="relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(30,58,138,0.35),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(219,39,119,0.20),_transparent_28%)] pointer-events-none"></div>
 
-                <div className="flex space-x-4">
-                    {auth?.user ? (
-                        <Link href={route('dashboard')} className="text-sm font-medium px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300 backdrop-blur-lg border border-white/10">
-                            Mi Cuenta
-                        </Link>
-                    ) : (
-                        <>
-                            <Link href={route('login')} className="text-sm font-medium px-5 py-2.5 rounded-full hover:bg-white/5 transition-all duration-300">
-                                Iniciar Sesión
-                            </Link>
-                            <Link href={route('register')} className="text-sm font-medium px-5 py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 transition-all duration-300 shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_25px_rgba(99,102,241,0.5)]">
-                                Registrarse
-                            </Link>
-                        </>
-                    )}
-                </div>
-            </nav>
-
-            {/* Hero Section */}
-            <main className="relative z-10 container mx-auto px-6 pt-20 pb-24 lg:pt-32 lg:pb-32">
-                <div className="text-center max-w-4xl mx-auto mb-20">
-                    <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
-                        Eleva tu estilo con <br className="hidden md:block" />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
-                            calidad premium
-                        </span>
-                    </h1>
-                    <p className="text-lg md:text-xl text-neutral-400 mb-10 max-w-2xl mx-auto">
-                        Descubre una colección cuidadosamente curada que combina diseño vanguardista con materiales de la más alta calidad.
-                    </p>
-                    <div className="flex flex-col sm:flex-row justify-center gap-4">
-                        <button className="px-8 py-4 rounded-full bg-white text-black font-semibold hover:scale-105 transition-transform duration-300 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-                            Explorar Colección
-                        </button>
-                        <button className="px-8 py-4 rounded-full bg-white/5 border border-white/10 text-white font-semibold hover:bg-white/10 backdrop-blur-md transition-all duration-300">
-                            Ver Ofertas
+                <header className="relative z-10 container mx-auto px-6 py-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div className="flex items-center justify-between">
+                        <div className="text-2xl font-bold tracking-tight text-white">VoyageEase</div>
+                        <button className="inline-flex items-center justify-center rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 lg:hidden">
+                            <span className="mr-2">Menu</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-4 w-4">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
                         </button>
                     </div>
-                </div>
 
-                {/* Products Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {products.map((product) => (
-                        <div key={product.id} className="group relative rounded-3xl bg-white/5 border border-white/10 p-6 hover:bg-white/10 transition-all duration-500 backdrop-blur-md overflow-hidden hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
-                            <div className={`absolute inset-0 bg-gradient-to-b opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${product.color}`}></div>
-                            
-                            <div className="relative h-64 mb-6 rounded-2xl overflow-hidden bg-neutral-900/50 flex items-center justify-center p-4 border border-white/5">
-                                <img 
-                                    src={product.image} 
-                                    alt={product.name} 
-                                    className="w-full h-full object-cover rounded-xl filter drop-shadow-2xl group-hover:scale-110 transition-transform duration-700 ease-out"
-                                />
+                    <nav className="hidden lg:flex items-center gap-8 text-sm text-slate-300">
+                        <a href="#" className="hover:text-white transition-colors">Destinations</a>
+                        <a href="#packages" className="hover:text-white transition-colors">Paquetes</a>
+                        <a href="#" className="hover:text-white transition-colors">Ofertas</a>
+                        <a href="#" className="hover:text-white transition-colors">Business Travel</a>
+                    </nav>
+
+                    <div className="hidden lg:flex items-center gap-4">
+                        <button className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-700 bg-slate-900/70 text-slate-300 hover:bg-slate-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-5 w-5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                            </svg>
+                        </button>
+                        <button className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-700 bg-slate-900/70 text-slate-300 hover:bg-slate-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-5 w-5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h18M4 7h16M4 11h10m1 8h5" />
+                            </svg>
+                        </button>
+                        <div className="inline-flex items-center gap-3 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-200">
+                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=64&q=80" alt="Usuario" className="h-8 w-8 rounded-full object-cover" />
+                            <div className="hidden sm:block text-left">
+                                <p className="text-sm font-semibold text-white">Alex Mercer</p>
+                                <p className="text-xs text-slate-400">Gold Member</p>
                             </div>
-                            
-                            <div className="relative z-10">
-                                <p className="text-xs font-semibold text-neutral-400 tracking-wider uppercase mb-2">{product.category}</p>
-                                <h3 className="text-2xl font-bold text-white mb-2">{product.name}</h3>
-                                <div className="flex justify-between items-center mt-4">
-                                    <span className="text-xl font-medium text-white/90">{product.price}</span>
-                                    <button className="p-3 rounded-full bg-white/10 hover:bg-white text-white hover:text-black transition-colors duration-300">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                                        </svg>
-                                    </button>
+                        </div>
+                    </div>
+                </header>
+
+                <section className="relative">
+                    <div className="relative mx-auto max-w-screen-2xl overflow-hidden rounded-[2rem] bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=90')" }}>
+                        <div className="absolute inset-0 bg-slate-950/70" />
+                        <div className="relative z-10 container mx-auto px-6 py-20 lg:px-12 lg:py-28">
+                            <div className="max-w-3xl text-center mx-auto">
+                                <p className="inline-flex items-center rounded-full border border-slate-700 bg-slate-900/80 px-4 py-2 text-sm text-sky-300 mb-6">
+                                    <span className="mr-2">Nuevo</span>
+                                    <span className="rounded-full bg-sky-500 px-2 py-0.5 text-xs font-semibold text-white">Viajes de lujo</span>
+                                </p>
+                                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6">
+                                    Elevate Your Journey
+                                </h1>
+                                <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-10">
+                                    Luxury travel experiences curated by experts for the discerning global explorer.
+                                </p>
+
+                                <div className="rounded-[2rem] border border-slate-800 bg-slate-950/90 p-6 shadow-2xl shadow-slate-950/30">
+                                    <div className="grid gap-4 md:grid-cols-[1.8fr_1fr] lg:grid-cols-[2.4fr_1fr] items-center">
+                                        <div className="grid gap-4 sm:grid-cols-3">
+                                            <label className="rounded-3xl bg-slate-900/90 px-4 py-4 text-left text-sm text-slate-300">
+                                                <span className="block text-xs uppercase tracking-[0.18em] text-slate-500">Destination</span>
+                                                <span className="mt-2 block text-white">Where are you going?</span>
+                                            </label>
+                                            <label className="rounded-3xl bg-slate-900/90 px-4 py-4 text-left text-sm text-slate-300">
+                                                <span className="block text-xs uppercase tracking-[0.18em] text-slate-500">Check-in / Check-out</span>
+                                                <span className="mt-2 block text-white">Add dates</span>
+                                            </label>
+                                            <label className="rounded-3xl bg-slate-900/90 px-4 py-4 text-left text-sm text-slate-300">
+                                                <span className="block text-xs uppercase tracking-[0.18em] text-slate-500">Guests</span>
+                                                <span className="mt-2 block text-white">2 adults, 1 room</span>
+                                            </label>
+                                        </div>
+
+                                        <button className="inline-flex h-full items-center justify-center rounded-3xl bg-sky-500 px-8 py-5 text-white font-semibold shadow-[0_20px_50px_rgba(56,189,248,0.25)] transition hover:bg-sky-400">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="mr-2 h-5 w-5">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                            </svg>
+                                            Search
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </section>
+            </div>
+
+            <main className="relative z-10 container mx-auto px-6 pb-20 lg:px-12">
+                <section className="grid gap-10 lg:grid-cols-[280px_minmax(0,1fr)]">
+                    <aside className="rounded-[2rem] border border-slate-800 bg-slate-900/90 p-6 text-slate-300 shadow-xl shadow-slate-950/10">
+                        <h2 className="text-sm font-semibold tracking-[0.24em] uppercase text-sky-300 mb-6">Refine Exploration</h2>
+                        <div className="space-y-4">
+                            {['Beach & Tropical', 'Mountain & Adventure', 'Urban & Culture', 'Wildlife & Safari', 'Wellness & Spa'].map((item, index) => (
+                                <label key={item} className="flex items-center gap-3 rounded-3xl border border-slate-800 bg-slate-950/80 px-4 py-3 text-sm cursor-pointer hover:border-slate-700">
+                                    <input type="checkbox" className="h-4 w-4 rounded border-slate-700 bg-slate-800 text-sky-500" />
+                                    <span className={index === 0 ? 'font-semibold text-white' : 'text-slate-300'}>{item}</span>
+                                </label>
+                            ))}
+                        </div>
+                        <div className="mt-8 rounded-[1.75rem] border border-slate-800 bg-slate-950/90 p-5">
+                            <p className="text-xs uppercase tracking-[0.24em] text-slate-500 mb-3">Budget Range</p>
+                            <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                                <div className="h-full w-2/5 rounded-full bg-sky-500" />
+                            </div>
+                            <div className="mt-4 flex justify-between text-sm text-slate-400">
+                                <span>$500</span>
+                                <span>$10,000+</span>
+                            </div>
+                        </div>
+                        <div className="mt-8 rounded-[1.75rem] border border-slate-800 bg-slate-950/90 p-5">
+                            <p className="text-xs uppercase tracking-[0.24em] text-slate-500 mb-3">Popular Amenities</p>
+                            {['Free Cancellation', 'All Inclusive', 'Adults Only'].map((option) => (
+                                <label key={option} className="flex items-center gap-3 rounded-3xl border border-slate-800 bg-slate-900/80 px-4 py-3 text-sm cursor-pointer hover:border-slate-700 mb-3">
+                                    <input type="checkbox" className="h-4 w-4 rounded border-slate-700 bg-slate-800 text-sky-500" />
+                                    <span className="text-slate-300">{option}</span>
+                                </label>
+                            ))}
+                        </div>
+                        <div className="mt-8 rounded-[1.75rem] border border-slate-800 bg-slate-950/90 p-5 text-slate-300">
+                            <p className="font-semibold text-white mb-2">Expert Concierge</p>
+                            <p className="text-sm text-slate-400">Need help planning your perfect trip? Our experts are online.</p>
+                            <button className="mt-5 w-full rounded-full bg-sky-500 px-4 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition">Start Live Chat</button>
+                        </div>
+                    </aside>
+
+                    <section id="packages" className="space-y-8">
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between py-5">
+                            <div>
+                                <p className="text-sm uppercase tracking-[0.3em] text-sky-300">Curated Collections</p>
+                                <h2 className="mt-3 text-3xl font-bold text-white">Featured Exclusive Packages</h2>
+                            </div>
+                            <div className="inline-flex items-center gap-3 rounded-full border border-slate-800 bg-slate-900/90 px-4 py-2 text-sm text-slate-300">
+                                Sort by:
+                                <span className="rounded-full bg-slate-800 px-3 py-1 text-white">Recommended</span>
+                            </div>
+                        </div>
+
+                        <div className="grid gap-6 xl:grid-cols-3">
+                            {packages.map((pack) => (
+                                <article key={pack.id} className="group overflow-hidden rounded-[2rem] border border-slate-800 bg-slate-950/95 shadow-xl shadow-slate-950/20 transition hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(15,23,42,0.35)]">
+                                    <div className="relative h-72 overflow-hidden">
+                                        <img src={pack.image} alt={pack.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+                                        {pack.label && (
+                                            <span className="absolute left-4 top-4 rounded-full bg-sky-500/95 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-white shadow-lg shadow-slate-950/20">{pack.label}</span>
+                                        )}
+                                    </div>
+                                    <div className="p-6">
+                                        <div className="flex items-center justify-between gap-3 mb-4 text-sm text-slate-400">
+                                            <span>{pack.rating} ★</span>
+                                            <span className="font-semibold text-white">{pack.location}</span>
+                                        </div>
+                                        <h3 className="text-2xl font-semibold text-white mb-3">{pack.title}</h3>
+                                        <p className="text-sm leading-6 text-slate-400 mb-6">{pack.description}</p>
+                                        <div className="flex items-center justify-between gap-4">
+                                            <div>
+                                                <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Total price</p>
+                                                <p className="mt-1 text-xl font-semibold text-white">{pack.price}</p>
+                                            </div>
+                                            <button className="rounded-3xl bg-sky-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-400">
+                                                View Details
+                                            </button>
+                                        </div>
+                                    </div>
+                                </article>
+                            ))}
+                        </div>
+                    </section>
+                </section>
+
+                <section className="mt-16 grid gap-6 md:grid-cols-3">
+                    {highlights.map((item) => (
+                        <div key={item.id} className="rounded-[1.75rem] border border-slate-800 bg-slate-900/90 p-6 text-slate-300 shadow-xl shadow-slate-950/20">
+                            <h3 className="text-xl font-semibold text-white mb-3">{item.title}</h3>
+                            <p className="text-sm leading-6 text-slate-400">{item.detail}</p>
+                        </div>
                     ))}
-                </div>
+                </section>
             </main>
 
-            {/* Footer */}
-            <footer className="relative z-10 border-t border-white/10 bg-neutral-950 mt-20">
-                <div className="container mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center">
-                    <p className="text-neutral-500 text-sm">© 2026 Vibe Store. Todos los derechos reservados.</p>
-                    <div className="flex space-x-6 mt-4 md:mt-0 text-neutral-500">
-                        <a href="#" className="hover:text-white transition-colors">Instagram</a>
-                        <a href="#" className="hover:text-white transition-colors">Twitter</a>
+            <footer className="border-t border-slate-800 bg-slate-950/95 py-10 text-slate-400">
+                <div className="container mx-auto px-6 flex flex-col gap-4 text-sm md:flex-row md:items-center md:justify-between">
+                    <div>
+                        <p className="font-semibold text-white">VoyageEase</p>
+                        <p>Setting the standard for premium travel logistics since 2012.</p>
+                    </div>
+                    <div className="flex flex-wrap gap-6">
+                        <a href="#" className="hover:text-white">Destinos</a>
+                        <a href="#packages" className="hover:text-white">Paquetes</a>
+                        <a href="#" className="hover:text-white">Contacto</a>
                     </div>
                 </div>
             </footer>
