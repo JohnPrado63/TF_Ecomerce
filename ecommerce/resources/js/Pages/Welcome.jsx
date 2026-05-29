@@ -1,36 +1,6 @@
 import { Link, Head } from '@inertiajs/react';
 
-const packages = [
-    {
-        id: 1,
-        title: 'Bali Spiritual Retreat',
-        location: 'Ubud, Indonesia',
-        price: '$1,299',
-        label: 'Editor’s Pick',
-        rating: '4.9',
-        description: 'Immerse yourself in the heart of Bali with private yoga, rice-terrace views and wellness rituals.',
-        image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80'
-    },
-    {
-        id: 2,
-        title: 'Santorini Romance',
-        location: 'Oia, Greece',
-        price: '$2,450',
-        rating: '4.8',
-        description: '5 nights in a luxury cliffside villa with private infinity pool and sunset sailing.',
-        image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80'
-    },
-    {
-        id: 3,
-        title: 'Aguas  turquesas, Cangallo',
-        location: ' Cangallo-Ayacucho, Peru',
-        price: 'S/. 250.00',
-        label: 'Limited Availability',
-        rating: '4.7',
-        description: 'Premium 1-day guided tour through Lins and Banff with luxury lodge stays.',
-        image: 'https://wsrv.nl/?url=https://denomades.s3.us-west-2.amazonaws.com/blog/wp-content/uploads/2019/07/18142626/aguasturquesasOK.jpg&w=1200&fit=cover&q=75&output=webp&h=675'
-    }
-];
+
 
 const highlights = [
     {
@@ -50,7 +20,7 @@ const highlights = [
     },
 ];
 
-export default function Welcome({ auth }) {
+export default function Welcome({ auth,packages }) {
     return (
         <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
             <Head title="Inicio - ESKY TRIPS" />
@@ -197,32 +167,54 @@ export default function Welcome({ auth }) {
                         </div>
 
                         <div className="grid gap-6 xl:grid-cols-3">
-                            {packages.map((pack) => (
-                                <article key={pack.id} className="group overflow-hidden rounded-[2rem] border border-slate-800 bg-slate-950/95 shadow-xl shadow-slate-950/20 transition hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(15,23,42,0.35)]">
-                                    <div className="relative h-72 overflow-hidden">
-                                        <img src={pack.image} alt={pack.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
-                                        {pack.label && (
-                                            <span className="absolute left-4 top-4 rounded-full bg-sky-500/95 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-white shadow-lg shadow-slate-950/20">{pack.label}</span>
+                            {packages && packages.map((pkg) => (
+                                <div key={pkg.id} className="relative rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 hover:border-slate-600 transition group">
+                                    {/* Imagen */}
+                                    <div className="relative h-52 overflow-hidden">
+                                        <img
+                                            src={pkg.image_url}
+                                            alt={pkg.title}
+                                            className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                                        />
+                                        {pkg.includes_guide && (
+                                            <span className="absolute top-3 left-3 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                                Guía incluido
+                                            </span>
                                         )}
                                     </div>
-                                    <div className="p-6">
-                                        <div className="flex items-center justify-between gap-3 mb-4 text-sm text-slate-400">
-                                            <span>{pack.rating} ★</span>
-                                            <span className="font-semibold text-white">{pack.location}</span>
+
+                                    {/* Contenido */}
+                                    <div className="p-5">
+                                        <div className="flex items-center gap-1 text-slate-400 text-sm mb-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            </svg>
+                                            {pkg.location?.city}, {pkg.location?.region}
                                         </div>
-                                        <h3 className="text-2xl font-semibold text-white mb-3">{pack.title}</h3>
-                                        <p className="text-sm leading-6 text-slate-400 mb-6">{pack.description}</p>
-                                        <div className="flex items-center justify-between gap-4">
+
+                                        <h3 className="text-white font-bold text-lg mb-2">{pkg.title}</h3>
+                                        <p className="text-slate-400 text-sm mb-4 line-clamp-2">{pkg.description}</p>
+
+                                        <div className="flex items-center justify-between">
                                             <div>
-                                                <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Total price</p>
-                                                <p className="mt-1 text-xl font-semibold text-white">{pack.price}</p>
+                                                <span className="text-xs text-slate-500">Desde</span>
+                                                <p className="text-cyan-400 font-bold text-xl">
+                                                    S/. {Number(pkg.price).toFixed(2)}
+                                                </p>
                                             </div>
-                                            <button className="rounded-3xl bg-sky-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-400">
-                                                View Details
-                                            </button>
+                                            <div className="flex items-center gap-3 text-slate-400 text-sm">
+                                                <span>📅 {pkg.duration_days} día(s)</span>
+                                            </div>
                                         </div>
+
+                                        <Link
+                                            href={`/packages/${pkg.id}`}
+                                            className="mt-4 block w-full text-center bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold py-2 rounded-xl transition"
+                                        >
+                                            Ver detalles
+                                        </Link>
                                     </div>
-                                </article>
+                                </div>
                             ))}
                         </div>
                     </section>
