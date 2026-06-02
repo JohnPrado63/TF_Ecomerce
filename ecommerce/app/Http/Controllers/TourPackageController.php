@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TourPackage;
 use App\Models\Category;
+use App\Models\Location;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -16,8 +17,14 @@ class TourPackageController extends Controller
             ->where('status', true)
             ->get();
 
+        $locations = Location::where('region', 'Ayacucho')
+            ->whereHas('tourPackages', fn ($query) => $query->where('status', true))
+            ->orderBy('city')
+            ->get();
+
         return Inertia::render('Packages/Index', [
-            'packages' => $packages
+            'packages' => $packages,
+            'locations' => $locations,
         ]);
     }
 
