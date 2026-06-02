@@ -45,10 +45,34 @@ class LocationSeeder extends Seeder
                 'latitude'  => -12.9344,
                 'longitude' => -74.2458,
             ],
+            [
+                'city'      => 'Sucre',
+                'region'    => 'Ayacucho',
+                'address'   => 'Centro histórico de Sucre',
+                'latitude'  => -13.1950,
+                'longitude' => -74.1900,
+            ],
+            [
+                'city'      => 'Parinacochas',
+                'region'    => 'Ayacucho',
+                'address'   => 'Laguna Parinacochas',
+                'latitude'  => -14.0200,
+                'longitude' => -74.0900,
+            ],
+            [
+                'city'      => 'Paucar del Sara Sara',
+                'region'    => 'Ayacucho',
+                'address'   => 'Capital de Paucar del Sara Sara',
+                'latitude'  => -14.0111,
+                'longitude' => -74.4100,
+            ],
         ];
 
         foreach ($locations as $location) {
-            Location::create($location);
+            Location::firstOrCreate(
+                ['city' => $location['city'], 'region' => $location['region']],
+                $location
+            );
         }
     }
 }

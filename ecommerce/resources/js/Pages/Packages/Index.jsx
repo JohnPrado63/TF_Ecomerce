@@ -1,13 +1,15 @@
 import { Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
 
-export default function Index({ packages }) {
+export default function Index({ packages, locations }) {
     const [search, setSearch]       = useState('');
+    const [ubicacion, setUbicacion] = useState('');
     const [categoria, setCategoria] = useState('');
     const [duracion, setDuracion]   = useState('');
     const [orden, setOrden]         = useState('');
 
     const filtrados = packages
+        .filter(pkg => ubicacion ? pkg.location?.city === ubicacion : true)
         .filter(pkg =>
             pkg.title.toLowerCase().includes(search.toLowerCase()) ||
             pkg.location?.city.toLowerCase().includes(search.toLowerCase())
@@ -57,6 +59,18 @@ export default function Index({ packages }) {
                         onChange={e => setSearch(e.target.value)}
                         className="bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 col-span-1 md:col-span-1"
                     />
+
+                    {/* Filtro ubicación */}
+                    <select
+                        value={ubicacion}
+                        onChange={e => setUbicacion(e.target.value)}
+                        className="bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
+                    >
+                        <option value="">Todas las ubicaciones</option>
+                        {locations?.map(loc => (
+                            <option key={loc.id} value={loc.city}>{loc.city}</option>
+                        ))}
+                    </select>
 
                     {/* Filtro categoría */}
                     <select

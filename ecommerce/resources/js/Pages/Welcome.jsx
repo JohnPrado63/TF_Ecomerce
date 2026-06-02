@@ -1,4 +1,5 @@
 import { Link, Head } from '@inertiajs/react';
+import { useMemo, useState } from 'react';
 
 
 
@@ -20,7 +21,81 @@ const highlights = [
     },
 ];
 
-export default function Welcome({ auth,packages }) {
+export default function Welcome({ auth, packages, locations }) {
+    const categoryOptions = [
+        { label: 'Playa y Tropical', value: 'Beach & Tropical' },
+        { label: 'Montaña y Aventura', value: 'Mountain & Adventure' },
+        { label: 'Urbano y Cultura', value: 'Urban & Culture' },
+        { label: 'Vida silvestre y Safari', value: 'Wildlife & Safari' },
+        { label: 'Bienestar y Spa', value: 'Wellness & Spa' },
+    ];
+
+    const ayacuchoDestinations = useMemo(() => {
+        if (!locations) return [];
+
+        const emojiMap = {
+            Huamanga: '🏛️',
+            Cangallo: '🌊',
+            Vilcashuamán: '⛰️',
+            'La Mar': '🌿',
+            Lucanas: '🏜️',
+            Huanta: '🌄',
+            Quinua: '🌾',
+        };
+
+        return locations.map((location) => ({
+            slug: location.city
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/[^a-z0-9-]/g, ''),
+            name: location.city,
+            emoji: emojiMap[location.city] || '📍',
+            desc: `Descubre ${location.city} y sus atractivos en Ayacucho.`,
+        }));
+    }, [locations]);
+
+    const specialOffers = [
+        {
+            slug: 'descuento-temprano',
+            title: 'Descuento Temprano',
+            desc: 'Reserva 30 días antes y ahorra 20% en paquetes Ayacucho.',
+            discount: '20%',
+        },
+        {
+            slug: 'pack-familiar',
+            title: 'Pack Familiar',
+            desc: 'Viaja en familia y obtén beneficios especiales.',
+            discount: '15%',
+        },
+        {
+            slug: 'ultimo-minuto',
+            title: 'Último Minuto',
+            desc: 'Reservas de último minuto con precios increíbles.',
+            discount: '30%',
+        },
+    ];
+
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [appliedCategories, setAppliedCategories] = useState([]);
+
+    const filteredPackages = useMemo(() => {
+        if (!packages) return [];
+        return packages.filter((pkg) => {
+            if (appliedCategories.length === 0) {
+                return true;
+            }
+            return appliedCategories.includes(pkg.category?.name);
+        });
+    }, [packages, appliedCategories]);
+
+    const toggleCategory = (value) => {
+        setSelectedCategories((prev) =>
+            prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
+        );
+    };
+
     return (
         <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
             <Head title="Inicio - ESKY TRIPS" />
@@ -57,23 +132,37 @@ export default function Welcome({ auth,packages }) {
 
 
                     <div className="hidden lg:flex items-center gap-4">
-                        <button className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-700 bg-slate-900/70 text-slate-300 hover:bg-slate-800">
+                        <button className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-700 bg-slate-900/70 text-slate-300 hover:bg-slate-800 transition">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-5 w-5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                             </svg>
                         </button>
-                        <button className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-700 bg-slate-900/70 text-slate-300 hover:bg-slate-800">
+                        <button className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-700 bg-slate-900/70 text-slate-300 hover:bg-slate-800 transition">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-5 w-5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h18M4 7h16M4 11h10m1 8h5" />
                             </svg>
                         </button>
-                        <div className="inline-flex items-center gap-3 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-200">
-                            <img src="https://scontent.flim14-1.fna.fbcdn.net/v/t39.30808-6/491260195_1161932805943417_6436027430883532513_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_ohc=hkvoTmlp-2kQ7kNvwE0kRcz&_nc_oc=AdoCRM2O5kdUKYhKjnBbeJtXIXaNlElbVH0sDBonGwMWlNVCKYX88i_p10CRgCkfaDE&_nc_zt=23&_nc_ht=scontent.flim14-1.fna&_nc_gid=yL2FXDqW25_3uuj-UHXtAQ&_nc_ss=7b289&oh=00_Af5iuiaKg5Be6OZ9zF7xb9U1jEiGV2JI53XuO1F-4iUTRA&oe=6A10F011" alt="Usuario" className="h-8 w-8 rounded-full object-cover" />
-                            <div className="hidden sm:block text-left">
-                                <p className="text-sm font-semibold text-white">Osito</p>
-                                <p className="text-xs text-slate-400">Gold Member FUSCH</p>
+                        {auth?.user ? (
+                            <Link href="/profile" className="inline-flex items-center gap-3 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-200 transition hover:border-sky-500 hover:bg-slate-800">
+                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sky-500 text-sm font-semibold text-slate-950">
+                                    {auth.user.name?.split(' ').map((word) => word[0]).join('').slice(0, 2).toUpperCase()}
+                                </div>
+                                <div className="hidden sm:block text-left">
+                                    <p className="text-sm font-semibold text-white">{auth.user.name || auth.user.email}</p>
+                                    <p className="text-xs text-slate-400">Gold Member</p>
+                                </div>
+                            </Link>
+                        ) : (
+                            <div className="inline-flex items-center gap-3 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-200">
+                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-sm font-semibold text-slate-300">
+                                    <span>G</span>
+                                </div>
+                                <div className="hidden sm:block text-left">
+                                    <p className="text-sm font-semibold text-white">Invitado</p>
+                                    <p className="text-xs text-slate-400">Conéctate para más</p>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </header>
 
@@ -127,28 +216,47 @@ export default function Welcome({ auth,packages }) {
             <main className="relative z-10 container mx-auto px-6 pb-20 lg:px-12">
                 <section className="grid gap-10 lg:grid-cols-[280px_minmax(0,1fr)]">
                     <aside className="rounded-[2rem] border border-slate-800 bg-slate-900/90 p-6 text-slate-300 shadow-xl shadow-slate-950/10">
-                        <h2 className="text-sm font-semibold tracking-[0.24em] uppercase text-sky-300 mb-6">Refine Exploration</h2>
+                        <h2 className="text-sm font-semibold tracking-[0.24em] uppercase text-sky-300 mb-6">Refinar búsqueda</h2>
                         <div className="space-y-4">
-                            {['Beach & Tropical', 'Mountain & Adventure', 'Urban & Culture', 'Wildlife & Safari', 'Wellness & Spa'].map((item, index) => (
-                                <label key={item} className="flex items-center gap-3 rounded-3xl border border-slate-800 bg-slate-950/80 px-4 py-3 text-sm cursor-pointer hover:border-slate-700">
-                                    <input type="checkbox" className="h-4 w-4 rounded border-slate-700 bg-slate-800 text-sky-500" />
-                                    <span className={index === 0 ? 'font-semibold text-white' : 'text-slate-300'}>{item}</span>
+                            {categoryOptions.map((item) => (
+                                <label key={item.value} className="flex items-center gap-3 rounded-3xl border border-slate-800 bg-slate-950/80 px-4 py-3 text-sm cursor-pointer hover:border-slate-700">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedCategories.includes(item.value)}
+                                        onChange={() => toggleCategory(item.value)}
+                                        className="h-4 w-4 rounded border-slate-700 bg-slate-800 text-sky-500"
+                                    />
+                                    <span className={selectedCategories.includes(item.value) ? 'font-semibold text-white' : 'text-slate-300'}>{item.label}</span>
                                 </label>
                             ))}
                         </div>
+                        <div className="mt-6">
+                            <button
+                                type="button"
+                                onClick={() => setAppliedCategories(selectedCategories)}
+                                className="w-full rounded-full bg-sky-500 px-4 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition"
+                            >
+                                Aplicar filtros
+                            </button>
+                        </div>
+                        <p className="mt-3 text-sm text-slate-400">
+                            {appliedCategories.length > 0
+                                ? `Filtrando: ${appliedCategories.map((value) => categoryOptions.find((option) => option.value === value)?.label).join(', ')}`
+                                : 'Mostrando todos los paquetes'}
+                        </p>
                         <div className="mt-8 rounded-[1.75rem] border border-slate-800 bg-slate-950/90 p-5">
-                            <p className="text-xs uppercase tracking-[0.24em] text-slate-500 mb-3">Budget Range</p>
+                            <p className="text-xs uppercase tracking-[0.24em] text-slate-500 mb-3">Rango de presupuesto</p>
                             <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
                                 <div className="h-full w-2/5 rounded-full bg-sky-500" />
                             </div>
                             <div className="mt-4 flex justify-between text-sm text-slate-400">
-                                <span>$500</span>
-                                <span>$10,000+</span>
+                                <span>S/. 500</span>
+                                <span>S/. 10,000+</span>
                             </div>
                         </div>
                         <div className="mt-8 rounded-[1.75rem] border border-slate-800 bg-slate-950/90 p-5">
-                            <p className="text-xs uppercase tracking-[0.24em] text-slate-500 mb-3">Popular Amenities</p>
-                            {['Free Cancellation', 'All Inclusive', 'Adults Only'].map((option) => (
+                            <p className="text-xs uppercase tracking-[0.24em] text-slate-500 mb-3">Servicios populares</p>
+                            {['Cancelación gratis', 'Todo incluido', 'Solo adultos'].map((option) => (
                                 <label key={option} className="flex items-center gap-3 rounded-3xl border border-slate-800 bg-slate-900/80 px-4 py-3 text-sm cursor-pointer hover:border-slate-700 mb-3">
                                     <input type="checkbox" className="h-4 w-4 rounded border-slate-700 bg-slate-800 text-sky-500" />
                                     <span className="text-slate-300">{option}</span>
@@ -156,26 +264,26 @@ export default function Welcome({ auth,packages }) {
                             ))}
                         </div>
                         <div className="mt-8 rounded-[1.75rem] border border-slate-800 bg-slate-950/90 p-5 text-slate-300">
-                            <p className="font-semibold text-white mb-2">Expert Concierge</p>
-                            <p className="text-sm text-slate-400">Need help planning your perfect trip? Our experts are online.</p>
-                            <button className="mt-5 w-full rounded-full bg-sky-500 px-4 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition">Start Live Chat</button>
+                            <p className="font-semibold text-white mb-2">Conserje experto</p>
+                            <p className="text-sm text-slate-400">¿Necesitas ayuda para planificar tu viaje perfecto? Nuestros expertos están en línea.</p>
+                            <button className="mt-5 w-full rounded-full bg-sky-500 px-4 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition">Iniciar chat en vivo</button>
                         </div>
                     </aside>
 
                     <section id="packages" className="space-y-8">
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between py-5">
                             <div>
-                                <p className="text-sm uppercase tracking-[0.3em] text-sky-300">Curated Collections</p>
-                                <h2 className="mt-3 text-3xl font-bold text-white">Featured Exclusive Packages</h2>
+                                <p className="text-sm uppercase tracking-[0.3em] text-sky-300">Colecciones seleccionadas</p>
+                                <h2 className="mt-3 text-3xl font-bold text-white">Paquetes exclusivos destacados</h2>
                             </div>
                             <div className="inline-flex items-center gap-3 rounded-full border border-slate-800 bg-slate-900/90 px-4 py-2 text-sm text-slate-300">
-                                Sort by:
-                                <span className="rounded-full bg-slate-800 px-3 py-1 text-white">Recommended</span>
+                                Ordenar por:
+                                <span className="rounded-full bg-slate-800 px-3 py-1 text-white">Recomendado</span>
                             </div>
                         </div>
 
                         <div className="grid gap-6 xl:grid-cols-3">
-                            {packages && packages.map((pkg) => (
+                            {filteredPackages.map((pkg) => (
                                 <div key={pkg.id} className="relative rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 hover:border-slate-600 transition group">
                                     {/* Imagen */}
                                     <div className="relative h-52 overflow-hidden">
@@ -244,19 +352,16 @@ export default function Welcome({ auth,packages }) {
                         <h2 className="mt-3 text-3xl font-bold text-white">Destinos Principales</h2>
                     </div>
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                        {[
-                            { name: 'Cusco', emoji: '🏔️', desc: 'Machu Picchu y historia inca' },
-                            { name: 'Ica', emoji: '🐪', desc: 'Desierto y oasis' },
-                            { name: 'Ayacucho', emoji: '✨', desc: 'Cultura y tradición' },
-                            { name: 'Puno', emoji: '🌊', desc: 'Lago Titicaca' },
-                        ].map((dest, idx) => (
-                            <div key={idx} className="group rounded-2xl border border-slate-700 bg-slate-900 p-6 hover:border-sky-500 hover:bg-slate-800/80 transition cursor-pointer">
-                                <div className="text-4xl mb-3 group-hover:scale-110 transition">{dest.emoji}</div>
-                                <h3 className="text-xl font-bold text-white mb-2">{dest.name}</h3>
-                                <p className="text-slate-400 text-sm">{dest.desc}</p>
-                                <button className="mt-4 text-sky-400 hover:text-sky-300 font-semibold text-sm">
-                                    Explorar →
-                                </button>
+                        {ayacuchoDestinations.map((dest) => (
+                            <div key={dest.slug} className="group relative overflow-hidden rounded-3xl border border-slate-700 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/20 transition hover:-translate-y-1 hover:border-sky-500">
+                                <div className="absolute top-4 right-4 rounded-full bg-sky-500/10 px-3 py-2 text-xs uppercase tracking-[0.24em] text-sky-200">{dest.emoji}</div>
+                                <div className="mt-6">
+                                    <h3 className="text-xl font-bold text-white mb-2">{dest.name}</h3>
+                                    <p className="text-slate-400 text-sm leading-6">{dest.desc}</p>
+                                </div>
+                                <Link href={`/destinos/${dest.slug}`} className="mt-6 inline-flex items-center rounded-full border border-slate-700 bg-slate-950/90 px-4 py-2 text-sm font-semibold text-sky-300 hover:bg-slate-900 transition">
+                                    Explorar
+                                </Link>
                             </div>
                         ))}
                     </div>
@@ -269,20 +374,16 @@ export default function Welcome({ auth,packages }) {
                         <h2 className="mt-3 text-3xl font-bold text-white">Ofertas Exclusivas</h2>
                     </div>
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        {[
-                            { title: 'Descuento Temprano', desc: 'Reserva 30 días antes y ahorra 20%', discount: '20%' },
-                            { title: 'Pack Familiar', desc: 'Viaja en familia y obtén beneficios especiales', discount: '15%' },
-                            { title: 'Último Minuto', desc: 'Reservas últimas con precios increíbles', discount: '30%' },
-                        ].map((offer, idx) => (
-                            <div key={idx} className="relative rounded-2xl border border-cyan-600 bg-gradient-to-br from-cyan-950/40 to-slate-900 p-8 overflow-hidden group hover:border-cyan-400 transition">
+                        {specialOffers.map((offer) => (
+                            <div key={offer.slug} className="relative rounded-2xl border border-cyan-600 bg-gradient-to-br from-cyan-950/40 to-slate-900 p-8 overflow-hidden group hover:border-cyan-400 transition">
                                 <div className="absolute top-0 right-0 text-6xl font-bold text-cyan-600/20 group-hover:text-cyan-500/30 transition">
                                     {offer.discount}
                                 </div>
                                 <h3 className="text-2xl font-bold text-white mb-2 relative z-10">{offer.title}</h3>
                                 <p className="text-slate-300 mb-4 relative z-10">{offer.desc}</p>
-                                <button className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold px-6 py-2 rounded-xl transition relative z-10">
-                                    Ver Oferta
-                                </button>
+                                <Link href={`/ofertas/${offer.slug}`} className="relative z-10 inline-flex rounded-full bg-cyan-500 px-6 py-2 text-sm font-bold text-slate-900 hover:bg-cyan-400 transition">
+                                    Ver oferta
+                                </Link>
                             </div>
                         ))}
                     </div>
