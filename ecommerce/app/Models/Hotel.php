@@ -11,7 +11,8 @@ class Hotel extends Model
 
     protected $fillable = [
         'location_id', 'nombre',
-        'estrellas', 'direccion', 'telefono'
+        'estrellas', 'direccion', 'telefono',
+        'price_per_person'
     ];
 
     // Un hotel pertenece a una ubicación

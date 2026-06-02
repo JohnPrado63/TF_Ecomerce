@@ -52,6 +52,45 @@ export default function Show({ package: pkg }) {
                                 📅 {pkg.duration_days} día(s)
                             </div>
                         </div>
+
+                        <div className="mb-6">
+                            <h2 className="text-xl font-bold mb-4">Hoteles cercanos</h2>
+                            {pkg.hoteles?.length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {pkg.hoteles.map((hotel) => (
+                                        <div key={hotel.id} className="p-4 rounded-2xl border border-slate-700 bg-slate-900">
+                                            <p className="font-semibold text-white">{hotel.nombre}</p>
+                                            <p className="text-slate-400 text-sm">{hotel.estrellas} estrellas</p>
+                                            <p className="text-slate-500 text-sm mt-2">{hotel.direccion}</p>
+                                            <p className="text-slate-500 text-sm">{hotel.telefono}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="p-4 rounded-2xl border border-slate-700 bg-slate-900 text-slate-400">
+                                    No hay hoteles asociados a este paquete todavía.
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="mb-6">
+                            <h2 className="text-xl font-bold mb-4">Restaurantes recomendados</h2>
+                            {pkg.restaurantes?.length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {pkg.restaurantes.map((restaurante) => (
+                                        <div key={restaurante.id} className="p-4 rounded-2xl border border-slate-700 bg-slate-900">
+                                            <p className="font-semibold text-white">{restaurante.nombre}</p>
+                                            <p className="text-slate-400 text-sm">{restaurante.tipo_comida}</p>
+                                            <p className="text-slate-500 text-sm mt-2">{restaurante.direccion}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="p-4 rounded-2xl border border-slate-700 bg-slate-900 text-slate-400">
+                                    No hay restaurantes asociados a este paquete todavía.
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     {/* Card de reserva derecha */}

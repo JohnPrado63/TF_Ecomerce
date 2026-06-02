@@ -40,13 +40,21 @@ export default function Welcome({ auth,packages }) {
                     </div>
 
                     <nav className="hidden lg:flex items-center gap-4 text-slate-300">
-                        <div className="inline-flex items-center gap-3 rounded-3xl bg-slate-900/60 px-3 py-2 shadow-lg shadow-black/40">
-                            <a href="#" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Destinations</a>
-                            <a href="#packages" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Paquetes</a>
-                            <a href="#" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Ofertas</a>
-                            <a href="#" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Business Travel</a>
-                        </div>
+                        <Link href="/packages" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Paquetes</Link>
+                        <a href="#destinos" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Destinos</a>
+                        <a href="#ofertas" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Ofertas</a>
+                        {auth?.user ? (
+                            <>
+                                <Link href="/bookings" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Mis Reservas</Link>
+                            </>
+                        ) : (
+                            <>
+                                <Link href="/login" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Iniciar sesión</Link>
+                                <Link href="/register" className="px-5 py-3 text-base font-semibold rounded-xl bg-cyan-500 text-slate-900 hover:bg-cyan-400 transition">Registrarse</Link>
+                            </>
+                        )}
                     </nav>
+
 
                     <div className="hidden lg:flex items-center gap-4">
                         <button className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-700 bg-slate-900/70 text-slate-300 hover:bg-slate-800">
@@ -227,6 +235,57 @@ export default function Welcome({ auth,packages }) {
                             <p className="text-sm leading-6 text-slate-400">{item.detail}</p>
                         </div>
                     ))}
+                </section>
+
+                {/* Sección Destinos */}
+                <section id="destinos" className="mt-20 scroll-mt-20">
+                    <div className="mb-10">
+                        <p className="text-sm uppercase tracking-[0.3em] text-sky-300">Explorar</p>
+                        <h2 className="mt-3 text-3xl font-bold text-white">Destinos Principales</h2>
+                    </div>
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                        {[
+                            { name: 'Cusco', emoji: '🏔️', desc: 'Machu Picchu y historia inca' },
+                            { name: 'Ica', emoji: '🐪', desc: 'Desierto y oasis' },
+                            { name: 'Ayacucho', emoji: '✨', desc: 'Cultura y tradición' },
+                            { name: 'Puno', emoji: '🌊', desc: 'Lago Titicaca' },
+                        ].map((dest, idx) => (
+                            <div key={idx} className="group rounded-2xl border border-slate-700 bg-slate-900 p-6 hover:border-sky-500 hover:bg-slate-800/80 transition cursor-pointer">
+                                <div className="text-4xl mb-3 group-hover:scale-110 transition">{dest.emoji}</div>
+                                <h3 className="text-xl font-bold text-white mb-2">{dest.name}</h3>
+                                <p className="text-slate-400 text-sm">{dest.desc}</p>
+                                <button className="mt-4 text-sky-400 hover:text-sky-300 font-semibold text-sm">
+                                    Explorar →
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* Sección Ofertas */}
+                <section id="ofertas" className="mt-20 scroll-mt-20">
+                    <div className="mb-10">
+                        <p className="text-sm uppercase tracking-[0.3em] text-sky-300">Especial</p>
+                        <h2 className="mt-3 text-3xl font-bold text-white">Ofertas Exclusivas</h2>
+                    </div>
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                        {[
+                            { title: 'Descuento Temprano', desc: 'Reserva 30 días antes y ahorra 20%', discount: '20%' },
+                            { title: 'Pack Familiar', desc: 'Viaja en familia y obtén beneficios especiales', discount: '15%' },
+                            { title: 'Último Minuto', desc: 'Reservas últimas con precios increíbles', discount: '30%' },
+                        ].map((offer, idx) => (
+                            <div key={idx} className="relative rounded-2xl border border-cyan-600 bg-gradient-to-br from-cyan-950/40 to-slate-900 p-8 overflow-hidden group hover:border-cyan-400 transition">
+                                <div className="absolute top-0 right-0 text-6xl font-bold text-cyan-600/20 group-hover:text-cyan-500/30 transition">
+                                    {offer.discount}
+                                </div>
+                                <h3 className="text-2xl font-bold text-white mb-2 relative z-10">{offer.title}</h3>
+                                <p className="text-slate-300 mb-4 relative z-10">{offer.desc}</p>
+                                <button className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold px-6 py-2 rounded-xl transition relative z-10">
+                                    Ver Oferta
+                                </button>
+                            </div>
+                        ))}
+                    </div>
                 </section>
             </main>
 

@@ -6,13 +6,29 @@ export default function Create({ package: pkg }) {
         package_id:       pkg.id,
         booking_date:     '',
         persons_quantity: 1,
-        include_hotel:    false,
+        include_hotel:    pkg.includes_hotel || false,
+        hotel_id:         pkg.hoteles?.[0]?.id ?? null,
+        restaurante_id:   pkg.restaurantes?.[0]?.id ?? null,
     });
 
-    // Calcular total automáticamente
-    const baseTotal  = pkg.price * data.persons_quantity;
-    const hotelExtra = data.include_hotel ? 80 * data.persons_quantity : 0;
-    const totalFinal = baseTotal + hotelExtra;
+    const selectedHotel = pkg.hoteles?.find(hotel => hotel.id === data.hotel_id);
+    const selectedRestaurant = pkg.restaurantes?.find(rest => rest.id === data.restaurante_id);
+
+    const hotelPricePerPerson = Number(selectedHotel?.price_per_person ?? 0);
+    const restaurantPricePerPerson = Number(selectedRestaurant?.price_per_person ?? 0);
+    const baseTotal           = pkg.price * data.persons_quantity;
+    // Sum hotel cost whenever the user includes/selects hotel (keeps UI consistent with selection)
+    const hotelExtra          = data.include_hotel && selectedHotel ? hotelPricePerPerson * data.persons_quantity : 0;
+    const restaurantExtra     = selectedRestaurant ? restaurantPricePerPerson * data.persons_quantity : 0;
+    const totalFinal          = baseTotal + hotelExtra + restaurantExtra;
+
+    function handleToggleHotel() {
+        const nextState = !data.include_hotel;
+        setData('include_hotel', nextState);
+        if (nextState && !data.hotel_id && pkg.hoteles?.length) {
+            setData('hotel_id', pkg.hoteles[0].id);
+        }
+    }
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -87,38 +103,122 @@ export default function Create({ package: pkg }) {
                                 )}
                             </div>
 
-                            {/* Incluir hotel */}
-                            {!pkg.includes_hotel && (
-                                <div>
-                                    <label className="block text-slate-300 text-sm font-medium mb-2">
-                                        🏨 ¿Incluir alojamiento?
-                                    </label>
-                                    <div
-                                        onClick={() => setData('include_hotel', !data.include_hotel)}
-                                        className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition ${
-                                            data.include_hotel
-                                                ? 'border-cyan-500 bg-cyan-900/30'
-                                                : 'border-slate-600 bg-slate-800'
-                                        }`}
-                                    >
-                                        <div>
-                                            <p className="font-medium">Agregar hotel</p>
-                                            <p className="text-slate-400 text-sm">+S/. 80.00 por persona</p>
-                                        </div>
-                                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                                            data.include_hotel
-                                                ? 'border-cyan-500 bg-cyan-500'
-                                                : 'border-slate-500'
-                                        }`}>
-                                            {data.include_hotel && (
-                                                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                </svg>
-                                            )}
-                                        </div>
+                            <div>
+                                <div className="flex items-center justify-between gap-3 mb-3">
+                                    <div>
+                                        <label className="block text-slate-300 text-sm font-medium mb-2">
+                                            🏨 Selecciona un hotel
+                                        </label>
+                                        <p className="text-slate-500 text-sm">
+                                            {pkg.includes_hotel
+                                                ? 'El paquete incluye alojamiento. Elige el hotel preferido.'
+                                                : 'Agrega alojamiento opcional y selecciona el hotel cercano.'}
+                                        </p>
                                     </div>
+                                    {!pkg.includes_hotel && (
+                                        <button
+                                            type="button"
+                                            onClick={handleToggleHotel}
+                                            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                                                data.include_hotel
+                                                    ? 'bg-cyan-500 text-slate-950'
+                                                    : 'bg-slate-800 text-slate-200 border border-slate-700'
+                                            }`}>
+                                            {data.include_hotel ? 'Alojamiento activado' : 'Agregar hotel'}
+                                        </button>
+                                    )}
                                 </div>
-                            )}
+
+                                {pkg.hoteles?.length > 0 ? (
+                                    <div className="grid grid-cols-1 gap-3">
+                                        {pkg.hoteles.map((hotel) => (
+                                            <button
+                                                key={hotel.id}
+                                                type="button"
+                                                onClick={() => setData('hotel_id', hotel.id)}
+                                                className={`group w-full rounded-[28px] border p-4 text-left transition duration-300 ${
+                                                    data.hotel_id === hotel.id
+                                                        ? 'border-cyan-400 bg-cyan-950/30 shadow-[0_20px_80px_rgba(6,182,212,0.15)]'
+                                                        : 'border-slate-700 bg-slate-900 hover:border-slate-500 hover:bg-slate-800'
+                                                }`}
+                                            >
+                                                <div className="flex items-start justify-between gap-4">
+                                                    <div>
+                                                        <div className="flex flex-wrap items-center gap-2 mb-2">
+                                                            <p className="font-semibold text-white text-base">{hotel.nombre}</p>
+                                                            <span className="rounded-full bg-slate-800 px-3 py-1 text-[11px] uppercase tracking-[0.14em] text-slate-400">
+                                                                {hotel.estrellas ?? '–'}⭐
+                                                            </span>
+                                                        </div>
+                                                        <p className="text-slate-400 text-sm">{hotel.direccion}</p>
+                                                        <p className="text-slate-500 text-sm mt-2">Tel: {hotel.telefono}</p>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <p className="text-cyan-300 font-semibold text-lg">S/. {Number(hotel.price_per_person).toFixed(2)}</p>
+                                                        <p className="text-slate-500 text-xs mt-1">por persona</p>
+                                                        {data.hotel_id === hotel.id && (
+                                                            <span className="mt-3 inline-flex rounded-full bg-cyan-500 px-3 py-1 text-[11px] font-semibold text-slate-950">
+                                                                Seleccionado
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="rounded-3xl border border-slate-700 bg-slate-900 p-4 text-slate-400">
+                                        No hay hoteles registrados para este paquete todavía.
+                                    </div>
+                                )}
+                            </div>
+
+                            <div>
+                                <label className="block text-slate-300 text-sm font-medium mb-2">
+                                    🍽️ Selecciona un restaurante cercano
+                                </label>
+                                <p className="text-slate-500 text-sm mb-3">
+                                    Elige un restaurante recomendado para completar tu paquete.
+                                </p>
+
+                                {pkg.restaurantes?.length > 0 ? (
+                                    <div className="grid grid-cols-1 gap-3">
+                                        {pkg.restaurantes.map((restaurante) => (
+                                            <button
+                                                key={restaurante.id}
+                                                type="button"
+                                                onClick={() => setData('restaurante_id', restaurante.id)}
+                                                className={`group w-full rounded-[28px] border p-4 text-left transition duration-300 ${
+                                                    data.restaurante_id === restaurante.id
+                                                        ? 'border-cyan-400 bg-cyan-950/30 shadow-[0_20px_80px_rgba(6,182,212,0.12)]'
+                                                        : 'border-slate-700 bg-slate-900 hover:border-slate-500 hover:bg-slate-800'
+                                                }`}
+                                            >
+                                                <div className="flex items-start justify-between gap-4">
+                                                    <div>
+                                                        <p className="font-semibold text-white text-base">{restaurante.nombre}</p>
+                                                        <p className="text-slate-400 text-sm">{restaurante.tipo_comida}</p>
+                                                        <p className="text-slate-500 text-sm mt-2">{restaurante.direccion}</p>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <p className="text-cyan-300 font-semibold text-lg">S/. {Number(restaurante.price_per_person).toFixed(2)}</p>
+                                                        <p className="text-slate-500 text-xs mt-1">aprox. por persona</p>
+                                                        {data.restaurante_id === restaurante.id && (
+                                                            <span className="mt-3 inline-flex rounded-full bg-cyan-500 px-3 py-1 text-[11px] font-semibold text-slate-950">
+                                                                Seleccionado
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="rounded-3xl border border-slate-700 bg-slate-900 p-4 text-slate-400">
+                                        No hay restaurantes registrados para este paquete todavía.
+                                    </div>
+                                )}
+                            </div>
 
                             {/* Botón submit */}
                             <button
@@ -157,16 +257,49 @@ export default function Create({ package: pkg }) {
                         <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5">
                             <h3 className="font-bold text-lg mb-4">Resumen de costos</h3>
 
-                            <div className="space-y-3 text-sm">
-                                <div className="flex justify-between text-slate-300">
-                                    <span>S/. {Number(pkg.price).toFixed(2)} × {data.persons_quantity} persona(s)</span>
+                            <div className="space-y-4 text-sm">
+                                <div className="grid grid-cols-[1fr_auto] items-center gap-4 text-slate-300">
+                                    <span>Paquete base</span>
                                     <span>S/. {baseTotal.toFixed(2)}</span>
                                 </div>
 
                                 {data.include_hotel && (
-                                    <div className="flex justify-between text-slate-300">
-                                        <span>Hotel × {data.persons_quantity} persona(s)</span>
+                                    <div className="grid grid-cols-[1fr_auto] items-center gap-4 text-slate-300">
+                                        <span>{pkg.includes_hotel ? 'Hotel incluido' : `Hotel × ${data.persons_quantity} persona(s)`}</span>
                                         <span>S/. {hotelExtra.toFixed(2)}</span>
+                                    </div>
+                                )}
+
+                                {selectedHotel && (
+                                    <div className="rounded-2xl bg-slate-950/60 border border-slate-700 p-3">
+                                        <div className="grid grid-cols-[1fr_auto] items-center gap-4">
+                                            <div>
+                                                <p className="font-medium text-slate-100">Hotel elegido</p>
+                                                <p className="text-slate-300 text-sm mt-1">{selectedHotel.nombre}</p>
+                                            </div>
+                                            <span className="text-cyan-300 font-semibold">S/. {hotelPricePerPerson.toFixed(2)}</span>
+                                        </div>
+                                        <p className="text-slate-500 text-xs mt-2">por persona</p>
+                                    </div>
+                                )}
+
+                                {selectedRestaurant && (
+                                    <div className="rounded-2xl bg-slate-950/60 border border-slate-700 p-3">
+                                        <div className="grid grid-cols-[1fr_auto] items-center gap-4">
+                                            <div>
+                                                <p className="font-medium text-slate-100">Restaurante elegido</p>
+                                                <p className="text-slate-300 text-sm mt-1">{selectedRestaurant.nombre}</p>
+                                            </div>
+                                            <span className="text-cyan-300 font-semibold">S/. {restaurantPricePerPerson.toFixed(2)}</span>
+                                        </div>
+                                        <p className="text-slate-500 text-xs mt-2">por persona</p>
+                                    </div>
+                                )}
+
+                                {selectedRestaurant && (
+                                    <div className="grid grid-cols-[1fr_auto] items-center gap-4 text-slate-300">
+                                        <span>Restaurante × {data.persons_quantity} persona(s)</span>
+                                        <span>S/. {restaurantExtra.toFixed(2)}</span>
                                     </div>
                                 )}
 

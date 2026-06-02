@@ -57,4 +57,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('bookings', BookingController::class);
 });
 
+// Rutas de administración agregando el 1/06/2026
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/packages', [AdminController::class, 'packages'])->name('packages');
+    Route::get('/bookings', [AdminController::class, 'bookings'])->name('bookings');
+    Route::put('/bookings/{id}/status', [AdminController::class, 'updateBookingStatus'])->name('bookings.status');
+    Route::delete('/packages/{id}', [AdminController::class, 'deletePackage'])->name('packages.delete');
+});
+
 require __DIR__.'/auth.php';

@@ -10,6 +10,7 @@ class Booking extends Model
     protected $fillable = [
         'client_id', 'package_id', 'booking_date',
         'persons_quantity', 'include_hotel',
+        'hotel_id', 'restaurante_id',
         'total_amount', 'status'
     ];
 
@@ -23,5 +24,17 @@ class Booking extends Model
     public function tourPackage()
     {
         return $this->belongsTo(TourPackage::class, 'package_id');
+    }
+
+    // Hotel seleccionado para la reserva
+    public function hotel()
+    {
+        return $this->belongsTo(Hotel::class, 'hotel_id');
+    }
+
+    // Restaurante seleccionado para la reserva
+    public function restaurante()
+    {
+        return $this->belongsTo(Restaurante::class, 'restaurante_id');
     }
 }

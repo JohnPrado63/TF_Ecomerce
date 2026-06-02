@@ -14,6 +14,8 @@ class DatabaseSeeder extends Seeder
             TourPackageSeeder::class,
             GuiaTuristicoSeeder::class,
             HotelSeeder::class,
+            RestauranteSeeder::class,
+            PackageExtrasSeeder::class,
         ]);
     }
 }

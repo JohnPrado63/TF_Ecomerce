@@ -11,7 +11,8 @@ class Restaurante extends Model
 
     protected $fillable = [
         'location_id', 'nombre',
-        'tipo_comida', 'direccion'
+        'tipo_comida', 'direccion',
+        'price_per_person'
     ];
 
     // Un restaurante pertenece a una ubicación

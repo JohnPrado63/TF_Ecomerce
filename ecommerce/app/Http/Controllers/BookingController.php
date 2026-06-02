@@ -13,7 +13,7 @@ class BookingController extends Controller
     // Muestra el formulario de reserva
     public function create(Request $request)
     {
-        $package = TourPackage::with(['category', 'location'])
+        $package = TourPackage::with(['category', 'location', 'hoteles', 'restaurantes'])
             ->findOrFail($request->package_id);
 
         return Inertia::render('Bookings/Create', [
@@ -29,6 +29,8 @@ class BookingController extends Controller
             'booking_date'     => 'required|date|after:today',
             'persons_quantity' => 'required|integer|min:1|max:20',
             'include_hotel'    => 'boolean',
+            'hotel_id'         => 'nullable|exists:hoteles,id',
+            'restaurante_id'   => 'nullable|exists:restaurantes,id',
         ]);
 
         // Buscar o crear el cliente vinculado al usuario
@@ -45,12 +47,41 @@ class BookingController extends Controller
         }
 
         // Calcular el total
-        $package      = TourPackage::findOrFail($request->package_id);
+        $package      = TourPackage::with(['hoteles', 'restaurantes'])->findOrFail($request->package_id);
         $total        = $package->price * $request->persons_quantity;
-        $includeHotel = $request->include_hotel ?? false;
+        $includeHotel = $package->includes_hotel || ($request->include_hotel ?? false);
+        $hotelCost    = 0;
+        $restaurantCost = 0;
 
-        if ($includeHotel) {
-            $total += 80 * $request->persons_quantity;
+        if ($includeHotel && $package->hoteles->isNotEmpty() && !$request->hotel_id) {
+            abort(422, 'Debe seleccionar un hotel para continuar con la reserva.');
+        }
+
+        $selectedHotel = null;
+        if ($request->hotel_id) {
+            $selectedHotel = $package->hoteles->firstWhere('id', $request->hotel_id);
+            if (!$selectedHotel) {
+                abort(422, 'Hotel no válido para este paquete.');
+            }
+        }
+
+        if ($request->restaurante_id && !$package->restaurantes->contains('id', $request->restaurante_id)) {
+            abort(422, 'Restaurante no válido para este paquete.');
+        }
+
+        // Sumar costo de hotel siempre que el usuario haya incluido/seleccionado alojamiento
+        if ($includeHotel && $selectedHotel) {
+            $hotelCost = $selectedHotel->price_per_person * $request->persons_quantity;
+            $total += $hotelCost;
+        }
+
+        // Sumar costo de restaurante si fue seleccionado
+        if ($request->restaurante_id) {
+            $selectedRestaurant = $package->restaurantes->firstWhere('id', $request->restaurante_id);
+            if ($selectedRestaurant) {
+                $restaurantCost = $selectedRestaurant->price_per_person * $request->persons_quantity;
+                $total += $restaurantCost;
+            }
         }
 
         // Crear la reserva
@@ -60,12 +91,19 @@ class BookingController extends Controller
             'booking_date'     => $request->booking_date,
             'persons_quantity' => $request->persons_quantity,
             'include_hotel'    => $includeHotel,
+            'hotel_id'         => $includeHotel ? $request->hotel_id : null,
+            'restaurante_id'   => $request->restaurante_id,
             'total_amount'     => $total,
             'status'           => 'pending',
         ]);
 
-        return redirect()->route('bookings.index')
-            ->with('success', '¡Reserva realizada con éxito!');
+        $booking = Booking::with(['tourPackage.location'])
+            ->where('client_id', $client->id)
+            ->latest()
+            ->first();
+        return inertia()->render('Bookings/Confirmation', [
+            'booking' => $booking
+        ]);
     }
 
     // Lista las reservas del usuario
