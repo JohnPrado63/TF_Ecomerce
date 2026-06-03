@@ -45,4 +45,12 @@ class Usuario extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Determine if the user has admin privileges.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->rol === 'admin';
+    }
 }

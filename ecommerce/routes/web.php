@@ -6,6 +6,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\AdminController;
 use App\Models\Location;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -45,6 +46,10 @@ Route::get('/', function () {
 
 
 Route::get('/dashboard', function () {
+    if (Auth::check() && Auth::user()->isAdmin()) {
+        return redirect()->route('admin.dashboard');
+    }
+
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -173,19 +178,20 @@ Route::get('/ofertas/{slug}', function ($slug) {
 })->name('offers.show');
 
 // Rutas protegidas (solo usuarios logueados)
-Route::middleware('auth')->group(function () {
-    Route::post('/packages', [TourPackageController::class, 'store'])->name('packages.store');
-    Route::delete('/packages/{id}', [TourPackageController::class, 'destroy'])->name('packages.destroy');
-    Route::resource('bookings', BookingController::class);
-});
+Route::resource('bookings', BookingController::class);
 
 // Rutas de administración agregando el 1/06/2026
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', fn () => redirect()->route('admin.dashboard'))->name('index');
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/packages', [AdminController::class, 'packages'])->name('packages');
+    Route::get('/packages/create', [AdminController::class, 'createPackage'])->name('packages.create');
+    Route::post('/packages', [AdminController::class, 'storePackage'])->name('packages.store');
+    Route::get('/packages/{id}/edit', [AdminController::class, 'editPackage'])->name('packages.edit');
+    Route::put('/packages/{id}', [AdminController::class, 'updatePackage'])->name('packages.update');
+    Route::delete('/packages/{id}', [AdminController::class, 'deletePackage'])->name('packages.delete');
     Route::get('/bookings', [AdminController::class, 'bookings'])->name('bookings');
     Route::put('/bookings/{id}/status', [AdminController::class, 'updateBookingStatus'])->name('bookings.status');
-    Route::delete('/packages/{id}', [AdminController::class, 'deletePackage'])->name('packages.delete');
 });
 
 require __DIR__.'/auth.php';
