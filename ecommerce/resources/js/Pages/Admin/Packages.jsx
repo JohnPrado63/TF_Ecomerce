@@ -34,8 +34,17 @@ export default function Packages({ packages }) {
             </nav>
 
             <div className="container mx-auto px-6 py-10">
-                <div className="flex items-center justify-between mb-8">
-                    <h1 className="text-3xl font-bold">Gestión de Paquetes</h1>
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8">
+                    <div>
+                        <h1 className="text-3xl font-bold">Gestión de Paquetes</h1>
+                        <p className="text-slate-400">Crea, edita y elimina los paquetes que aparecen en el sitio.</p>
+                    </div>
+                    <Link
+                        href="/admin/packages/create"
+                        className="inline-flex items-center rounded-2xl bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-400 transition"
+                    >
+                        Nuevo paquete
+                    </Link>
                 </div>
 
                 <div className="bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden">
@@ -79,12 +88,18 @@ export default function Packages({ packages }) {
                                         {pkg.available_slots}
                                     </td>
                                     <td className="p-4">
-                                        <div className="flex gap-2">
+                                        <div className="flex gap-2 flex-wrap">
                                             <Link
                                                 href={`/packages/${pkg.id}`}
                                                 className="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg transition"
                                             >
                                                 Ver
+                                            </Link>
+                                            <Link
+                                                href={route('admin.packages.edit', pkg.id)}
+                                                className="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg transition"
+                                            >
+                                                Editar
                                             </Link>
                                             <button
                                                 onClick={() => deletePackage(pkg.id)}
