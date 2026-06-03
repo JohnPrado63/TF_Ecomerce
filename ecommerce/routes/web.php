@@ -50,8 +50,29 @@ Route::get('/dashboard', function () {
         return redirect()->route('admin.dashboard');
     }
 
-    return Inertia::render('Dashboard');
+    $client = \App\Models\Client::where('user_id', Auth::id())->first();
+
+    $bookings = $client
+        ? \App\Models\Booking::with(['tourPackage.location'])
+            ->where('client_id', $client->id)
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get()
+        : collect();
+
+    $stats = $client ? [
+        'total'     => \App\Models\Booking::where('client_id', $client->id)->count(),
+        'confirmed' => \App\Models\Booking::where('client_id', $client->id)->where('status', 'confirmed')->count(),
+        'pending'   => \App\Models\Booking::where('client_id', $client->id)->where('status', 'pending')->count(),
+    ] : ['total' => 0, 'confirmed' => 0, 'pending' => 0];
+
+    return Inertia::render('Dashboard', [
+        'bookings' => $bookings,
+        'stats'    => $stats,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -193,5 +214,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/bookings', [AdminController::class, 'bookings'])->name('bookings');
     Route::put('/bookings/{id}/status', [AdminController::class, 'updateBookingStatus'])->name('bookings.status');
 });
+// Rutas de reseñas
+Route::post('/reviews', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
+Route::delete('/reviews/{id}', [App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy')->middleware('auth');
 
 require __DIR__.'/auth.php';

@@ -1,4 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
+import Navbar from '@/Components/Navbar';
 
 export default function Index({ bookings }) {
 
@@ -22,6 +23,7 @@ export default function Index({ bookings }) {
 
     return (
         <div className="min-h-screen bg-slate-950 text-white">
+            <Navbar />
             <Head title="Mis Reservas - ESKY TRIPS" />
 
             <div className="container mx-auto px-6 py-10">
