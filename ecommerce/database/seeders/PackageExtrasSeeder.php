@@ -25,8 +25,8 @@ class PackageExtrasSeeder extends Seeder
                 'restaurantes' => ['Restaurante La Casona'],
             ],
             'Huanta y sus Lagunas' => [
-                'hoteles' => ['Hotel Plaza Ayacucho'],
-                'restaurantes' => ['Restaurante La Casona'],
+                'hoteles' => ['Hotel Plaza Huanta'],
+                'restaurantes' => ['Restaurante el Huantino'],
             ],
         ];
 

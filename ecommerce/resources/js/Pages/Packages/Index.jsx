@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
+import Navbar from '@/Components/Navbar';
 
 export default function Index({ packages, locations }) {
     const [search, setSearch]       = useState('');
@@ -31,6 +32,7 @@ export default function Index({ packages, locations }) {
 
     return (
         <div className="min-h-screen bg-slate-950 text-white">
+            <Navbar />  
             <Head title="Paquetes Turísticos - ESKY TRIPS" />
 
             <div className="container mx-auto px-6 py-10">

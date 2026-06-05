@@ -150,4 +150,14 @@ class AdminController extends Controller
         TourPackage::findOrFail($id)->delete();
         return redirect()->back()->with('success', 'Paquete eliminado correctamente');
     }
+    public function payments()
+    {
+        $payments = \App\Models\Payment::with(['booking.tourPackage', 'booking.client'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return Inertia::render('Admin/Payments', [
+            'payments' => $payments,
+        ]);
+    }
 }

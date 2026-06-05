@@ -1,5 +1,6 @@
 import { Head, useForm, Link } from '@inertiajs/react';
 import DatePicker from '@/Components/DatePicker';
+import Navbar from '@/Components/Navbar';
 
 export default function Create({ package: pkg }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -37,6 +38,7 @@ export default function Create({ package: pkg }) {
 
     return (
         <div className="min-h-screen bg-slate-950 text-white">
+            <Navbar />
             <Head title={`Reservar - ${pkg.title}`} />
 
             <div className="container mx-auto px-6 py-10 max-w-4xl">

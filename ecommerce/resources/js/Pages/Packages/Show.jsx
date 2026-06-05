@@ -1,8 +1,25 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import Navbar from '@/Components/Navbar';
 
 export default function Show({ package: pkg }) {
+    const { auth } = usePage().props;
+
+    const { data, setData, post, processing, errors, reset } = useForm({
+        package_id: pkg.id,
+        rating: 5,
+        comment: '',
+    });
+
+    function submitReview(e) {
+        e.preventDefault();
+        post('/reviews', {
+            onSuccess: () => reset('comment'),
+        });
+    }
+
     return (
         <div className="min-h-screen bg-slate-950 text-white">
+            <Navbar />
             <Head title={`${pkg.title} - ESKY TRIPS`} />
 
             <div className="container mx-auto px-6 py-10">
@@ -26,8 +43,9 @@ export default function Show({ package: pkg }) {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                    {/* Info izquierda */}
+                    {/* Columna izquierda */}
                     <div className="lg:col-span-2">
+
                         <p className="text-slate-400 text-sm mb-2">
                             📍 {pkg.location?.city}, {pkg.location?.region}
                         </p>
@@ -53,6 +71,7 @@ export default function Show({ package: pkg }) {
                             </div>
                         </div>
 
+                        {/* Hoteles */}
                         <div className="mb-6">
                             <h2 className="text-xl font-bold mb-4">Hoteles cercanos</h2>
                             {pkg.hoteles?.length > 0 ? (
@@ -73,6 +92,7 @@ export default function Show({ package: pkg }) {
                             )}
                         </div>
 
+                        {/* Restaurantes */}
                         <div className="mb-6">
                             <h2 className="text-xl font-bold mb-4">Restaurantes recomendados</h2>
                             {pkg.restaurantes?.length > 0 ? (
@@ -91,7 +111,117 @@ export default function Show({ package: pkg }) {
                                 </div>
                             )}
                         </div>
+
+                        {/* Reseñas */}
+                        <div className="mb-6">
+                            <h2 className="text-xl font-bold mb-4">
+                                Reseñas ({pkg.reviews?.length ?? 0})
+                            </h2>
+
+                            {pkg.reviews?.length > 0 ? (
+                                <div className="space-y-4 mb-6">
+                                    {pkg.reviews.map((review) => (
+                                        <div key={review.id} className="bg-slate-900 border border-slate-700 rounded-xl p-4">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center text-slate-900 font-bold text-xs">
+                                                        {review.client?.first_name?.charAt(0).toUpperCase()}
+                                                    </div>
+                                                    <span className="font-semibold text-sm">
+                                                        {review.client?.first_name}
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    {[1,2,3,4,5].map((star) => (
+                                                        <span key={star} className={star <= review.rating ? 'text-yellow-400' : 'text-slate-600'}>
+                                                            ★
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            {review.comment && (
+                                                <p className="text-slate-300 text-sm">{review.comment}</p>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="bg-slate-900 border border-slate-700 rounded-xl p-4 text-slate-400 text-sm mb-6">
+                                    Aún no hay reseñas para este paquete. ¡Sé el primero!
+                                </div>
+                            )}
+
+                            {/* Formulario reseña */}
+                            {auth?.user ? (
+                                <div className="bg-slate-900 border border-slate-700 rounded-xl p-5">
+                                    <h3 className="font-bold mb-4">Dejar una reseña</h3>
+                                    <form onSubmit={submitReview} className="space-y-4">
+
+                                        <div>
+                                            <label className="block text-slate-300 text-sm font-medium mb-2">
+                                                Calificación
+                                            </label>
+                                            <div className="flex gap-2">
+                                                {[1,2,3,4,5].map((star) => (
+                                                    <button
+                                                        key={star}
+                                                        type="button"
+                                                        onClick={() => setData('rating', star)}
+                                                        className={`text-3xl transition ${
+                                                            star <= data.rating
+                                                                ? 'text-yellow-400'
+                                                                : 'text-slate-600 hover:text-yellow-300'
+                                                        }`}
+                                                    >
+                                                        ★
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-slate-300 text-sm font-medium mb-2">
+                                                Comentario (opcional)
+                                            </label>
+                                            <textarea
+                                                value={data.comment}
+                                                onChange={e => setData('comment', e.target.value)}
+                                                rows={3}
+                                                placeholder="Cuéntanos tu experiencia..."
+                                                className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition resize-none"
+                                            />
+                                            {errors.comment && (
+                                                <p className="text-red-400 text-xs mt-1">{errors.comment}</p>
+                                            )}
+                                        </div>
+
+                                        <button
+                                            type="submit"
+                                            disabled={processing}
+                                            className="bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-600 text-slate-900 font-bold px-6 py-2 rounded-xl transition"
+                                        >
+                                            {processing ? 'Enviando...' : 'Publicar reseña'}
+                                        </button>
+
+                                    </form>
+                                </div>
+                            ) : (
+                                <div className="bg-slate-900 border border-slate-700 rounded-xl p-4 text-center">
+                                    <p className="text-slate-400 text-sm mb-3">
+                                        Inicia sesión para dejar una reseña
+                                    </p>
+                                    <Link
+                                        href="/login"
+                                        className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold px-5 py-2 rounded-xl transition text-sm"
+                                    >
+                                        Iniciar sesión
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
+
                     </div>
+                    {/* fin columna izquierda */}
 
                     {/* Card de reserva derecha */}
                     <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 h-fit sticky top-6">
@@ -114,6 +244,7 @@ export default function Show({ package: pkg }) {
                             Sin cargos ocultos • Confirmación inmediata
                         </p>
                     </div>
+
                 </div>
             </div>
         </div>
