@@ -217,5 +217,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 // Rutas de reseñas
 Route::post('/reviews', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
 Route::delete('/reviews/{id}', [App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy')->middleware('auth');
+// Rutas de pagos
+Route::middleware('auth')->group(function () {
+    Route::get('/payments/{bookingId}', [App\Http\Controllers\PaymentController::class, 'show'])->name('payments.show');
+    Route::post('/payments', [App\Http\Controllers\PaymentController::class, 'store'])->name('payments.store');
+});
 
+// Ruta admin para verificar pagos
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::put('/payments/{id}/verify', [App\Http\Controllers\PaymentController::class, 'verify'])->name('payments.verify');
+    Route::get('/payments', [App\Http\Controllers\AdminController::class, 'payments'])->name('payments');
+});
 require __DIR__.'/auth.php';

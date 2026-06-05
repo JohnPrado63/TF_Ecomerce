@@ -32,6 +32,9 @@ export default function Dashboard({ stats, reservasRecientes }) {
                         <Link href="/admin/bookings" className="text-slate-400 hover:text-white transition">
                             Reservas
                         </Link>
+                        <Link href="/admin/payments" className="text-slate-400 hover:text-white transition">
+                            Pagos
+                        </Link> 
                     </div>
                 </div>
                 <Link href="/" className="text-slate-400 hover:text-white text-sm transition">

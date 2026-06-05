@@ -36,6 +36,9 @@ export default function Bookings({ bookings }) {
                         <Link href="/admin/bookings" className="text-white font-semibold border-b-2 border-cyan-500 pb-1">
                             Reservas
                         </Link>
+                        <Link href="/admin/payments" className="text-slate-400 hover:text-white transition">
+                            Pagos
+                        </Link>
                     </div>
                 </div>
                 <Link href="/" className="text-slate-400 hover:text-white text-sm transition">
