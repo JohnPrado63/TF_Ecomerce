@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\BookingConfirmation;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Booking;
 use App\Models\Client;
 use App\Models\TourPackage;
@@ -97,11 +99,19 @@ class BookingController extends Controller
             'status'           => 'pending',
         ]);
 
-        $booking = Booking::with(['tourPackage.location'])
+        $booking = Booking::with(['tourPackage.location','client'])
             ->where('client_id', $client->id)
             ->latest()
             ->first();
-        return inertia()->render('Bookings/Confirmation', [
+        // Enviar email de confirmación
+        try {
+            Mail::to(auth()->user()->email)
+            ->send(new BookingConfirmation($booking));
+        } catch (\Exception $e) {
+            // Log error pero no interrumpir el flujo
+            \Log::error('Error al enviar email de confirmación: ' . $e->getMessage());
+        }
+        return Inertia::render('Bookings/Confirmation', [
             'booking' => $booking
         ]);
     }
