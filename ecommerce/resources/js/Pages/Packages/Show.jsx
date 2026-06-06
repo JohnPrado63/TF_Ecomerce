@@ -1,3 +1,4 @@
+import MapView from '@/Components/MapView';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import Navbar from '@/Components/Navbar';
 
@@ -111,7 +112,21 @@ export default function Show({ package: pkg }) {
                                 </div>
                             )}
                         </div>
-
+                        {/*ubicacion en el mapa */}
+                        <div className="mb-6">
+                            <h2 className="text-xl font-bold mb-4">
+                                📍 Ubicación del destino
+                            </h2>
+                            <p className="text-slate-400 text-sm mb-3">
+                                {pkg.location?.city}, {pkg.location?.region}-Ayacucho, Perú
+                            </p>
+                            <MapView
+                                latitude={pkg.location?.latitude}
+                                longitude={pkg.location?.longitude}
+                                title={pkg.title}
+                                city={pkg.location?.city}
+                            />
+                        </div>
                         {/* Reseñas */}
                         <div className="mb-6">
                             <h2 className="text-xl font-bold mb-4">
