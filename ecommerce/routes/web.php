@@ -170,4 +170,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::put('/payments/{id}/verify', [App\Http\Controllers\PaymentController::class, 'verify'])->name('payments.verify');
     Route::get('/payments', [App\Http\Controllers\AdminController::class, 'payments'])->name('payments');
 });
+Route::get('/contacto', function () {
+    return Inertia::render('Contacto');
+})->name('contacto');
 require __DIR__.'/auth.php';
