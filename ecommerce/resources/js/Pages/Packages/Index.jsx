@@ -3,7 +3,8 @@ import { useState } from 'react';
 import Navbar from '@/Components/Navbar';
 
 export default function Index({ packages, locations }) {
-    const [search, setSearch]       = useState('');
+    const urlParams = new URLSearchParams(window.location.search);
+    const [search, setSearch] = useState(urlParams.get('search') || '');
     const [ubicacion, setUbicacion] = useState('');
     const [categoria, setCategoria] = useState('');
     const [duracion, setDuracion]   = useState('');

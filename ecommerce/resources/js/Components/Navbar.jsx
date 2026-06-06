@@ -24,6 +24,12 @@ export default function Navbar() {
                     <Link href="/packages" className="text-slate-300 hover:text-white text-sm font-medium transition">
                         Paquetes
                     </Link>
+                    <Link
+                        href="/contacto"
+                        className="text-slate-300 hover:text-white text-sm font-medium transition"
+                    >
+                        Contacto
+                    </Link>
                     {auth?.user && (
                         auth.user.rol === 'admin' ? (
                             <Link href="/admin/dashboard" className="text-slate-300 hover:text-white text-sm font-medium transition">

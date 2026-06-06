@@ -1,4 +1,4 @@
-import { Link, Head } from '@inertiajs/react';
+import { Link, Head, router } from '@inertiajs/react';
 import { useMemo, useState } from 'react';
 
 
@@ -72,6 +72,16 @@ export default function Welcome({ auth, packages, destinations }) {
 
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [appliedCategories, setAppliedCategories] = useState([]);
+    const [searchDestination, setSearchDestination] = useState('');
+    const [searchDates, setSearchDates] = useState('');
+    const [searchGuests, setSearchGuests] = useState('');
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchDestination.trim()) {
+            router.get('/packages', { search: searchDestination });
+        }
+    };
 
     const filteredPackages = useMemo(() => {
         if (!packages) return [];
@@ -178,25 +188,52 @@ export default function Welcome({ auth, packages, destinations }) {
                                 <div className="rounded-[2rem] border border-slate-800 bg-slate-950/90 p-6 shadow-2xl shadow-slate-950/30">
                                     <div className="grid gap-4 md:grid-cols-[1.8fr_1fr] lg:grid-cols-[2.4fr_1fr] items-center">
                                         <div className="grid gap-4 sm:grid-cols-3">
-                                            <label className="rounded-3xl bg-slate-900/90 px-4 py-4 text-left text-sm text-slate-300">
-                                                <span className="block text-xs uppercase tracking-[0.18em] text-slate-500">Destination</span>
-                                                <span className="mt-2 block text-white">Where are you going?</span>
-                                            </label>
-                                            <label className="rounded-3xl bg-slate-900/90 px-4 py-4 text-left text-sm text-slate-300">
-                                                <span className="block text-xs uppercase tracking-[0.18em] text-slate-500">Check-in / Check-out</span>
-                                                <span className="mt-2 block text-white">Add dates</span>
-                                            </label>
-                                            <label className="rounded-3xl bg-slate-900/90 px-4 py-4 text-left text-sm text-slate-300">
-                                                <span className="block text-xs uppercase tracking-[0.18em] text-slate-500">Guests</span>
-                                                <span className="mt-2 block text-white">2 adults, 1 room</span>
-                                            </label>
+
+
+                                            <div className="rounded-3xl bg-slate-900/90 px-4 py-4 text-left text-sm text-slate-300">
+                                                <span className="block text-xs uppercase tracking-[0.18em] text-slate-500">Destino</span>
+                                                <input
+                                                    type="text"
+                                                    value={searchDestination}
+                                                    onChange={e => setSearchDestination(e.target.value)}
+                                                    placeholder="¿A dónde vas?"
+                                                    className="mt-2 block w-full bg-transparent text-white placeholder-slate-500 focus:outline-none"
+                                                />
+                                            </div>
+                                            <div className="rounded-3xl bg-slate-900/90 px-4 py-4 text-left text-sm text-slate-300">
+                                                <span className="block text-xs uppercase tracking-[0.18em] text-slate-500">Fecha de viaje</span>
+                                                <input
+                                                    type="date"
+                                                    value={searchDates}
+                                                    onChange={e => setSearchDates(e.target.value)}
+                                                    className="mt-2 block w-full bg-transparent text-white focus:outline-none"
+                                                />
+                                            </div>
+                                            <div className="rounded-3xl bg-slate-900/90 px-4 py-4 text-left text-sm text-slate-300">
+                                                <span className="block text-xs uppercase tracking-[0.18em] text-slate-500">Personas</span>
+                                                <input
+                                                    type="number"
+                                                    value={searchGuests}
+                                                    onChange={e => setSearchGuests(e.target.value)}
+                                                    placeholder="2 adultos"
+                                                    min="1"
+                                                    max="20"
+                                                    className="mt-2 block w-full bg-transparent text-white placeholder-slate-500 focus:outline-none"
+                                                />
+                                            </div>
+
                                         </div>
 
-                                        <button className="inline-flex h-full items-center justify-center rounded-3xl bg-sky-500 px-8 py-5 text-white font-semibold shadow-[0_20px_50px_rgba(56,189,248,0.25)] transition hover:bg-sky-400">
+
+
+                                        <button
+                                            onClick={handleSearch}
+                                            className="inline-flex h-full items-center justify-center rounded-3xl bg-sky-500 px-8 py-5 text-white font-semibold shadow-[0_20px_50px_rgba(56,189,248,0.25)] transition hover:bg-sky-400"
+                                        >
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="mr-2 h-5 w-5">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                             </svg>
-                                            Search
+                                            Buscar
                                         </button>
                                     </div>
                                 </div>
@@ -421,7 +458,7 @@ export default function Welcome({ auth, packages, destinations }) {
                             <h4 className="text-sm font-semibold text-white mb-3">Soporte</h4>
                             <ul className="space-y-2 text-sm">
                                 <li><a href="#" className="hover:text-white">Preguntas frecuentes</a></li>
-                                <li><a href="#" className="hover:text-white">Contacto</a></li>
+                                <li><Link href="/contacto" className="hover:text-white">Contacto</Link></li>
                                 <li><a href="#" className="hover:text-white">Política de privacidad</a></li>
                             </ul>
                         </div>
