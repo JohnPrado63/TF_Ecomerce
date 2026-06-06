@@ -21,7 +21,7 @@ const highlights = [
     },
 ];
 
-export default function Welcome({ auth, packages, locations }) {
+export default function Welcome({ auth, packages, destinations }) {
     const categoryOptions = [
         { label: 'Playa y Tropical', value: 'Beach & Tropical' },
         { label: 'Montaña y Aventura', value: 'Mountain & Adventure' },
@@ -31,30 +31,23 @@ export default function Welcome({ auth, packages, locations }) {
     ];
 
     const ayacuchoDestinations = useMemo(() => {
-        if (!locations) return [];
+        if (!destinations) return [];
 
         const emojiMap = {
             Huamanga: '🏛️',
             Cangallo: '🌊',
             Vilcashuamán: '⛰️',
-            'La Mar': '🌿',
-            Lucanas: '🏜️',
-            Huanta: '🌄',
             Quinua: '🌾',
+            Huanta: '🌄',
         };
 
-        return locations.map((location) => ({
-            slug: location.city
-                .toLowerCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .replace(/\s+/g, '-')
-                .replace(/[^a-z0-9-]/g, ''),
-            name: location.city,
-            emoji: emojiMap[location.city] || '📍',
-            desc: `Descubre ${location.city} y sus atractivos en Ayacucho.`,
+        return destinations.map((dest) => ({
+            slug: dest.slug,
+            name: dest.name,
+            emoji: emojiMap[dest.name] || '📍',
+            desc: dest.description,
         }));
-    }, [locations]);
+    }, [destinations]);
 
     const specialOffers = [
         {

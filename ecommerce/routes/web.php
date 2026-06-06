@@ -27,9 +27,8 @@ Route::get('/', function () {
         ->where('status', true)
         ->get();
 
-    $locations = Location::where('region', 'Ayacucho')
-        ->whereHas('tourPackages', fn ($query) => $query->where('status', true))
-        ->orderBy('city')
+    $destinations = \App\Models\Destination::with('location')
+        ->orderBy('name')
         ->get();
 
     return Inertia::render('Welcome', [
@@ -38,7 +37,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion'     => PHP_VERSION,
         'packages'       => $packages,
-        'locations'      => $locations,
+        'destinations'   => $destinations,
     ]);
 });
 
@@ -85,85 +84,28 @@ Route::get('/packages', [TourPackageController::class, 'index'])->name('packages
 Route::get('/packages/{id}', [TourPackageController::class, 'show'])->name('packages.show');
 
 Route::get('/destinos/{province}', function ($province) {
-    $location = Location::where('region', 'Ayacucho')->get()->first(
-        fn ($loc) => Str::slug($loc->city) === $province
-    );
+    $destination=\App\Models\Destination::with('location')
+        ->where('slug', $province)
+        ->first();
 
-    abort_unless($location, 404);
-
-    $destinationDetails = [
-        'huamanga' => [
-            'description' => 'Descubre el corazón de Ayacucho con su casco histórico, plazas coloniales y tradición viva.',
-            'summary' => 'Capital regional con cultura, mercados de artesanía y arquitectura virreinal.',
-            'style' => 'Urbano cultural',
-            'recommendation' => 'Camina por la Plaza Mayor, visita las iglesias barrocas y vive una tarde en el Mercado Central.',
-            'sites' => [
-                ['title' => 'Plaza Mayor de Ayacucho', 'detail' => 'Iglesias coloniales, balcones tallados y tiendas de artesanía local.'],
-                ['title' => 'Catedral de Ayacucho', 'detail' => 'Arquitectura barroca que define el centro histórico de la ciudad.'],
-                ['title' => 'Museo de la Memoria', 'detail' => 'Exposición sobre historia regional y valores culturales del valle.'],
-            ],
-        ],
-        'cangallo' => [
-            'description' => 'Lagunas color turquesa, senderos andinos y comunidades vivientes en Cangallo.',
-            'summary' => 'Provincia natural con rutas de lagunas escalonadas y paisaje serrano.',
-            'style' => 'Naturaleza y aventura',
-            'recommendation' => 'Recorre las lagunas de color y prueba la gastronomía local en los pueblos cercanos.',
-            'sites' => [
-                ['title' => 'Lagunas de Cangallo', 'detail' => 'Más de 15 lagunas naturales rodeadas de vegetación andina.'],
-                ['title' => 'Mirador de Achacocha', 'detail' => 'Vistas panorámicas de los valles y humedales de altura.'],
-                ['title' => 'Pueblo de Cangallo', 'detail' => 'Mercados típicos y tradiciones de los habitantes locales.'],
-            ],
-        ],
-        'vilcashuaman' => [
-            'description' => 'Arqueología ancestral y festividades tradicionales en la sierra ayacuchana.',
-            'summary' => 'Destino para los amantes de los sitios arqueológicos y la espiritualidad andina.',
-            'style' => 'Arqueología y tradición',
-            'recommendation' => 'Recorre el complejo arqueológico, participa en una feria local y prueba la comida serrana.',
-            'sites' => [
-                ['title' => 'Zona Arqueológica de Usqunta', 'detail' => 'Terrazas y estructuras preincaicas en un entorno montañoso.'],
-                ['title' => 'Museo de Sitio de Vilcas Huamán', 'detail' => 'Testimonios de la vida incaica y artefactos locales.'],
-                ['title' => 'Canchón de la Plaza Principal', 'detail' => 'Espacio cultural donde se celebran fiestas y tradiciones vivas.'],
-            ],
-        ],
-        'la-mar' => [
-            'description' => 'Valles serranos y pueblos con fuerte herencia cultural en el sur de Ayacucho.',
-            'summary' => 'Ruta tranquila entre paisajes verdes y fiesta popular.',
-            'style' => 'Naturaleza y festivales',
-            'recommendation' => 'Visita mercados campesinos y descubre pequeños talleres artesanales en el camino.',
-            'sites' => [
-                ['title' => 'Pampa de la Quinua', 'detail' => 'Paisajes amplios con cultivo tradicional y memoria histórica.'],
-                ['title' => 'Plaza de San Miguel', 'detail' => 'Centro de actividades con tradiciones religiosas y ferias.'],
-                ['title' => 'Mirador de Fin del Mundo', 'detail' => 'Vistas panorámicas de los valles ayacuchanos al atardecer.'],
-            ],
-        ],
-        'lucanas' => [
-            'description' => 'Carnaval, lagunas y paisajes altos en el sur de la región Ayacucho.',
-            'summary' => 'Provincia famosa por su carnaval y sus rutas naturales elevadas.',
-            'style' => 'Festividades y paisaje alto',
-            'recommendation' => 'Disfruta del folklore local y recorre las lagunas andinas cercanas.',
-            'sites' => [
-                ['title' => 'Carnaval de Lucanas', 'detail' => 'Celebración colorida con danzas, música y trajes tradicionales.'],
-                ['title' => 'Laguna Grande', 'detail' => 'Espacio natural para caminatas y observación de aves.'],
-                ['title' => 'Mirador de Escalerillas', 'detail' => 'Punto panorámico con vistas únicas de la puna.'],
-            ],
-        ],
-    ];
-
-    $slug = Str::slug($location->city);
-    $details = $destinationDetails[$slug] ?? [
-        'description' => "Descubre {$location->city} y su atractivo turístico en Ayacucho.",
-        'summary' => 'Provincia de Ayacucho con encanto local y tradiciones andinas.',
-        'style' => 'Destino regional',
-        'recommendation' => 'Explora los puntos de interés locales y disfruta de la hospitalidad ayacuchana.',
-        'sites' => [],
-    ];
-
+    abort_unless($destination, 404);
+    $packages = \App\Models\TourPackage::with(['category','location'])
+        ->where('location_id', $destination->location_id)
+        ->where('status', true)
+        ->get();
     return Inertia::render('Destinos/Show', [
-        'destination' => array_merge([
-            'name' => $location->city,
-            'region' => $location->region,
-        ], $details),
+        'destination' =>[
+            'name'             => $destination->name,
+            'region'           => $destination->location->region,
+            'description'      => $destination->description,
+            'summary'          => $destination->summary,
+            'style'            => $destination->style,
+            'recommendation'   => $destination->recommendation,
+            'sites'            => $destination->sites,
+        ],
+        'packages' => $packages,
     ]);
+
 })->name('destinos.show');
 
 Route::get('/ofertas/{slug}', function ($slug) {
