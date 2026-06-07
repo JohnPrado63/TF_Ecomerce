@@ -1,6 +1,8 @@
 import { Head, Link } from '@inertiajs/react';
+import StarRating from '@/Components/StarRating';
 import { useState } from 'react';
 import Navbar from '@/Components/Navbar';
+
 
 export default function Index({ packages, locations }) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -145,6 +147,12 @@ export default function Index({ packages, locations }) {
                                         📍 {pkg.location?.city}, {pkg.location?.region}
                                     </p>
                                     <h2 className="text-white font-bold text-lg mb-2">{pkg.title}</h2>
+                                    <div className="mb-2">
+                                        <StarRating 
+                                            rating={pkg.reviews_avg_rating} 
+                                            count={pkg.reviews_count}
+                                        />
+                                    </div>
                                     <p className="text-slate-400 text-sm mb-4 line-clamp-2">{pkg.description}</p>
                                     <div className="flex gap-2 mb-4 flex-wrap">
                                         {pkg.includes_guide == 1 && (

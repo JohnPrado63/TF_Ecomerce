@@ -24,6 +24,8 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     $packages = \App\Models\TourPackage::with(['category', 'location'])
+        ->withAvg('reviews', 'rating')
+        ->withCount('reviews')
         ->where('status', true)
         ->get();
 
