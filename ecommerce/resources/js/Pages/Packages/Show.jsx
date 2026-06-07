@@ -1,4 +1,5 @@
 import MapView from '@/Components/MapView';
+import StarRating from '@/Components/StarRating';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import Navbar from '@/Components/Navbar';
 
@@ -51,6 +52,13 @@ export default function Show({ package: pkg }) {
                             📍 {pkg.location?.city}, {pkg.location?.region}
                         </p>
                         <h1 className="text-3xl font-bold mb-4">{pkg.title}</h1>
+                        <div className="mb-4">
+                            <StarRating 
+                                rating={pkg.reviews_avg_rating} 
+                                count={pkg.reviews_count}
+                                size="md"
+                            />
+                        </div>
                         <p className="text-slate-300 leading-relaxed mb-6">
                             {pkg.description}
                         </p>

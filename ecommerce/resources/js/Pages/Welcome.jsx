@@ -1,3 +1,4 @@
+import StarRating from '@/Components/StarRating';
 import { Link, Head, router } from '@inertiajs/react';
 import { useMemo, useState } from 'react';
 
@@ -121,6 +122,7 @@ export default function Welcome({ auth, packages, destinations }) {
                         <Link href="/packages" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Paquetes</Link>
                         <a href="#destinos" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Destinos</a>
                         <a href="#ofertas" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Ofertas</a>
+                        <Link href="/contacto" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Contacto</Link>
                         {auth?.user ? (
                             <>
                                 <Link href="/bookings" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Mis Reservas</Link>
@@ -135,16 +137,7 @@ export default function Welcome({ auth, packages, destinations }) {
 
 
                     <div className="hidden lg:flex items-center gap-4">
-                        <button className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-700 bg-slate-900/70 text-slate-300 hover:bg-slate-800 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-5 w-5">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                            </svg>
-                        </button>
-                        <button className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-700 bg-slate-900/70 text-slate-300 hover:bg-slate-800 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-5 w-5">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h18M4 7h16M4 11h10m1 8h5" />
-                            </svg>
-                        </button>
+
                         {auth?.user ? (
                             <Link href="/profile" className="inline-flex items-center gap-3 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-200 transition hover:border-sky-500 hover:bg-slate-800">
                                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sky-500 text-sm font-semibold text-slate-950">
@@ -174,15 +167,12 @@ export default function Welcome({ auth, packages, destinations }) {
                         <div className="absolute inset-0 bg-slate-950/70" />
                         <div className="relative z-10 container mx-auto px-6 py-20 lg:px-12 lg:py-28">
                             <div className="max-w-3xl text-center mx-auto">
-                                <p className="inline-flex items-center rounded-full border border-slate-700 bg-slate-900/80 px-4 py-2 text-sm text-sky-300 mb-6">
-                                    <span className="mr-2">Nuevo</span>
-                                    <span className="rounded-full bg-sky-500 px-2 py-0.5 text-xs font-semibold text-white">Viajes de lujo</span>
-                                </p>
-                                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6">
-                                    Elevate Your Journey
+
+                                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-10">
+                                    Descubre la magia de Ayacucho
                                 </h1>
                                 <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-10">
-                                    Luxury travel experiences curated by experts for the discerning global explorer.
+                                     Planifica tu aventura perfecta explorando paquetes turísticos y servicios que tenemos para cada destino.
                                 </p>
 
                                 <div className="rounded-[2rem] border border-slate-800 bg-slate-950/90 p-6 shadow-2xl shadow-slate-950/30">
@@ -339,6 +329,12 @@ export default function Welcome({ auth, packages, destinations }) {
                                         </div>
 
                                         <h3 className="text-white font-bold text-lg mb-2">{pkg.title}</h3>
+                                        <div className="mb-2">
+                                            <StarRating 
+                                                rating={pkg.reviews_avg_rating}
+                                                count={pkg.reviews_count}
+                                            />
+                                        </div>
                                         <p className="text-slate-400 text-sm mb-4 line-clamp-2">{pkg.description}</p>
 
                                         <div className="flex items-center justify-between">

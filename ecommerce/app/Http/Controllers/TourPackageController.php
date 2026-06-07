@@ -14,17 +14,14 @@ class TourPackageController extends Controller
     public function index()
     {
         $packages = TourPackage::with(['category', 'location'])
+            ->withAvg('reviews', 'rating')
+            ->withCount('reviews')
             ->where('status', true)
             ->get();
 
-        $locations = Location::where('region', 'Ayacucho')
-            ->whereHas('tourPackages', fn ($query) => $query->where('status', true))
-            ->orderBy('city')
-            ->get();
 
         return Inertia::render('Packages/Index', [
             'packages' => $packages,
-            'locations' => $locations,
         ]);
     }
 
@@ -38,7 +35,10 @@ class TourPackageController extends Controller
             'hoteles',
             'guias',
             'restaurantes'
-        ])->findOrFail($id);
+        ])
+        ->withAvg('reviews', 'rating')
+        ->withCount('reviews')
+        ->findOrFail($id);
 
         return Inertia::render('Packages/Show', [
             'package' => $package
