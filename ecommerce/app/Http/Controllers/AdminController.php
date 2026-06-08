@@ -117,6 +117,48 @@ class AdminController extends Controller
 
         return redirect()->route('admin.packages')->with('success', 'Paquete actualizado correctamente');
     }
+    // Listar guías
+    public function guides()
+    {
+        $guides = \App\Models\GuiaTuristico::orderBy('nombre')->get();
+        return Inertia::render('Admin/Guides', [
+            'guides' => $guides,
+        ]);
+    }
+
+    // Crear guía
+    public function storeGuide(Request $request)
+    {
+        $request->validate([
+            'nombre'         => 'required|string|max:100',
+            'apellido'       => 'required|string|max:100',
+            'idiomas'        => 'nullable|string',
+            'telefono'       => 'nullable|string|max:20',
+            'credencial_nro' => 'nullable|string|max:50',
+        ]);
+
+        \App\Models\GuiaTuristico::create($request->all());
+        return redirect()->back()->with('success', 'Guía creado correctamente');
+    }
+
+    // Actualizar guía
+    public function updateGuide(Request $request, $id)
+    {
+        $request->validate([
+            'nombre'   => 'required|string|max:100',
+            'apellido' => 'required|string|max:100',
+        ]);
+
+        \App\Models\GuiaTuristico::findOrFail($id)->update($request->all());
+        return redirect()->back()->with('success', 'Guía actualizado correctamente');
+    }
+
+    // Eliminar guía
+    public function deleteGuide($id)
+    {
+        \App\Models\GuiaTuristico::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Guía eliminado correctamente');
+    }
 
     // Gestión de reservas
     public function bookings()
@@ -143,6 +185,55 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Estado actualizado correctamente');
     }
+    // Listar hoteles
+    public function hotels()
+    {
+        $hotels = \App\Models\Hotel::with('location')
+            ->orderBy('nombre')
+            ->get();
+
+        $locations = \App\Models\Location::orderBy('city')->get();
+
+        return Inertia::render('Admin/Hotels', [
+            'hotels'    => $hotels,
+            'locations' => $locations,
+        ]);
+    }
+
+    // Crear hotel
+    public function storeHotel(Request $request)
+    {
+        $request->validate([
+            'nombre'           => 'required|string|max:150',
+            'location_id'      => 'required|exists:locations,id',
+            'estrellas'        => 'nullable|integer|min:1|max:5',
+            'precio_por_noche' => 'nullable|numeric',
+            'direccion'        => 'nullable|string',
+            'telefono'         => 'nullable|string|max:20',
+        ]);
+
+        \App\Models\Hotel::create($request->all());
+        return redirect()->back()->with('success', 'Hotel creado correctamente');
+    }
+
+    // Actualizar hotel
+    public function updateHotel(Request $request, $id)
+    {
+        $request->validate([
+            'nombre'      => 'required|string|max:150',
+            'location_id' => 'required|exists:locations,id',
+        ]);
+
+        \App\Models\Hotel::findOrFail($id)->update($request->all());
+        return redirect()->back()->with('success', 'Hotel actualizado correctamente');
+    }
+
+    // Eliminar hotel
+    public function deleteHotel($id)
+    {
+        \App\Models\Hotel::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Hotel eliminado correctamente');
+    }
 
     // Eliminar paquete
     public function deletePackage($id)
@@ -160,4 +251,185 @@ class AdminController extends Controller
             'payments' => $payments,
         ]);
     }
+    // Listar transportes
+    public function transports()
+    {
+        $transports = \App\Models\EmpresaTransporte::with('location')
+            ->orderBy('nombre_empresa')
+            ->get();
+
+        $locations = \App\Models\Location::orderBy('city')->get();
+
+        return Inertia::render('Admin/Transports', [
+            'transports' => $transports,
+            'locations'  => $locations,
+        ]);
+    }
+
+    // Crear transporte
+    public function storeTransport(Request $request)
+    {
+        $request->validate([
+            'nombre_empresa'  => 'required|string|max:150',
+            'location_id'     => 'required|exists:locations,id',
+            'tipo_transporte' => 'required|in:Autobús,Miniván,Avión,Tren,Marítimo',
+            'contacto'        => 'nullable|string|max:100',
+        ]);
+
+        \App\Models\EmpresaTransporte::create($request->all());
+        return redirect()->back()->with('success', 'Empresa de transporte creada correctamente');
+    }
+
+    // Actualizar transporte
+    public function updateTransport(Request $request, $id)
+    {
+        $request->validate([
+            'nombre_empresa'  => 'required|string|max:150',
+            'location_id'     => 'required|exists:locations,id',
+            'tipo_transporte' => 'required|in:Autobús,Miniván,Avión,Tren,Marítimo',
+        ]);
+
+        \App\Models\EmpresaTransporte::findOrFail($id)->update($request->all());
+        return redirect()->back()->with('success', 'Empresa actualizada correctamente');
+    }
+
+    // Eliminar transporte
+    public function deleteTransport($id)
+    {
+        \App\Models\EmpresaTransporte::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Empresa eliminada correctamente');
+    }
+
+public function reports()
+{
+    // Reporte de ventas por mes
+    $salesByMonth = \App\Models\Booking::selectRaw(
+            'MONTH(created_at) as month,
+             YEAR(created_at) as year,
+             COUNT(*) as total_bookings,
+             SUM(total_amount) as total_sales'
+        )
+        ->where('status', 'confirmed')
+        ->groupBy('year', 'month')
+        ->orderBy('year', 'desc')
+        ->orderBy('month', 'desc')
+        ->take(6)
+        ->get();
+
+    // Paquetes más reservados
+    $topPackages = \App\Models\TourPackage::withCount('bookings')
+        ->withSum('bookings', 'total_amount')
+        ->orderBy('bookings_count', 'desc')
+        ->take(5)
+        ->get();
+
+    // Resumen general
+    $summary = [
+        'total_ventas'    => \App\Models\Booking::where('status', 'confirmed')->sum('total_amount'),
+        'total_reservas'  => \App\Models\Booking::count(),
+        'reservas_hoy'    => \App\Models\Booking::whereDate('created_at', today())->count(),
+        'pagos_pendientes'=> \App\Models\Payment::where('status', 'pending')->count(),
+    ];
+
+    return Inertia::render('Admin/Reports', [
+        'salesByMonth' => $salesByMonth,
+        'topPackages'  => $topPackages,
+        'summary'      => $summary,
+    ]);
+}
+
+    // Listar restaurantes
+    public function restaurants()
+    {
+        $restaurants = \App\Models\Restaurante::with('location')
+            ->orderBy('nombre')
+            ->get();
+
+        $locations = \App\Models\Location::orderBy('city')->get();
+
+        return Inertia::render('Admin/Restaurants', [
+            'restaurants' => $restaurants,
+            'locations'   => $locations,
+        ]);
+    }
+
+    // Crear restaurante
+    public function storeRestaurant(Request $request)
+    {
+        $request->validate([
+            'nombre'      => 'required|string|max:150',
+            'location_id' => 'required|exists:locations,id',
+            'tipo_comida' => 'nullable|string|max:100',
+            'direccion'   => 'nullable|string',
+        ]);
+
+        \App\Models\Restaurante::create($request->all());
+        return redirect()->back()->with('success', 'Restaurante creado correctamente');
+    }
+
+    // Actualizar restaurante
+    public function updateRestaurant(Request $request, $id)
+    {
+        $request->validate([
+            'nombre'      => 'required|string|max:150',
+            'location_id' => 'required|exists:locations,id',
+        ]);
+
+        \App\Models\Restaurante::findOrFail($id)->update($request->all());
+        return redirect()->back()->with('success', 'Restaurante actualizado correctamente');
+    }
+
+    // Eliminar restaurante
+    public function deleteRestaurant($id)
+    {
+        \App\Models\Restaurante::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Restaurante eliminado correctamente');
+    }
+
+
+    // Listar categorías
+    public function categories()
+    {
+        $categories = \App\Models\Category::withCount('tourPackages')
+            ->orderBy('name')
+            ->get();
+
+        return Inertia::render('Admin/Categories', [
+            'categories' => $categories,
+        ]);
+    }
+
+    // Crear categoría
+    public function storeCategory(Request $request)
+    {
+        $request->validate([
+            'name'        => 'required|string|max:100|unique:categories,name',
+            'description' => 'nullable|string',
+        ]);
+
+        \App\Models\Category::create($request->all());
+
+        return redirect()->back()->with('success', 'Categoría creada correctamente');
+    }
+
+    // Actualizar categoría
+    public function updateCategory(Request $request, $id)
+    {
+        $request->validate([
+            'name'        => 'required|string|max:100|unique:categories,name,'.$id,
+            'description' => 'nullable|string',
+        ]);
+
+        \App\Models\Category::findOrFail($id)->update($request->all());
+
+        return redirect()->back()->with('success', 'Categoría actualizada correctamente');
+    }
+
+    // Eliminar categoría
+    public function deleteCategory($id)
+    {
+        \App\Models\Category::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Categoría eliminada correctamente');
+    }
+
 }
