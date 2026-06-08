@@ -32,17 +32,19 @@ class PackageExtrasSeeder extends Seeder
 
         foreach ($packages as $title => $lists) {
             $package = TourPackage::where('title', $title)->first();
-            if (!$package) {
-                continue;
-            }
+            if (!$package) continue;
 
             if (!empty($lists['hoteles'])) {
-                $hotelIds = Hotel::whereIn('nombre', $lists['hoteles'])->pluck('id')->toArray();
+                $hotelIds = Hotel::whereIn('nombre', $lists['hoteles'])
+                    ->pluck('id')
+                    ->toArray();
                 $package->hoteles()->syncWithoutDetaching($hotelIds);
             }
 
             if (!empty($lists['restaurantes'])) {
-                $restauranteIds = Restaurante::whereIn('nombre', $lists['restaurantes'])->pluck('id')->toArray();
+                $restauranteIds = Restaurante::whereIn('nombre', $lists['restaurantes'])
+                    ->pluck('id')
+                    ->toArray();
                 $package->restaurantes()->syncWithoutDetaching($restauranteIds);
             }
         }
