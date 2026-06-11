@@ -18,7 +18,7 @@ export default function Show({ booking, payment }) {
 
     const qrImages = {
         yape: '/images/QR.png',
-        plin: './public/images/QR.png',
+        plin: '/images/PLIN.png',
     };
 
     return (

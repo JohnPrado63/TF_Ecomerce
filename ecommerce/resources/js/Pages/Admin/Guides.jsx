@@ -1,6 +1,6 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
-
+import AdminNavbar from '@/Components/AdminNavbar';
 export default function Guides({ guides }) {
     const [showForm, setShowForm] = useState(false);
     const [editing, setEditing]   = useState(null);
@@ -54,21 +54,8 @@ export default function Guides({ guides }) {
         <div className="min-h-screen bg-slate-950 text-white">
             <Head title="Guías Turísticos - Admin" />
 
-            <nav className="bg-slate-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between">
-                <div className="flex items-center gap-8">
-                    <span className="font-bold text-xl text-cyan-400">ESKY TRIPS Admin</span>
-                    <div className="flex gap-4">
-                        <Link href="/admin/dashboard" className="text-slate-400 hover:text-white transition">Dashboard</Link>
-                        <Link href="/admin/packages" className="text-slate-400 hover:text-white transition">Paquetes</Link>
-                        <Link href="/admin/bookings" className="text-slate-400 hover:text-white transition">Reservas</Link>
-                        <Link href="/admin/payments" className="text-slate-400 hover:text-white transition">Pagos</Link>
-                        <Link href="/admin/categories" className="text-slate-400 hover:text-white transition">Categorías</Link>
-                        <Link href="/admin/guides" className="text-white font-semibold border-b-2 border-cyan-500 pb-1">Guías</Link>
-                        <Link href="/admin/hotels" className="text-slate-400 hover:text-white transition">Hoteles</Link>
-                    </div>
-                </div>
-                <Link href="/" className="text-slate-400 hover:text-white text-sm transition">← Volver al sitio</Link>
-            </nav>
+            {/* Navbar admin */}   
+            <AdminNavbar />
 
             <div className="container mx-auto px-6 py-10">
                 <div className="flex items-center justify-between mb-8">
