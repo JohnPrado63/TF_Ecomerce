@@ -82,7 +82,7 @@ export default function Show({ package: pkg }) {
 
                         {/* Hoteles */}
                         <div className="mb-6">
-                            <h2 className="text-xl font-bold mb-4">Hoteles cercanos</h2>
+                            <h2 className="text-xl font-bold mb-4"> Hoteles cercanos</h2>
                             {pkg.hoteles?.length > 0 ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {pkg.hoteles.map((hotel) => (

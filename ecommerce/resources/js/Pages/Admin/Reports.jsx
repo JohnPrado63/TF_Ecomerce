@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-
+import AdminNavbar from '@/Components/AdminNavbar';
 export default function Reports({ salesByMonth, topPackages, summary }) {
 
     const months = [
@@ -11,24 +11,8 @@ export default function Reports({ salesByMonth, topPackages, summary }) {
         <div className="min-h-screen bg-slate-950 text-white">
             <Head title="Reportes - Admin" />
 
-            <nav className="bg-slate-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between">
-                <div className="flex items-center gap-8">
-                    <span className="font-bold text-xl text-cyan-400">ESKY TRIPS Admin</span>
-                    <div className="flex gap-4 text-sm">
-                        <Link href="/admin/dashboard" className="text-slate-400 hover:text-white transition">Dashboard</Link>
-                        <Link href="/admin/packages" className="text-slate-400 hover:text-white transition">Paquetes</Link>
-                        <Link href="/admin/bookings" className="text-slate-400 hover:text-white transition">Reservas</Link>
-                        <Link href="/admin/payments" className="text-slate-400 hover:text-white transition">Pagos</Link>
-                        <Link href="/admin/categories" className="text-slate-400 hover:text-white transition">Categorías</Link>
-                        <Link href="/admin/guides" className="text-slate-400 hover:text-white transition">Guías</Link>
-                        <Link href="/admin/hotels" className="text-slate-400 hover:text-white transition">Hoteles</Link>
-                        <Link href="/admin/restaurants" className="text-slate-400 hover:text-white transition">Restaurantes</Link>
-                        <Link href="/admin/transports" className="text-slate-400 hover:text-white transition">Transportes</Link>
-                        <Link href="/admin/reports" className="text-white font-semibold border-b-2 border-cyan-500 pb-1">Reportes</Link>
-                    </div>
-                </div>
-                <Link href="/" className="text-slate-400 hover:text-white text-sm transition">← Volver al sitio</Link>
-            </nav>
+            {/* Navbar admin */}
+            <AdminNavbar /> 
 
             <div className="container mx-auto px-6 py-10">
                 <h1 className="text-3xl font-bold mb-8">Reportes y Estadísticas</h1>
