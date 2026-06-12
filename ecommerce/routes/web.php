@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-
+use App\Http\Controllers\PreferenceController;
+use App\Http\Controllers\RecommendationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -79,6 +80,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/preferences', [PreferenceController::class, 'edit'])->name('preferences.edit');
+    Route::post('/preferences', [PreferenceController::class, 'update'])->name('preferences.update');
+    Route::get('/travel-match', [RecommendationController::class, 'index'])->name('travel-match');
 });
 
 // Rutas públicas de paquetes

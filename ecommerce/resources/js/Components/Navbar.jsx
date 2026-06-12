@@ -36,9 +36,14 @@ export default function Navbar() {
                                 Panel Admin
                             </Link>
                         ) : (
+                            <>
                             <Link href="/bookings" className="text-slate-300 hover:text-white text-sm font-medium transition">
                                 Mis Reservas
                             </Link>
+                            <Link href="/travel-match" className="text-slate-300 hover:text-white text-sm font-medium transition">
+                                🎯 Travel Match
+                            </Link> 
+                            </>
                         )
                     )}
                 </div>
@@ -104,6 +109,7 @@ export default function Navbar() {
                     <Link href="/packages" className="block px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-sm">
                         Paquetes
                     </Link>
+
                     {auth?.user ? (
                         <>
                             {auth.user.rol === 'admin' ? (
