@@ -39,9 +39,22 @@ class TourPackageController extends Controller
         ->withAvg('reviews', 'rating')
         ->withCount('reviews')
         ->findOrFail($id);
+        //restaurantes de la misma ubicacion que no esten asignados ya directamente al paquete
+        $assignedIds=$package->restaurantes->pluck('id')->toArray();
+        $nearbyRestaurants = \App\Models\Restaurante::where('location_id', $package->location_id)
+            ->whereNotIn('id', $assignedIds)
+            ->get();
+        //hoteles de la misma ubicacion que no esten asignados ya directamente al paquete
+        $assignedHotelIds=$package->hoteles->pluck('id')->toArray();
+        $nearbyHotels = \App\Models\Hotel::where('location_id', $package->location_id)
+            ->whereNotIn('id', $assignedHotelIds)
+            ->get();
+    
 
         return Inertia::render('Packages/Show', [
-            'package' => $package
+            'package' => $package,
+            'nearbyRestaurants' => $nearbyRestaurants,
+            'nearbyHotels' => $nearbyHotels,
         ]);
     }
 

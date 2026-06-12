@@ -3,7 +3,7 @@ import StarRating from '@/Components/StarRating';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import Navbar from '@/Components/Navbar';
 
-export default function Show({ package: pkg }) {
+export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels }) {
     const { auth } = usePage().props;
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -100,6 +100,35 @@ export default function Show({ package: pkg }) {
                                 </div>
                             )}
                         </div>
+                        {/* Otros hoteles en la zona */}
+                        {nearbyHotels?.length > 0 && (
+                            <div className="mb-6">
+                                <h2 className="text-lg font-bold mb-3 text-slate-300">
+                                    🏨 Otros hoteles en {pkg.location?.city}
+                                </h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {nearbyHotels.map((hotel) => (
+                                        <div key={hotel.id} className="p-4 rounded-2xl border border-slate-800 bg-slate-900/50 hover:border-slate-600 transition">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <p className="font-semibold text-white">{hotel.nombre}</p>
+                                                <div className="flex gap-1">
+                                                    {[...Array(hotel.estrellas)].map((_, i) => (
+                                                        <span key={i} className="text-yellow-400 text-xs">★</span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            {hotel.precio_por_noche && (
+                                                <p className="text-cyan-400 font-bold text-sm mb-1">
+                                                    S/. {Number(hotel.precio_por_noche).toFixed(2)}
+                                                    <span className="text-slate-500 text-xs font-normal"> / noche</span>
+                                                </p>
+                                            )}
+                                            <p className="text-slate-500 text-xs">📍 {hotel.direccion}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Restaurantes */}
                         <div className="mb-6">
@@ -120,6 +149,24 @@ export default function Show({ package: pkg }) {
                                 </div>
                             )}
                         </div>
+                        {/* Otros restaurantes en la zona */}
+                        {nearbyRestaurants?.length > 0 && (
+                            <div className="mb-6">
+                                <h2 className="text-lg font-bold mb-3 text-slate-300">
+                                    🍽️ Otros restaurantes en {pkg.location?.city}
+                                </h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {nearbyRestaurants.map((restaurante) => (
+                                        <div key={restaurante.id} className="p-4 rounded-2xl border border-slate-800 bg-slate-900/50 hover:border-slate-600 transition">
+                                            <p className="font-semibold text-white">{restaurante.nombre}</p>
+                                            <p className="text-slate-400 text-sm">{restaurante.tipo_comida}</p>
+                                            <p className="text-slate-500 text-xs mt-2">📍 {restaurante.direccion}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         {/*ubicacion en el mapa */}
                         <div className="mb-6">
                             <h2 className="text-xl font-bold mb-4">
