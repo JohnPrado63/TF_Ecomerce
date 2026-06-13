@@ -42,6 +42,12 @@ export default function Confirmation({ booking }) {
                                 <span className="text-slate-400">Personas</span>
                                 <span>{booking.persons_quantity}</span>
                             </div>
+                            {booking.guide && (
+                            <div className="flex justify-between">
+                                <span className="text-slate-400">Guía asignado</span>
+                                <span>{booking.guide.nombre} {booking.guide.apellido}</span>
+                            </div>
+                            )}
                             <div className="flex justify-between border-t border-slate-700 pt-3 font-bold text-base">
                                 <span>Total pagado</span>
                                 <span className="text-cyan-400">

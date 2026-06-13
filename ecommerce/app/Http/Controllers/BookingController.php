@@ -15,7 +15,7 @@ class BookingController extends Controller
     // Muestra el formulario de reserva
     public function create(Request $request)
     {
-        $package = TourPackage::with(['category', 'location', 'hoteles', 'restaurantes'])
+        $package = TourPackage::with(['category', 'location', 'hoteles', 'restaurantes','guias'])
             ->findOrFail($request->package_id);
 
         return Inertia::render('Bookings/Create', [
@@ -33,6 +33,7 @@ class BookingController extends Controller
             'include_hotel'    => 'boolean',
             'hotel_id'         => 'nullable|exists:hoteles,id',
             'restaurante_id'   => 'nullable|exists:restaurantes,id',
+            'guide_id'         => 'nullable|exists:guias_turisticos,id',
         ]);
 
         // Buscar o crear el cliente vinculado al usuario
@@ -94,12 +95,13 @@ class BookingController extends Controller
             'persons_quantity' => $request->persons_quantity,
             'include_hotel'    => $includeHotel,
             'hotel_id'         => $includeHotel ? $request->hotel_id : null,
+            'guide_id'         => $request->guide_id,
             'restaurante_id'   => $request->restaurante_id,
             'total_amount'     => $total,
             'status'           => 'pending',
         ]);
 
-        $booking = Booking::with(['tourPackage.location','client'])
+        $booking = Booking::with(['tourPackage.location','client','guide'])
             ->where('client_id', $client->id)
             ->latest()
             ->first();
