@@ -90,28 +90,53 @@ Route::get('/packages', [TourPackageController::class, 'index'])->name('packages
 Route::get('/packages/{id}', [TourPackageController::class, 'show'])->name('packages.show');
 
 Route::get('/destinos/{province}', function ($province) {
-    $destination=\App\Models\Destination::with('location')
+    $destination = \App\Models\Destination::with('location')
         ->where('slug', $province)
         ->first();
 
     abort_unless($destination, 404);
+
     $packages = \App\Models\TourPackage::with(['category','location'])
         ->where('location_id', $destination->location_id)
         ->where('status', true)
         ->get();
+
+   $packageTitles = $packages->pluck('title')->map(fn($t) => strtolower((string) $t));
+    $packageDescriptions = $packages->pluck('description')->map(fn($d) => strtolower((string) $d));
+
+    $destinationName = strtolower((string) $destination->name);
+
+    $sites = collect($destination->sites)->map(function ($site) use ($packageTitles, $packageDescriptions, $destinationName) {
+        // Palabras clave del sitio (sin palabras comunes)
+        $stopWords = ['de', 'la', 'el', 'los', 'las', 'y', 'en', 'del', $destinationName];
+
+        $siteTitle = strtolower((string) ($site['title'] ?? ''));
+
+        $siteWords = collect(explode(' ', $siteTitle))
+            ->filter(fn($word) => strlen($word) > 3 && !in_array($word, $stopWords))
+            ->values();
+
+        $allText = $packageTitles->merge($packageDescriptions)->implode(' ');
+
+        // Coincide si al menos una palabra clave significativa está en algún paquete
+        $hasPackage = $siteWords->contains(fn($word) => str_contains($allText, $word));
+
+        $site['has_package'] = $hasPackage;
+        return $site;
+    });
+
     return Inertia::render('Destinos/Show', [
-        'destination' =>[
-            'name'             => $destination->name,
-            'region'           => $destination->location->region,
-            'description'      => $destination->description,
-            'summary'          => $destination->summary,
-            'style'            => $destination->style,
-            'recommendation'   => $destination->recommendation,
-            'sites'            => $destination->sites,
+        'destination' => [
+            'name'           => $destination->name,
+            'region'         => $destination->location->region,
+            'description'    => $destination->description,
+            'summary'        => $destination->summary,
+            'style'          => $destination->style,
+            'recommendation' => $destination->recommendation,
+            'sites'          => $sites,
         ],
         'packages' => $packages,
     ]);
-
 })->name('destinos.show');
 
 Route::get('/ofertas/{slug}', function ($slug) {

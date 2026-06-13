@@ -45,9 +45,20 @@ export default function Show({ destination, packages }) {
                             {destination.sites.map((site) => (
                                 <div
                                     key={site.title}
-                                    className="rounded-3xl border border-slate-800 bg-slate-950/80 p-5 transition hover:border-sky-500"
+                                    className={`rounded-3xl border p-5 transition hover:border-sky-500 ${
+                                        site.has_package
+                                            ? 'border-cyan-500/40 bg-cyan-950/20'
+                                            : 'border-slate-800 bg-slate-950/80'
+                                    }`}
                                 >
-                                    <h3 className="text-lg font-semibold text-white mb-2">{site.title}</h3>
+                                    <div className="flex items-start justify-between gap-2 mb-2">
+                                        <h3 className="text-lg font-semibold text-white">{site.title}</h3>
+                                        {site.has_package && (
+                                            <span className="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded-full whitespace-nowrap flex items-center gap-1">
+                                                🎫 Incluido en tour
+                                            </span>
+                                        )}
+                                    </div>
                                     <p className="text-slate-400 text-sm leading-6">{site.detail}</p>
                                 </div>
                             ))}

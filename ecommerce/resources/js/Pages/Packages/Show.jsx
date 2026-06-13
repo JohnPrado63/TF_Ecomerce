@@ -79,6 +79,43 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels }) 
                                 📅 {pkg.duration_days} día(s)
                             </div>
                         </div>
+                        {/* Guía asignado */}
+                        {pkg.guias?.length > 0 && (
+                            <div className="mb-6">
+                                <h2 className="text-lg font-bold mb-3 text-slate-300">
+                                    🧭 Guías disponibles para este tour
+                                </h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {pkg.guias.map((guia) => (
+                                        <div key={guia.id} className="p-4 rounded-2xl border border-slate-700 bg-slate-900 hover:border-cyan-500/50 transition">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-12 h-12 rounded-full bg-cyan-500/20 text-cyan-400 font-bold text-lg flex items-center justify-center flex-shrink-0">
+                                                    {guia.nombre.charAt(0)}
+                                                </div>
+                                                <div>
+                                                    <p className="font-semibold text-white">
+                                                        {guia.nombre} {guia.apellido}
+                                                    </p>
+                                                    <p className="text-slate-400 text-sm">
+                                                        🗣️ {guia.idiomas}
+                                                    </p>
+                                                    <p className="text-slate-500 text-xs mt-1">
+                                                        📞 {guia.telefono} · 🪪 {guia.credencial_nro}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+
+
+
+
+
+
 
                         {/* Hoteles */}
                         <div className="mb-6">

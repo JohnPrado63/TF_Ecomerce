@@ -10,6 +10,7 @@ export default function Create({ package: pkg }) {
         include_hotel:    pkg.includes_hotel || false,
         hotel_id:         pkg.hoteles?.[0]?.id ?? null,
         restaurante_id:   pkg.restaurantes?.[0]?.id ?? null,
+        guide_id:      pkg.guias?.[0]?.id ||'',
     });
 
     const selectedHotel = pkg.hoteles?.find(hotel => hotel.id === data.hotel_id);
@@ -174,6 +175,46 @@ export default function Create({ package: pkg }) {
                                     </div>
                                 )}
                             </div>
+                            {/* Selección de guía */}
+                            {pkg.guias?.length > 0 && (
+                                <div>
+                                    <label className="block text-slate-300 text-sm font-medium mb-2">
+                                        🧭 Elige tu guía turístico
+                                    </label>
+                                    <div className="space-y-2">
+                                        {pkg.guias.map((guia) => (
+                                            <div
+                                                key={guia.id}
+                                                onClick={() => setData('guide_id', guia.id)}
+                                                className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition ${
+                                                    Number(data.guide_id) === guia.id
+                                                        ? 'border-cyan-500 bg-cyan-900/30'
+                                                        : 'border-slate-600 bg-slate-800'
+                                                }`}
+                                            >
+                                                <div className="w-10 h-10 rounded-full bg-cyan-500/20 text-cyan-400 font-bold text-sm flex items-center justify-center flex-shrink-0">
+                                                    {guia.nombre.charAt(0)}
+                                                </div>
+                                                <div className="flex-1">
+                                                    <p className="font-medium text-sm">{guia.nombre} {guia.apellido}</p>
+                                                    <p className="text-slate-400 text-xs">🗣️ {guia.idiomas}</p>
+                                                </div>
+                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                                                    Number(data.guide_id) === guia.id
+                                                        ? 'border-cyan-500 bg-cyan-500'
+                                                        : 'border-slate-500'
+                                                }`}>
+                                                    {Number(data.guide_id) === guia.id && (
+                                                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                        </svg>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
                             <div>
                                 <label className="block text-slate-300 text-sm font-medium mb-2">
