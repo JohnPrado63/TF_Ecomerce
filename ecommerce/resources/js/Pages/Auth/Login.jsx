@@ -4,9 +4,10 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 
 export default function Login({ status, canResetPassword }) {
+    const{ flash }=usePage().props;
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -52,7 +53,11 @@ export default function Login({ status, canResetPassword }) {
                 <h1 className="text-2xl font-bold text-white mb-2">Bienvenido de Vuelta</h1>
                 <p className="text-slate-400 text-sm">Inicia sesión para continuar con tus aventuras de viaje</p>
             </div>
-
+            {flash?.info && (
+                <div className="mb-4 p-3 bg-cyan-900/50 border border-cyan-700 rounded-xl text-cyan-300 text-sm">
+                    {flash.info}
+                </div>
+            )}
             {status && (
                 <div className="mb-4 p-3 rounded-lg bg-green-900/30 border border-green-700 text-green-300 text-sm field-animated opacity-0">
                     {status}

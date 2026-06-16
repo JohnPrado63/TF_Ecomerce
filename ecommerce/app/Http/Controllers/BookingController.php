@@ -15,6 +15,12 @@ class BookingController extends Controller
     // Muestra el formulario de reserva
     public function create(Request $request)
     {
+        // Si no está autenticado, redirigir al login y volver aquí después
+        if(!auth()->check()) {
+            session(['url.intended'=>url()->full()]);
+            return redirect()->route('login')
+                ->with('info','Por favor, Inicia sesión para continuar con tu reserva 🎒');
+        }
         $package = TourPackage::with(['category', 'location', 'hoteles', 'restaurantes','guias'])
             ->findOrFail($request->package_id);
 
