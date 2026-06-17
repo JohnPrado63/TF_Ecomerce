@@ -341,10 +341,13 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels }) 
                         </p>
 
                         <Link
-                            href={`/bookings/create?package_id=${pkg.id}`}
+                            href={auth?.user
+                                ? `/bookings/create?package_id=${pkg.id}`
+                                : `/reservar/${pkg.id}`
+                            }
                             className="block w-full text-center bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold py-3 rounded-xl transition text-lg mb-3"
                         >
-                            Reservar ahora
+                            {auth?.user ? 'Reservar ahora' : 'Inicia sesión para reservar'}
                         </Link>
 
                         <p className="text-slate-500 text-xs text-center">

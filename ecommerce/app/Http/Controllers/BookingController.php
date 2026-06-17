@@ -130,7 +130,7 @@ class BookingController extends Controller
         $client = Client::where('user_id', auth()->id())->first();
 
         $bookings = $client
-            ? Booking::with(['tourPackage.location'])
+            ? Booking::with(['tourPackage.location', 'guide'])
                 ->where('client_id', $client->id)
                 ->orderBy('created_at', 'desc')
                 ->get()

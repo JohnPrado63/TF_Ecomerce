@@ -225,4 +225,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 Route::get('/contacto', function () {
     return Inertia::render('Contacto');
 })->name('contacto');
+
+Route::get('/reservar/{packageId}', function ($packageId) {
+    if (auth()->check()) {
+        return redirect("/bookings/create?package_id={$packageId}");
+    }
+    session(['url.intended' => "/bookings/create?package_id={$packageId}"]);
+    return redirect()->route('login')
+        ->with('info', '¡Inicia sesión para reservar este paquete! 🎒');
+})->name('reservar');
 require __DIR__.'/auth.php';

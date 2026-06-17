@@ -89,8 +89,14 @@ export default function Index({ bookings }) {
                                             </span>
                                             <span className="text-slate-800">•</span>
                                             <span className="flex items-center gap-1">
-                                                <span className="text-slate-500">👥</span> {booking.persons_quantity} {booking.persons_quantity === 1 ? 'persona' : 'personas'}
+                                                <span className="text-slate-500 text-sm">👥</span> 
+                                                {booking.persons_quantity} {booking.persons_quantity === 1 ? 'persona' : 'personas'}
                                             </span>
+                                            {booking.guide && (
+                                                <p className="text-cyan-400/70 text-xs mt-0.5">
+                                                    🧭 Guía: {booking.guide.nombre} {booking.guide.apellido}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

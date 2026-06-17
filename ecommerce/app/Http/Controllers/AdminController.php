@@ -163,7 +163,7 @@ class AdminController extends Controller
     // Gestión de reservas
     public function bookings()
     {
-        $bookings = Booking::with(['tourPackage', 'client'])
+        $bookings = Booking::with(['tourPackage', 'client', 'guide'])
             ->orderBy('created_at', 'desc')
             ->get();
 
