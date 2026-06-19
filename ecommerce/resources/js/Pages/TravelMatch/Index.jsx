@@ -30,7 +30,7 @@ export default function Index({ recommendations, preference }) {
                         </p>
                     </div>
                     <Link
-                        href="/preferencias"
+                        href="/preferences"
                         className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold px-5 py-2.5 rounded-xl transition text-sm whitespace-nowrap"
                     >
                         ⚙️ Editar preferencias

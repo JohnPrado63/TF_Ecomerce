@@ -2,25 +2,34 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Offer extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
-        'title',
-        'slug',
-        'description',
-        'discount_percentage',
-        'details',
-        'benefits',
-        'active',
+        'title', 'description', 'slug',
+        'discount_percentage', 'start_date',
+        'end_date', 'active', 'code',
+        'applicable_packages',
     ];
 
     protected $casts = [
-        'benefits' => 'json',
-        'active' => 'boolean',
+        'applicable_packages' => 'array',
+        'active'              => 'boolean',
+        'start_date'          => 'date',
+        'end_date'            => 'date',
     ];
+
+    // Verificar si la oferta está vigente
+    public function isValid(): bool
+    {
+        return $this->active
+            && now()->between($this->start_date, $this->end_date);
+    }
+
+    // Calcular precio con descuento
+    public function applyDiscount(float $price): float
+    {
+        return round($price * (1 - $this->discount_percentage / 100), 2);
+    }
 }

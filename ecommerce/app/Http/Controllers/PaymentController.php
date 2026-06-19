@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Mail\PaymentConfirmation;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Payment;
 use App\Models\Booking;
 use App\Models\Client;
@@ -53,6 +54,7 @@ class PaymentController extends Controller
                 'method'       => $request->method,
                 'status'       => 'pending',
                 'voucher_path' => $path,
+                'notes'        => $request->order_reference,
             ]
         );
 
@@ -67,17 +69,30 @@ class PaymentController extends Controller
             'status' => 'required|in:verified,rejected',
         ]);
 
-        $payment = Payment::findOrFail($id);
+        $payment = Payment::with(['booking.client.user', 'booking.tourPackage.location'])
+            ->findOrFail($id);
+
         $payment->update(['status' => $request->status]);
 
-        // Si se verifica el pago, confirmar la reserva
         if ($request->status === 'verified') {
+            // Confirmar la reserva
             $payment->booking->update(['status' => 'confirmed']);
+
+            // Enviar correo de confirmación de pago
+            try {
+                $userEmail = $payment->booking->client->user->email;
+                \Log::info("Intentando enviar correo de confirmación a: $userEmail");
+                Mail::to($userEmail)->send(new PaymentConfirmation($payment));
+                \Log::info("Correo de confirmación enviado exitosamente a: $userEmail");
+            } catch (\Exception $e) {
+                \Log::error("Error al enviar correo de confirmación: " . $e->getMessage());
+                // Si falla el correo no interrumpe el flujo
+            }
         }
 
         return redirect()->back()
             ->with('success', $request->status === 'verified'
-                ? 'Pago verificado y reserva confirmada'
-                : 'Pago rechazado');
+                ? '✅ Pago verificado, reserva confirmada y correo enviado'
+                : '❌ Pago rechazado');
     }
 }

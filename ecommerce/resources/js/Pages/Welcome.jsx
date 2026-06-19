@@ -22,7 +22,7 @@ const highlights = [
     },
 ];
 
-export default function Welcome({ auth, packages, destinations }) {
+export default function Welcome({ auth, packages, destinations, offers }) {
     const categoryOptions = [
         { label: 'Playa y Tropical', value: 'Beach & Tropical' },
         { label: 'Montaña y Aventura', value: 'Mountain & Adventure' },
@@ -49,27 +49,6 @@ export default function Welcome({ auth, packages, destinations }) {
             desc: dest.description,
         }));
     }, [destinations]);
-
-    const specialOffers = [
-        {
-            slug: 'descuento-temprano',
-            title: 'Descuento Temprano',
-            desc: 'Reserva 30 días antes y ahorra 20% en paquetes Ayacucho.',
-            discount: '20%',
-        },
-        {
-            slug: 'pack-familiar',
-            title: 'Pack Familiar',
-            desc: 'Viaja en familia y obtén beneficios especiales.',
-            discount: '15%',
-        },
-        {
-            slug: 'ultimo-minuto',
-            title: 'Último Minuto',
-            desc: 'Reservas de último minuto con precios increíbles.',
-            discount: '30%',
-        },
-    ];
 
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [appliedCategories, setAppliedCategories] = useState([]);
@@ -400,18 +379,22 @@ export default function Welcome({ auth, packages, destinations }) {
                         <h2 className="mt-3 text-3xl font-bold text-white">Ofertas Exclusivas</h2>
                     </div>
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        {specialOffers.map((offer) => (
+                        {offers?.map((offer) => (
                             <div key={offer.slug} className="relative rounded-2xl border border-cyan-600 bg-gradient-to-br from-cyan-950/40 to-slate-900 p-8 overflow-hidden group hover:border-cyan-400 transition">
                                 <div className="absolute top-0 right-0 text-6xl font-bold text-cyan-600/20 group-hover:text-cyan-500/30 transition">
-                                    {offer.discount}
+                                    {offer.discount_percentage}%
                                 </div>
                                 <h3 className="text-2xl font-bold text-white mb-2 relative z-10">{offer.title}</h3>
-                                <p className="text-slate-300 mb-4 relative z-10">{offer.desc}</p>
-                                <Link href={`/ofertas/${offer.slug}`} className="relative z-10 inline-flex rounded-full bg-cyan-500 px-6 py-2 text-sm font-bold text-slate-900 hover:bg-cyan-400 transition">
-                                    Ver oferta
+                                <p className="text-slate-300 mb-4 relative z-10">{offer.description}</p>
+                                <Link
+                                    href={`/ofertas/${offer.slug}`}
+                                    className="relative z-10 inline-flex rounded-full bg-cyan-500 px-6 py-2 text-sm font-bold text-slate-900 hover:bg-cyan-400 transition"
+                                >
+                                    Ver oferta -{offer.discount_percentage}% OFF
                                 </Link>
                             </div>
                         ))}
+
                     </div>
                 </section>
             </main>

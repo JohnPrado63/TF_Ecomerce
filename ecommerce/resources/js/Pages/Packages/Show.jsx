@@ -336,19 +336,63 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels }) 
                         <p className="text-4xl font-bold text-cyan-400 mb-2">
                             S/. {Number(pkg.price).toFixed(2)}
                         </p>
-                        <p className="text-slate-400 text-sm mb-6">
-                            {pkg.available_slots} lugares disponibles
-                        </p>
+                        {/* Slots disponibles con color según cantidad */}
+                        <div className ="flex items-center gap-2 mb-6">
+                            <div className ={`w-2 h-2 rounded-full $ {
 
-                        <Link
-                            href={auth?.user
-                                ? `/bookings/create?package_id=${pkg.id}`
-                                : `/reservar/${pkg.id}`
-                            }
-                            className="block w-full text-center bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold py-3 rounded-xl transition text-lg mb-3"
-                        >
-                            {auth?.user ? 'Reservar ahora' : 'Inicia sesión para reservar'}
-                        </Link>
+                                pkg.available_slots>10
+                                    ?'bg-green -400'
+                                    :pkg.available_slots>3
+                                    ?'bg-yellow-400'
+                                    :'bg-red-400'
+
+                            }`}/>
+                            <p className={`text-sm font-semibold ${
+                                pkg.available_slots > 10
+                                    ? 'text-green-400'
+                                    : pkg.available_slots > 3
+                                    ? 'text-yellow-400'
+                                    : 'text-red-400'
+                            }`}>
+                                {pkg.available_slots > 0
+                                    ? `${pkg.available_slots} lugar(es) disponible(s)`
+                                    : '¡Sin lugares disponibles!'
+                                }
+                            </p>
+                        </div>
+                        {/* Barra de disponibilidad */}
+                        <div className="w-full bg-slate-800 rounded-full h-1.5 mb-6">
+                            <div
+                                className={`h-1.5 rounded-full transition-all ${
+                                    pkg.available_slots > 10
+                                        ? 'bg-green-400'
+                                        : pkg.available_slots > 3
+                                        ? 'bg-yellow-400'
+                                        : 'bg-red-400'
+                                }`}
+                                style={{ width: `${Math.min(100, (pkg.available_slots / 30) * 100)}%` }}
+                            />
+                        </div>
+                
+
+                        {pkg.available_slots > 0 ? (
+                            <Link
+                                href={auth?.user
+                                    ? `/bookings/create?package_id=${pkg.id}`
+                                    : `/reservar/${pkg.id}`
+                                }
+                                className="block w-full text-center bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold py-3 rounded-xl transition text-lg mb-3"
+                            >
+                                {auth?.user ? 'Reservar ahora' : 'Inicia sesión para reservar'}
+                            </Link>
+                        ) : (
+                            <button
+                                disabled
+                                className="block w-full text-center bg-slate-700 text-slate-400 font-bold py-3 rounded-xl cursor-not-allowed text-lg mb-3"
+                            >
+                                Sin lugares disponibles
+                            </button>
+                        )}
 
                         <p className="text-slate-500 text-xs text-center">
                             Sin cargos ocultos • Confirmación inmediata

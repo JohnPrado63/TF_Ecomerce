@@ -431,5 +431,40 @@ public function reports()
         \App\Models\Category::findOrFail($id)->delete();
         return redirect()->back()->with('success', 'Categoría eliminada correctamente');
     }
+    public function offers()
+    {
+        $offers = \App\Models\Offer::orderBy('created_at', 'desc')->get();
+        return Inertia::render('Admin/Offers', [
+            'offers' => $offers,
+        ]);
+    }
+
+    public function storeOffer(Request $request)
+    {
+        $request->validate([
+            'title'               => 'required|string|max:150',
+            'slug'                => 'required|string|unique:offers,slug',
+            'discount_percentage' => 'required|numeric|min:1|max:100',
+            'start_date'          => 'required|date',
+            'end_date'            => 'required|date|after:start_date',
+            'code'                => 'nullable|string|unique:offers,code',
+        ]);
+
+        \App\Models\Offer::create($request->all());
+        return redirect()->back()->with('success', 'Oferta creada correctamente');
+    }
+
+    public function updateOffer(Request $request, $id)
+    {
+        $offer = \App\Models\Offer::findOrFail($id);
+        $offer->update($request->all());
+        return redirect()->back()->with('success', 'Oferta actualizada correctamente');
+    }
+
+    public function deleteOffer($id)
+    {
+        \App\Models\Offer::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Oferta eliminada correctamente');
+    }
 
 }

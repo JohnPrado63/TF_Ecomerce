@@ -7,6 +7,7 @@ export default function Show({ booking, payment }) {
         booking_id: booking.id,
         method: 'yape',
         voucher: null,
+        order_reference: '',
     });
 
     function handleSubmit(e) {
@@ -16,9 +17,16 @@ export default function Show({ booking, payment }) {
         });
     }
 
+    // Logos SVG de Yape y Plin
+    const YapeLogo = () => (
+        <svg viewBox="0 0 60 24" className="h-5 w-auto fill-white">
+            <text x="0" y="18" fontSize="18" fontWeight="bold" fontFamily="Arial">Yape</text>
+        </svg>
+    );
+
     const qrImages = {
-        yape: '/images/QR.png',
-        plin: '/images/PLIN.png',
+        yape: '/images/QR.png', // reemplazar con tu QR real
+        plin: 'https://i.ibb.co/your-plin-qr/qr.png', // reemplazar con tu QR real
     };
 
     return (
@@ -34,74 +42,73 @@ export default function Show({ booking, payment }) {
 
                 <h1 className="text-3xl font-bold mb-8">Realizar Pago</h1>
 
-                {/* Si ya subió comprobante */}
+                {/* Estado del pago */}
                 {payment?.status === 'pending' && (
                     <div className="bg-yellow-900/30 border border-yellow-700 rounded-2xl p-5 mb-6">
-                        <p className="text-yellow-300 font-semibold">
-                            ⏳ Tu comprobante está siendo verificado por el administrador.
-                        </p>
-                        <p className="text-yellow-400 text-sm mt-1">
-                            Te notificaremos cuando se confirme tu reserva.
-                        </p>
+                        <p className="text-yellow-300 font-semibold">⏳ Tu comprobante está siendo verificado.</p>
+                        <p className="text-yellow-400 text-sm mt-1">Te notificaremos cuando se confirme tu reserva.</p>
                     </div>
                 )}
-
                 {payment?.status === 'verified' && (
                     <div className="bg-green-900/30 border border-green-700 rounded-2xl p-5 mb-6">
-                        <p className="text-green-300 font-semibold">
-                            ✅ Tu pago fue verificado y tu reserva está confirmada.
-                        </p>
+                        <p className="text-green-300 font-semibold">✅ Tu pago fue verificado y tu reserva está confirmada.</p>
                     </div>
                 )}
-
                 {payment?.status === 'rejected' && (
                     <div className="bg-red-900/30 border border-red-700 rounded-2xl p-5 mb-6">
-                        <p className="text-red-300 font-semibold">
-                            ❌ Tu pago fue rechazado. Por favor sube un nuevo comprobante.
-                        </p>
+                        <p className="text-red-300 font-semibold">❌ Tu pago fue rechazado. Por favor sube un nuevo comprobante.</p>
                     </div>
                 )}
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-                    {/* QR y método de pago */}
+                    {/* Método de pago y QR */}
                     <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6">
                         <h2 className="text-xl font-bold mb-4">Método de pago</h2>
 
                         {/* Selector método */}
                         <div className="flex gap-3 mb-6">
+                            {/* Yape */}
+                            {/* Yape */}
                             <button
                                 type="button"
                                 onClick={() => setData('method', 'yape')}
-                                className={`flex-1 py-3 rounded-xl font-bold text-sm border transition ${
+                                className={`flex-1 py-3 rounded-xl font-bold text-sm border transition flex items-center justify-center gap-2 ${
                                     data.method === 'yape'
                                         ? 'bg-purple-600 border-purple-500 text-white'
-                                        : 'bg-slate-800 border-slate-600 text-slate-400 hover:border-slate-500'
+                                        : 'bg-slate-800 border-slate-600 text-slate-400 hover:border-purple-500'
                                 }`}
                             >
-                                💜 Yape
+                                <div className="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs font-black">Y</div>
+                                <span>Yape</span>
                             </button>
+
+                            {/* Plin */}
                             <button
                                 type="button"
                                 onClick={() => setData('method', 'plin')}
-                                className={`flex-1 py-3 rounded-xl font-bold text-sm border transition ${
+                                className={`flex-1 py-3 rounded-xl font-bold text-sm border transition flex items-center justify-center gap-2 ${
                                     data.method === 'plin'
                                         ? 'bg-green-600 border-green-500 text-white'
-                                        : 'bg-slate-800 border-slate-600 text-slate-400 hover:border-slate-500'
+                                        : 'bg-slate-800 border-slate-600 text-slate-400 hover:border-green-500'
                                 }`}
                             >
-                                💚 Plin
+                                <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-white text-xs font-black">P</div>
+                                <span>Plin</span>
                             </button>
+
+                            {/* Efectivo */}
                             <button
                                 type="button"
                                 onClick={() => setData('method', 'efectivo')}
-                                className={`flex-1 py-3 rounded-xl font-bold text-sm border transition ${
+                                className={`flex-1 py-3 rounded-xl font-bold text-sm border transition flex items-center justify-center gap-2 ${
                                     data.method === 'efectivo'
                                         ? 'bg-cyan-600 border-cyan-500 text-white'
-                                        : 'bg-slate-800 border-slate-600 text-slate-400 hover:border-slate-500'
+                                        : 'bg-slate-800 border-slate-600 text-slate-400 hover:border-cyan-500'
                                 }`}
                             >
-                                💵 Efectivo
+                                <div className="w-6 h-6 rounded-full bg-cyan-600 flex items-center justify-center text-white text-xs font-black">$</div>
+                                <span>Efectivo</span>
                             </button>
                         </div>
 
@@ -113,11 +120,15 @@ export default function Show({ booking, payment }) {
                                 </p>
                                 <div className="bg-white p-4 rounded-2xl inline-block mb-3">
                                     <img
-                                        src={qrImages[data.method]}
+                                        src={data.method === 'yape'
+                                            ? '/images/QR.png'
+                                            : 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=plin://pay?phone=51927496713'
+                                        }
                                         alt="QR de pago"
-                                        className="w-48 h-48"
+                                        className="w-48 h-48 object-contain"
                                     />
                                 </div>
+
                                 <p className="text-slate-400 text-xs">
                                     Número: <span className="text-white font-bold">+51 927 496 713</span>
                                 </p>
@@ -132,15 +143,26 @@ export default function Show({ booking, payment }) {
                                 <p className="text-slate-300 text-sm">
                                     Acércate a nuestras oficinas para realizar el pago en efectivo.
                                 </p>
-                                <p className="text-slate-400 text-xs mt-2">
-                                    📍 Jr. Lima 123, Huamanga, Ayacucho
-                                </p>
+                                <p className="text-slate-400 text-xs mt-2">📍 Jr. Lima 123, Huamanga, Ayacucho</p>
                             </div>
                         )}
                     </div>
 
                     {/* Resumen y subir comprobante */}
                     <div className="space-y-4">
+
+                        {/* Número de orden */}
+                        <div className="bg-slate-900 border border-cyan-500/30 rounded-2xl p-5">
+                            <p className="text-slate-400 text-xs uppercase tracking-widest mb-1">
+                                Número de orden
+                            </p>
+                            <p className="text-2xl font-black text-cyan-400 tracking-widest">
+                                {booking.order_number}
+                            </p>
+                            <p className="text-slate-500 text-xs mt-2">
+                                💡 Incluye este número en el concepto de tu pago para identificarlo más rápido.
+                            </p>
+                        </div>
 
                         {/* Resumen */}
                         <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5">
@@ -153,19 +175,13 @@ export default function Show({ booking, payment }) {
                                 />
                                 <div>
                                     <p className="font-semibold">{booking.tour_package?.title}</p>
-                                    <p className="text-slate-400 text-sm">
-                                        📍 {booking.tour_package?.location?.city}
-                                    </p>
-                                    <p className="text-slate-400 text-sm">
-                                        📅 {booking.booking_date}
-                                    </p>
+                                    <p className="text-slate-400 text-sm">📍 {booking.tour_package?.location?.city}</p>
+                                    <p className="text-slate-400 text-sm">📅 {booking.booking_date}</p>
                                 </div>
                             </div>
                             <div className="border-t border-slate-700 pt-3 flex justify-between font-bold text-lg">
                                 <span>Total a pagar</span>
-                                <span className="text-cyan-400">
-                                    S/. {Number(booking.total_amount).toFixed(2)}
-                                </span>
+                                <span className="text-cyan-400">S/. {Number(booking.total_amount).toFixed(2)}</span>
                             </div>
                         </div>
 
@@ -175,6 +191,24 @@ export default function Show({ booking, payment }) {
                                 <h3 className="font-bold mb-4">Subir comprobante</h3>
                                 <form onSubmit={handleSubmit} className="space-y-4">
 
+                                    {/* Referencia del pago */}
+                                    <div>
+                                        <label className="block text-slate-300 text-sm font-medium mb-2">
+                                            📋 Referencia del pago (opcional)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={data.order_reference}
+                                            onChange={e => setData('order_reference', e.target.value)}
+                                            placeholder={`Ej: ${booking.order_number}`}
+                                            className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition"
+                                        />
+                                        <p className="text-slate-500 text-xs mt-1">
+                                            Escribe el número de orden que pusiste en el concepto del pago
+                                        </p>
+                                    </div>
+
+                                    {/* Captura */}
                                     <div>
                                         <label className="block text-slate-300 text-sm font-medium mb-2">
                                             Captura del pago
@@ -190,6 +224,22 @@ export default function Show({ booking, payment }) {
                                         )}
                                     </div>
 
+                                    {/* WhatsApp alternativo */}
+                                    <div className="bg-green-900/20 border border-green-700/50 rounded-xl p-3">
+                                        <p className="text-green-300 text-xs font-semibold mb-1">
+                                            💬 ¿Prefieres pagar por WhatsApp?
+                                        </p>
+                                        {/* CORREGIDO: Se agregó la etiqueta de apertura <a> */}
+                                        <a
+                                            href={`https://wa.me/51927496713?text=Hola,%20quiero%20confirmar%20mi%20reserva%20ESKY%20TRIPS.%20N%C3%BAmero%20de%20orden:%20${booking.order_number}%20-%20${booking.tour_package?.title}%20-%20S/.%20${booking.total_amount}`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="text-green-400 hover:text-green-300 text-xs underline transition"
+                                        >
+                                            Enviar comprobante por WhatsApp →
+                                        </a>
+                                    </div>
+
                                     <button
                                         type="submit"
                                         disabled={processing || !data.voucher}
@@ -202,9 +252,10 @@ export default function Show({ booking, payment }) {
                             </div>
                         )}
 
+
                     </div>
                 </div>
             </div>
         </div>
     );
-}
+}  //ayudame a corregir

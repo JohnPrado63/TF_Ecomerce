@@ -1,7 +1,7 @@
 import AdminNavbar from '@/Components/AdminNavbar';
 import { Head, Link, router } from '@inertiajs/react';
 
-export default function Payments({ payments = [] }) { // Se añade valor por defecto para evitar errores si llega undefined
+export default function Payments({ payments = [] }) { 
 
     const statusColor = {
         pending:  'bg-yellow-900 text-yellow-300',
@@ -25,7 +25,6 @@ export default function Payments({ payments = [] }) { // Se añade valor por def
         <div className="min-h-screen bg-slate-950 text-white">
             <Head title="Gestión de Pagos - Admin" />
 
-            {/* Navbar admin */}
             <AdminNavbar />
 
             <div className="container mx-auto px-6 py-10">
@@ -39,6 +38,9 @@ export default function Payments({ payments = [] }) { // Se añade valor por def
                                 <th className="text-left p-4">Cliente</th>
                                 <th className="text-left p-4">Método</th>
                                 <th className="text-left p-4">Monto</th>
+                                <th className="text-left p-4">Referencia</th>
+                                {/* 1. Aquí mapea con el encabezado "Referencia" de tu HTML original */}
+                                <th className="text-left p-4">Notas</th> 
                                 <th className="text-left p-4">Comprobante</th>
                                 <th className="text-left p-4">Estado</th>
                                 <th className="text-left p-4">Acciones</th>
@@ -47,7 +49,8 @@ export default function Payments({ payments = [] }) { // Se añade valor por def
                         <tbody>
                             {payments.length === 0 ? (
                                 <tr>
-                                    <td colSpan="7" className="text-center p-8 text-slate-400">
+                                    {/* CORREGIDO: colSpan ahora es 9 porque añadimos una columna */}
+                                    <td colSpan="9" className="text-center p-8 text-slate-400">
                                         No hay pagos registrados aún
                                     </td>
                                 </tr>
@@ -68,6 +71,16 @@ export default function Payments({ payments = [] }) { // Se añade valor por def
                                         <td className="p-4 text-cyan-400 font-bold">
                                             S/. {Number(payment.amount).toFixed(2)}
                                         </td>
+                                        {/* Tu código original asumía "Referencia" aquí, pero renderizabas el enlace del comprobante. */}
+                                        <td className="p-4 text-sm text-slate-300">
+                                            {payment.order_reference || '-'}
+                                        </td>
+                                        
+                                        {/* 2. AQUÍ VA TU NUEVA COLUMNA DE NOTAS */}
+                                        <td className="p-4 text-slate-400 text-sm">
+                                            {payment.notes || '-'}
+                                        </td>
+
                                         <td className="p-4">
                                             {payment.voucher_path ? (
                                                 <a
