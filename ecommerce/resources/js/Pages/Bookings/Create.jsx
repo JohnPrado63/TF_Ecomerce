@@ -1,8 +1,7 @@
 import { Head, useForm, Link } from '@inertiajs/react';
 import DatePicker from '@/Components/DatePicker';
 import Navbar from '@/Components/Navbar';
-
-export default function Create({ package: pkg }) {
+export default function Create({ package: pkg, offer }) {
     const { data, setData, post, processing, errors } = useForm({
         package_id:       pkg.id,
         booking_date:     '',
@@ -11,6 +10,7 @@ export default function Create({ package: pkg }) {
         hotel_id:         pkg.hoteles?.[0]?.id ?? null,
         restaurante_id:   pkg.restaurantes?.[0]?.id ?? null,
         guide_id:      pkg.guias?.[0]?.id ||'',
+        offer_id:     offer?.id|| null,
     });
 
     const selectedHotel = pkg.hoteles?.find(hotel => hotel.id === data.hotel_id);
@@ -22,7 +22,9 @@ export default function Create({ package: pkg }) {
     // Sum hotel cost whenever the user includes/selects hotel (keeps UI consistent with selection)
     const hotelExtra          = data.include_hotel && selectedHotel ? hotelPricePerPerson * data.persons_quantity : 0;
     const restaurantExtra     = selectedRestaurant ? restaurantPricePerPerson * data.persons_quantity : 0;
-    const totalFinal          = baseTotal + hotelExtra + restaurantExtra;
+    const subtotal            = baseTotal + hotelExtra;
+    const discountAmt         = offer ? Math.round(subtotal * (offer.discount_percentage/100)*100)/100:0;
+    const totalFinal          = subtotal-discountAmt;
 
     function handleToggleHotel() {
         const nextState = !data.include_hotel;
@@ -55,10 +57,34 @@ export default function Create({ package: pkg }) {
                 <h1 className="text-3xl font-bold mb-8">Confirmar Reserva</h1>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {offer && (
+                        <div className="bg-cyan-900/30 border border-cyan-500/50 rounded-xl p-3 mb-4 flex items-center gap-3">
+                            <span className="bg-cyan-500 text-slate-900 font-black text-sm px-3 py-1 rounded-full">
+                                -{offer.discount_percentage}% OFF
+                            </span>
+                            <div>
+                                <p className="text-cyan-300 font-semibold text-sm">{offer.title}</p>
+                                <p className="text-slate-400 text-xs">Descuento aplicado automáticamente</p>
+                            </div>
+                        </div>
+                    )}
+
+
 
                     {/* Formulario izquierda */}
                     <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6">
                         <h2 className="text-xl font-bold mb-6">Datos del viaje</h2>
+                        {offer && (
+                            <div className="bg-cyan-900/30 border border-cyan-500/50 rounded-xl p-3 mb-4 flex items-center gap-3">
+                                <span className="bg-cyan-500 text-slate-900 font-black text-sm px-3 py-1 rounded-full">
+                                    -{offer.discount_percentage}% OFF
+                                </span>
+                                <div>
+                                    <p className="text-cyan-300 font-semibold text-sm">{offer.title}</p>
+                                    <p className="text-slate-400 text-xs">Descuento aplicado automáticamente</p>
+                                </div>
+                            </div>
+                        )}
 
                         <form onSubmit={handleSubmit} className="space-y-5">
 
@@ -305,6 +331,12 @@ export default function Create({ package: pkg }) {
                                     <span>Paquete base</span>
                                     <span>S/. {baseTotal.toFixed(2)}</span>
                                 </div>
+                                {offer && discountAmt > 0 && (
+                                    <div className="flex justify-between text-green-400">
+                                        <span>Descuento ({offer.discount_percentage}%)</span>
+                                        <span>- S/. {discountAmt.toFixed(2)}</span>
+                                    </div>
+                                )}
 
                                 {data.include_hotel && (
                                     <div className="grid grid-cols-[1fr_auto] items-center gap-4 text-slate-300">
@@ -347,6 +379,12 @@ export default function Create({ package: pkg }) {
                                 )}
 
                                 <div className="border-t border-slate-700 pt-3 flex justify-between font-bold text-lg">
+                                    {offer && discountAmt > 0 && (
+                                        <div className="flex justify-between text-green-400">
+                                            <span>Descuento ({offer.discount_percentage}%)</span>
+                                            <span>- S/. {discountAmt.toFixed(2)}</span>
+                                        </div>
+                                    )}
                                     <span>Total</span>
                                     <span className="text-cyan-400">S/. {totalFinal.toFixed(2)}</span>
                                 </div>

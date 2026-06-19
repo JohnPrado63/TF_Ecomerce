@@ -10,9 +10,22 @@ class Booking extends Model
     protected $fillable = [
         'client_id', 'package_id', 'booking_date',
         'persons_quantity', 'include_hotel','guide_id',
+        'offer_id','discount_amount',
         'hotel_id', 'restaurante_id',
-        'total_amount', 'status'
+        'total_amount', 'status','order_number'
     ];
+    public function offer()
+    {
+        return $this->belongsTo(Offer::class);
+    }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($booking) {
+            $booking->order_number = 'ESKY-' . strtoupper(substr(uniqid(), -6));
+        });
+    }
 
     // Una reserva pertenece a un cliente
     public function client()

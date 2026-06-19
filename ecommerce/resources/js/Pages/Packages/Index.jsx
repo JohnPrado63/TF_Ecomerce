@@ -171,6 +171,24 @@ export default function Index({ packages, locations }) {
                                                 S/. {Number(pkg.price).toFixed(2)}
                                             </p>
                                             <p className="text-slate-500 text-xs">{pkg.duration_days} día(s)</p>
+                                            <p className="text-cyan-400 font-bold text-xl">
+                                                S/. {Number(pkg.price).toFixed(2)}
+                                            </p>
+                                            <p className="text-slate-500 text-xs">{pkg.duration_days} día(s)</p>
+                                            <p className={`text-xs font-semibold mt-1 ${
+                                                pkg.available_slots > 10
+                                                    ? 'text-green-400'
+                                                    : pkg.available_slots > 3
+                                                    ? 'text-yellow-400'
+                                                    : pkg.available_slots > 0
+                                                    ? 'text-red-400'
+                                                    : 'text-slate-500'
+                                            }`}>
+                                                {pkg.available_slots > 0
+                                                    ? `${pkg.available_slots} lugares`
+                                                    : 'Sin disponibilidad'
+                                                }
+                                            </p>
                                         </div>
                                         <Link
                                             href={`/packages/${pkg.id}`}

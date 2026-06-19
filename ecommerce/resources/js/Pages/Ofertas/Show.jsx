@@ -1,49 +1,114 @@
 import { Head, Link } from '@inertiajs/react';
+import Navbar from '@/Components/Navbar';
+import StarRating from '@/Components/StarRating';
 
-export default function Show({ offer }) {
+export default function Show({ offer, packages }) {
+
+    const endDate = new Date(offer.end_date).toLocaleDateString('es-PE', {
+        day: 'numeric', month: 'long', year: 'numeric'
+    });
+
     return (
         <div className="min-h-screen bg-slate-950 text-white">
-            <Head title={`${offer.title} - Ofertas Ayacucho`} />
+            <Navbar />
+            <Head title={`${offer.title} - ESKY TRIPS`} />
 
             <div className="container mx-auto px-6 py-10">
-                <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between mb-10">
-                    <div>
-                        <p className="text-sm uppercase tracking-[0.3em] text-sky-300">Oferta exclusiva</p>
-                        <h1 className="mt-3 text-4xl font-bold">{offer.title}</h1>
-                        <p className="mt-3 max-w-2xl text-slate-400">{offer.desc}</p>
+
+                {/* Header oferta */}
+                <div className="relative bg-gradient-to-r from-cyan-900/40 to-slate-900 border border-cyan-700/40 rounded-2xl p-8 mb-10 overflow-hidden">
+                    <div className="absolute top-0 right-0 text-[120px] font-black text-cyan-500/10 leading-none pr-6 pt-2">
+                        -{offer.discount_percentage}%
                     </div>
-                    <Link href="/" className="inline-flex items-center rounded-full bg-slate-900/80 border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-100 hover:bg-slate-800 transition">
-                        ← Volver al inicio
-                    </Link>
-                </div>
+                    <div className="relative z-10">
+                        <p className="text-cyan-400 text-sm uppercase tracking-widest mb-2">
+                            Oferta especial
+                        </p>
+                        <h1 className="text-4xl font-black mb-3">{offer.title}</h1>
+                        <p className="text-slate-300 mb-4">{offer.description}</p>
 
-                <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-                    <div className="rounded-[2rem] border border-slate-800 bg-slate-900/90 p-8 shadow-xl shadow-slate-950/10">
-                        <p className="text-sm uppercase tracking-[0.24em] text-cyan-400 mb-4">Ahorra hasta {offer.discount}</p>
-                        <p className="text-slate-300 leading-7 mb-6">{offer.details}</p>
-
-                        <div className="grid gap-4">
-                            {offer.benefits.map((benefit) => (
-                                <div key={benefit} className="rounded-3xl border border-slate-800 bg-slate-950/80 p-4">
-                                    <p className="text-slate-200">{benefit}</p>
+                        <div className="flex flex-wrap gap-4 items-center">
+                            <div className="bg-cyan-500 text-slate-900 font-black text-2xl px-6 py-2 rounded-xl">
+                                -{offer.discount_percentage}% OFF
+                            </div>
+                            {offer.code && (
+                                <div className="bg-slate-800 border border-slate-600 rounded-xl px-4 py-2">
+                                    <p className="text-slate-400 text-xs mb-1">Código de descuento</p>
+                                    <p className="text-cyan-400 font-black text-lg tracking-widest">
+                                        {offer.code}
+                                    </p>
                                 </div>
-                            ))}
+                            )}
+                            <div className="text-slate-400 text-sm">
+                                ⏰ Válido hasta: <span className="text-white font-semibold">{endDate}</span>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div className="rounded-[2rem] border border-slate-800 bg-slate-950/90 p-8 shadow-xl shadow-slate-950/10">
-                        <p className="text-xs uppercase tracking-[0.24em] text-slate-500 mb-4">Detalles de la oferta</p>
-                        <ul className="space-y-4 text-slate-300">
-                            <li><span className="font-semibold text-white">Región:</span> Ayacucho</li>
-                            <li><span className="font-semibold text-white">Válida para:</span> Paquetes turísticos seleccionados</li>
-                            <li><span className="font-semibold text-white">Reserva con:</span> 48 horas de anticipación</li>
-                            <li><span className="font-semibold text-white">Condición:</span> Sujeto a disponibilidad</li>
-                        </ul>
+                {/* Paquetes con descuento */}
+                <h2 className="text-2xl font-bold mb-6">
+                    🧳 Paquetes con {offer.discount_percentage}% de descuento
+                </h2>
 
-                        <Link href="/packages" className="mt-8 inline-flex items-center justify-center rounded-full bg-sky-500 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-sky-400 transition">
-                            Ver paquetes disponibles
-                        </Link>
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {packages.map((pkg) => (
+                        <div
+                            key={pkg.id}
+                            className="group bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden hover:border-cyan-500/50 hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1 transition-all duration-300"
+                        >
+                            {/* Imagen */}
+                            <div className="relative h-44 overflow-hidden">
+                                <img
+                                    src={pkg.image_url}
+                                    alt={pkg.title}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                                />
+                                <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-black px-3 py-1 rounded-full">
+                                    -{pkg.discount_percent}% OFF
+                                </div>
+                            </div>
+
+                            {/* Info */}
+                            <div className="p-5">
+                                <p className="text-slate-500 text-xs mb-1">
+                                    📍 {pkg.location?.city}, {pkg.location?.region}
+                                </p>
+                                <h3 className="text-white font-bold mb-1 group-hover:text-cyan-400 transition">
+                                    {pkg.title}
+                                </h3>
+
+                                <div className="mb-3">
+                                    <StarRating
+                                        rating={pkg.reviews_avg_rating}
+                                        count={pkg.reviews_count}
+                                    />
+                                </div>
+
+                                {/* Precio con descuento */}
+                                <div className="flex items-center gap-3 mb-4">
+                                    <p className="text-slate-500 text-sm line-through">
+                                        S/. {Number(pkg.original_price).toFixed(2)}
+                                    </p>
+                                    <p className="text-cyan-400 font-black text-xl">
+                                        S/. {Number(pkg.discounted_price).toFixed(2)}
+                                    </p>
+                                </div>
+
+                                <div className="flex items-center justify-between">
+                                    <p className="text-slate-500 text-xs">
+                                        📅 {pkg.duration_days} día(s)
+                                    </p>
+                                    <Link
+                                        href={`/packages/${pkg.id}?offer=${offer.slug}`}
+                                        className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold px-4 py-2 rounded-xl transition text-xs"
+                                    >
+                                        Reservar con descuento
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>

@@ -14,6 +14,7 @@ export default function AdminNavbar() {
         { href: '/admin/restaurants', label: 'Restaurantes' },
         { href: '/admin/transports', label: 'Transportes' },
         { href: '/admin/reports', label: 'Reportes' },
+        { href: '/admin/offers', label: 'Ofertas' },
     ];
 
     return (

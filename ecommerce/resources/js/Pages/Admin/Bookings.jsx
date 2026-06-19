@@ -36,6 +36,7 @@ export default function Bookings({ bookings }) {
                                 <th className="text-left p-4">Cliente</th>
                                 <th className="text-left p-4">Fecha</th>
                                 <th className="text-left p-4">Personas</th>
+                                <th className="text-left p-4">Guía</th>
                                 <th className="text-left p-4">Total</th>
                                 <th className="text-left p-4">Estado</th>
                                 <th className="text-left p-4">Acciones</th>
@@ -56,6 +57,27 @@ export default function Bookings({ bookings }) {
                                     <td className="p-4 text-slate-300 text-sm">
                                         {booking.persons_quantity}
                                     </td>
+
+                                    <td className="p-4 text-sm">
+                                        {booking.guide ? (
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-7 h-7 rounded-full bg-cyan-500/20 text-cyan-400 font-bold text-xs flex items-center justify-center">
+                                                    {booking.guide.nombre.charAt(0)}
+                                                </div>
+                                                <div>
+                                                    <p className="text-white text-xs font-semibold">
+                                                        {booking.guide.nombre} {booking.guide.apellido}
+                                                    </p>
+                                                    <p className="text-slate-500 text-xs">
+                                                        {booking.guide.telefono}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <span className="text-slate-600 text-xs">Sin guía</span>
+                                        )}
+                                    </td>
+
                                     <td className="p-4 text-cyan-400 font-bold">
                                         S/. {Number(booking.total_amount).toFixed(2)}
                                     </td>
@@ -92,4 +114,4 @@ export default function Bookings({ bookings }) {
             </div>
         </div>
     );
-}
+} 
