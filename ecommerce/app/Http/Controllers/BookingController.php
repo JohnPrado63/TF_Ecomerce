@@ -108,10 +108,11 @@ class BookingController extends Controller
         if ($request->restaurante_id) {
             $selectedRestaurant = $package->restaurantes->firstWhere('id', $request->restaurante_id);
             if ($selectedRestaurant) {
-                $total += $selectedRestaurant->price_per_person * $request->persons_quantity;
+                $total += ($selectedRestaurant->price_per_person??0) * $request->persons_quantity;
             }
         }
-
+        $offer=null;
+        $discountAmount=0;
         // 7. Aplicar descuento sobre el subtotal totalizado
         if ($request->offer_id) {
             $offer = \App\Models\Offer::find($request->offer_id);

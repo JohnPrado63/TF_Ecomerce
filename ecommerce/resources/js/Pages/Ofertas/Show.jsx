@@ -100,7 +100,7 @@ export default function Show({ offer, packages }) {
                                         📅 {pkg.duration_days} día(s)
                                     </p>
                                     <Link
-                                        href={`/packages/${pkg.id}?offer=${offer.slug}`}
+                                        href={`/bookings/create?package_id=${pkg.id}&offer=${offer.slug}`}
                                         className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold px-4 py-2 rounded-xl transition text-xs"
                                     >
                                         Reservar con descuento

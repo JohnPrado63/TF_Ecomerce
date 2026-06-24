@@ -171,10 +171,6 @@ export default function Index({ packages, locations }) {
                                                 S/. {Number(pkg.price).toFixed(2)}
                                             </p>
                                             <p className="text-slate-500 text-xs">{pkg.duration_days} día(s)</p>
-                                            <p className="text-cyan-400 font-bold text-xl">
-                                                S/. {Number(pkg.price).toFixed(2)}
-                                            </p>
-                                            <p className="text-slate-500 text-xs">{pkg.duration_days} día(s)</p>
                                             <p className={`text-xs font-semibold mt-1 ${
                                                 pkg.available_slots > 10
                                                     ? 'text-green-400'

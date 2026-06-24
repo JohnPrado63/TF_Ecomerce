@@ -24,11 +24,10 @@ const highlights = [
 
 export default function Welcome({ auth, packages, destinations, offers }) {
     const categoryOptions = [
-        { label: 'Playa y Tropical', value: 'Beach & Tropical' },
-        { label: 'Montaña y Aventura', value: 'Mountain & Adventure' },
-        { label: 'Urbano y Cultura', value: 'Urban & Culture' },
-        { label: 'Vida silvestre y Safari', value: 'Wildlife & Safari' },
-        { label: 'Bienestar y Spa', value: 'Wellness & Spa' },
+        { label: 'Aventura y Naturaleza', value: 'Aventura y Naturaleza' },
+        { label: 'Cultural e Historico', value: 'Cultural e Historico' },
+        { label: 'Religioso', value: 'Religioso' },
+        { label: 'Gastronomia', value: 'Gastronomia' },
     ];
 
     const ayacuchoDestinations = useMemo(() => {
