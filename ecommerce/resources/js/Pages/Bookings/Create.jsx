@@ -1,30 +1,36 @@
 import { Head, useForm, Link } from '@inertiajs/react';
-import DatePicker from '@/Components/DatePicker';
 import Navbar from '@/Components/Navbar';
+
 export default function Create({ package: pkg, offer }) {
     const { data, setData, post, processing, errors } = useForm({
-        package_id:       pkg.id,
-        booking_date:     '',
+        package_id:     pkg.id,
+        booking_date:   '',
         persons_quantity: 1,
-        include_hotel:    pkg.includes_hotel || false,
-        hotel_id:         pkg.hoteles?.[0]?.id ?? null,
-        restaurante_id:   pkg.restaurantes?.[0]?.id ?? null,
-        guide_id:      pkg.guias?.[0]?.id ||'',
-        offer_id:     offer?.id|| null,
+        include_hotel:  pkg.includes_hotel || false,
+        hotel_id:       pkg.hoteles?.[0]?.id ?? null,
+        restaurante_id: pkg.restaurantes?.[0]?.id ?? null,
+        guide_id:       pkg.guias?.[0]?.id || '',
+        offer_id:       offer?.id || null,
     });
 
-    const selectedHotel = pkg.hoteles?.find(hotel => hotel.id === data.hotel_id);
-    const selectedRestaurant = pkg.restaurantes?.find(rest => rest.id === data.restaurante_id);
+    const selectedHotel      = pkg.hoteles?.find(h => h.id === data.hotel_id);
+    const selectedRestaurant = pkg.restaurantes?.find(r => r.id === data.restaurante_id);
 
-    const hotelPricePerPerson = Number(selectedHotel?.price_per_person ?? 0);
+    const hotelPricePerPerson      = Number(selectedHotel?.precio_por_noche ?? 0);
     const restaurantPricePerPerson = Number(selectedRestaurant?.price_per_person ?? 0);
-    const baseTotal           = pkg.price * data.persons_quantity;
-    // Sum hotel cost whenever the user includes/selects hotel (keeps UI consistent with selection)
-    const hotelExtra          = data.include_hotel && selectedHotel ? hotelPricePerPerson * data.persons_quantity : 0;
-    const restaurantExtra     = selectedRestaurant ? restaurantPricePerPerson * data.persons_quantity : 0;
-    const subtotal            = baseTotal + hotelExtra;
-    const discountAmt         = offer ? Math.round(subtotal * (offer.discount_percentage/100)*100)/100:0;
-    const totalFinal          = subtotal-discountAmt;
+
+    const baseTotal       = pkg.price * data.persons_quantity;
+    const hotelExtra      = data.include_hotel && selectedHotel
+        ? hotelPricePerPerson * data.persons_quantity
+        : 0;
+    const restaurantExtra = selectedRestaurant
+        ? restaurantPricePerPerson * data.persons_quantity
+        : 0;
+    const subtotal        = baseTotal + hotelExtra + restaurantExtra;
+    const discountAmt     = offer
+        ? Math.round(subtotal * (offer.discount_percentage / 100) * 100) / 100
+        : 0;
+    const totalFinal      = subtotal - discountAmt;
 
     function handleToggleHotel() {
         const nextState = !data.include_hotel;
@@ -46,7 +52,6 @@ export default function Create({ package: pkg, offer }) {
 
             <div className="container mx-auto px-6 py-10 max-w-4xl">
 
-                {/* Botón volver */}
                 <Link
                     href={`/packages/${pkg.id}`}
                     className="text-cyan-400 hover:text-cyan-300 text-sm mb-6 inline-block"
@@ -57,23 +62,12 @@ export default function Create({ package: pkg, offer }) {
                 <h1 className="text-3xl font-bold mb-8">Confirmar Reserva</h1>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    {offer && (
-                        <div className="bg-cyan-900/30 border border-cyan-500/50 rounded-xl p-3 mb-4 flex items-center gap-3">
-                            <span className="bg-cyan-500 text-slate-900 font-black text-sm px-3 py-1 rounded-full">
-                                -{offer.discount_percentage}% OFF
-                            </span>
-                            <div>
-                                <p className="text-cyan-300 font-semibold text-sm">{offer.title}</p>
-                                <p className="text-slate-400 text-xs">Descuento aplicado automáticamente</p>
-                            </div>
-                        </div>
-                    )}
-
-
 
                     {/* Formulario izquierda */}
                     <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6">
-                        <h2 className="text-xl font-bold mb-6">Datos del viaje</h2>
+                        <h2 className="text-xl font-bold mb-4">Datos del viaje</h2>
+
+                        {/* Badge oferta - solo una vez */}
                         {offer && (
                             <div className="bg-cyan-900/30 border border-cyan-500/50 rounded-xl p-3 mb-4 flex items-center gap-3">
                                 <span className="bg-cyan-500 text-slate-900 font-black text-sm px-3 py-1 rounded-full">
@@ -88,105 +82,93 @@ export default function Create({ package: pkg, offer }) {
 
                         <form onSubmit={handleSubmit} className="space-y-5">
 
-                            {/* Fecha de viaje */}
+                            {/* Fecha */}
                             <div>
                                 <label className="block text-slate-300 text-sm font-medium mb-2">
                                     📅 Fecha de viaje
                                 </label>
-                                <DatePicker
+                                <input
+                                    type="date"
                                     value={data.booking_date}
-                                    onChange={e => setData('booking_date', e)}
+                                    onChange={e => setData('booking_date', e.target.value)}
                                     min={new Date(Date.now() + 86400000).toISOString().split('T')[0]}
+                                    className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                 />
                                 {errors.booking_date && (
                                     <p className="text-red-400 text-xs mt-1">{errors.booking_date}</p>
                                 )}
                             </div>
 
-                            {/* Número de personas */}
+                            {/* Personas */}
                             <div>
                                 <label className="block text-slate-300 text-sm font-medium mb-2">
                                     👥 Número de personas
                                 </label>
                                 <div className="flex items-center gap-4">
-                                    <button
-                                        type="button"
+                                    <button type="button"
                                         onClick={() => setData('persons_quantity', Math.max(1, data.persons_quantity - 1))}
-                                        className="w-10 h-10 rounded-full bg-slate-700 hover:bg-slate-600 text-white font-bold text-xl flex items-center justify-center"
-                                    >
+                                        className="w-10 h-10 rounded-full bg-slate-700 hover:bg-slate-600 text-white font-bold text-xl flex items-center justify-center">
                                         -
                                     </button>
-                                    <span className="text-2xl font-bold w-8 text-center">
-                                        {data.persons_quantity}
-                                    </span>
-                                    <button
-                                        type="button"
+                                    <span className="text-2xl font-bold w-8 text-center">{data.persons_quantity}</span>
+                                    <button type="button"
                                         onClick={() => setData('persons_quantity', Math.min(20, data.persons_quantity + 1))}
-                                        className="w-10 h-10 rounded-full bg-slate-700 hover:bg-slate-600 text-white font-bold text-xl flex items-center justify-center"
-                                    >
+                                        className="w-10 h-10 rounded-full bg-slate-700 hover:bg-slate-600 text-white font-bold text-xl flex items-center justify-center">
                                         +
                                     </button>
                                 </div>
-                                {errors.persons_quantity && (
-                                    <p className="text-red-400 text-xs mt-1">{errors.persons_quantity}</p>
-                                )}
                             </div>
 
+                            {/* Hotel */}
                             <div>
-                                <div className="flex items-center justify-between gap-3 mb-3">
+                                <div className="flex items-center justify-between mb-3">
                                     <div>
-                                        <label className="block text-slate-300 text-sm font-medium mb-2">
+                                        <label className="block text-slate-300 text-sm font-medium mb-1">
                                             🏨 Selecciona un hotel
                                         </label>
-                                        <p className="text-slate-500 text-sm">
+                                        <p className="text-slate-500 text-xs">
                                             {pkg.includes_hotel
-                                                ? 'El paquete incluye alojamiento. Elige el hotel preferido.'
-                                                : 'Agrega alojamiento opcional y selecciona el hotel cercano.'}
+                                                ? 'El paquete incluye alojamiento.'
+                                                : 'Alojamiento opcional.'}
                                         </p>
                                     </div>
                                     {!pkg.includes_hotel && (
-                                        <button
-                                            type="button"
-                                            onClick={handleToggleHotel}
+                                        <button type="button" onClick={handleToggleHotel}
                                             className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                                                 data.include_hotel
                                                     ? 'bg-cyan-500 text-slate-950'
                                                     : 'bg-slate-800 text-slate-200 border border-slate-700'
                                             }`}>
-                                            {data.include_hotel ? 'Alojamiento activado' : 'Agregar hotel'}
+                                            {data.include_hotel ? '✓ Activado' : 'Agregar'}
                                         </button>
                                     )}
                                 </div>
 
                                 {pkg.hoteles?.length > 0 ? (
-                                    <div className="grid grid-cols-1 gap-3">
+                                    <div className="space-y-3">
                                         {pkg.hoteles.map((hotel) => (
-                                            <button
-                                                key={hotel.id}
-                                                type="button"
+                                            <button key={hotel.id} type="button"
                                                 onClick={() => setData('hotel_id', hotel.id)}
-                                                className={`group w-full rounded-[28px] border p-4 text-left transition duration-300 ${
+                                                className={`w-full rounded-2xl border p-4 text-left transition ${
                                                     data.hotel_id === hotel.id
-                                                        ? 'border-cyan-400 bg-cyan-950/30 shadow-[0_20px_80px_rgba(6,182,212,0.15)]'
-                                                        : 'border-slate-700 bg-slate-900 hover:border-slate-500 hover:bg-slate-800'
-                                                }`}
-                                            >
+                                                        ? 'border-cyan-400 bg-cyan-950/30'
+                                                        : 'border-slate-700 bg-slate-900 hover:border-slate-500'
+                                                }`}>
                                                 <div className="flex items-start justify-between gap-4">
                                                     <div>
-                                                        <div className="flex flex-wrap items-center gap-2 mb-2">
-                                                            <p className="font-semibold text-white text-base">{hotel.nombre}</p>
-                                                            <span className="rounded-full bg-slate-800 px-3 py-1 text-[11px] uppercase tracking-[0.14em] text-slate-400">
-                                                                {hotel.estrellas ?? '–'}⭐
-                                                            </span>
-                                                        </div>
-                                                        <p className="text-slate-400 text-sm">{hotel.direccion}</p>
-                                                        <p className="text-slate-500 text-sm mt-2">Tel: {hotel.telefono}</p>
+                                                        <p className="font-semibold text-white">{hotel.nombre}</p>
+                                                        <p className="text-slate-400 text-xs mt-1">
+                                                            {'⭐'.repeat(hotel.estrellas || 0)}
+                                                        </p>
+                                                        <p className="text-slate-500 text-xs">{hotel.direccion}</p>
                                                     </div>
                                                     <div className="text-right">
-                                                        <p className="text-cyan-300 font-semibold text-lg">S/. {Number(hotel.price_per_person).toFixed(2)}</p>
-                                                        <p className="text-slate-500 text-xs mt-1">por persona</p>
+                                                        <p className="text-cyan-300 font-bold">
+                                                            S/. {Number(hotel.precio_por_noche).toFixed(2)}
+                                                        </p>
+                                                        <p className="text-slate-500 text-xs">por noche</p>
                                                         {data.hotel_id === hotel.id && (
-                                                            <span className="mt-3 inline-flex rounded-full bg-cyan-500 px-3 py-1 text-[11px] font-semibold text-slate-950">
+                                                            <span className="mt-2 inline-flex rounded-full bg-cyan-500 px-2 py-0.5 text-xs font-semibold text-slate-950">
                                                                 Seleccionado
                                                             </span>
                                                         )}
@@ -196,12 +178,13 @@ export default function Create({ package: pkg, offer }) {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="rounded-3xl border border-slate-700 bg-slate-900 p-4 text-slate-400">
-                                        No hay hoteles registrados para este paquete todavía.
+                                    <div className="rounded-2xl border border-slate-700 bg-slate-900 p-4 text-slate-400 text-sm">
+                                        No hay hoteles registrados para este paquete.
                                     </div>
                                 )}
                             </div>
-                            {/* Selección de guía */}
+
+                            {/* Guía */}
                             {pkg.guias?.length > 0 && (
                                 <div>
                                     <label className="block text-slate-300 text-sm font-medium mb-2">
@@ -209,30 +192,27 @@ export default function Create({ package: pkg, offer }) {
                                     </label>
                                     <div className="space-y-2">
                                         {pkg.guias.map((guia) => (
-                                            <div
-                                                key={guia.id}
-                                                onClick={() => setData('guide_id', guia.id)}
+                                            <div key={guia.id} onClick={() => setData('guide_id', guia.id)}
                                                 className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition ${
                                                     Number(data.guide_id) === guia.id
                                                         ? 'border-cyan-500 bg-cyan-900/30'
                                                         : 'border-slate-600 bg-slate-800'
-                                                }`}
-                                            >
-                                                <div className="w-10 h-10 rounded-full bg-cyan-500/20 text-cyan-400 font-bold text-sm flex items-center justify-center flex-shrink-0">
+                                                }`}>
+                                                <div className="w-10 h-10 rounded-full bg-cyan-500/20 text-cyan-400 font-bold text-sm flex items-center justify-center">
                                                     {guia.nombre.charAt(0)}
                                                 </div>
                                                 <div className="flex-1">
                                                     <p className="font-medium text-sm">{guia.nombre} {guia.apellido}</p>
                                                     <p className="text-slate-400 text-xs">🗣️ {guia.idiomas}</p>
                                                 </div>
-                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                                                     Number(data.guide_id) === guia.id
                                                         ? 'border-cyan-500 bg-cyan-500'
                                                         : 'border-slate-500'
                                                 }`}>
                                                     {Number(data.guide_id) === guia.id && (
                                                         <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                                                         </svg>
                                                     )}
                                                 </div>
@@ -242,38 +222,38 @@ export default function Create({ package: pkg, offer }) {
                                 </div>
                             )}
 
+                            {/* Restaurante */}
                             <div>
                                 <label className="block text-slate-300 text-sm font-medium mb-2">
-                                    🍽️ Selecciona un restaurante cercano
+                                    🍽️ Selecciona un restaurante
                                 </label>
-                                <p className="text-slate-500 text-sm mb-3">
-                                    Elige un restaurante recomendado para completar tu paquete.
+                                <p className="text-slate-500 text-xs mb-3">
+                                    Elige un restaurante recomendado para completar tu experiencia.
                                 </p>
 
                                 {pkg.restaurantes?.length > 0 ? (
-                                    <div className="grid grid-cols-1 gap-3">
+                                    <div className="space-y-3">
                                         {pkg.restaurantes.map((restaurante) => (
-                                            <button
-                                                key={restaurante.id}
-                                                type="button"
+                                            <button key={restaurante.id} type="button"
                                                 onClick={() => setData('restaurante_id', restaurante.id)}
-                                                className={`group w-full rounded-[28px] border p-4 text-left transition duration-300 ${
+                                                className={`w-full rounded-2xl border p-4 text-left transition ${
                                                     data.restaurante_id === restaurante.id
-                                                        ? 'border-cyan-400 bg-cyan-950/30 shadow-[0_20px_80px_rgba(6,182,212,0.12)]'
-                                                        : 'border-slate-700 bg-slate-900 hover:border-slate-500 hover:bg-slate-800'
-                                                }`}
-                                            >
+                                                        ? 'border-cyan-400 bg-cyan-950/30'
+                                                        : 'border-slate-700 bg-slate-900 hover:border-slate-500'
+                                                }`}>
                                                 <div className="flex items-start justify-between gap-4">
                                                     <div>
-                                                        <p className="font-semibold text-white text-base">{restaurante.nombre}</p>
-                                                        <p className="text-slate-400 text-sm">{restaurante.tipo_comida}</p>
-                                                        <p className="text-slate-500 text-sm mt-2">{restaurante.direccion}</p>
+                                                        <p className="font-semibold text-white">{restaurante.nombre}</p>
+                                                        <p className="text-slate-400 text-xs">{restaurante.tipo_comida}</p>
+                                                        <p className="text-slate-500 text-xs mt-1">{restaurante.direccion}</p>
                                                     </div>
                                                     <div className="text-right">
-                                                        <p className="text-cyan-300 font-semibold text-lg">S/. {Number(restaurante.price_per_person).toFixed(2)}</p>
-                                                        <p className="text-slate-500 text-xs mt-1">aprox. por persona</p>
+                                                        <p className="text-cyan-300 font-bold">
+                                                            S/. {Number(restaurante.price_per_person ?? 0).toFixed(2)}
+                                                        </p>
+                                                        <p className="text-slate-500 text-xs">aprox./persona</p>
                                                         {data.restaurante_id === restaurante.id && (
-                                                            <span className="mt-3 inline-flex rounded-full bg-cyan-500 px-3 py-1 text-[11px] font-semibold text-slate-950">
+                                                            <span className="mt-2 inline-flex rounded-full bg-cyan-500 px-2 py-0.5 text-xs font-semibold text-slate-950">
                                                                 Seleccionado
                                                             </span>
                                                         )}
@@ -283,18 +263,14 @@ export default function Create({ package: pkg, offer }) {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="rounded-3xl border border-slate-700 bg-slate-900 p-4 text-slate-400">
-                                        No hay restaurantes registrados para este paquete todavía.
+                                    <div className="rounded-2xl border border-slate-700 bg-slate-900 p-4 text-slate-400 text-sm">
+                                        No hay restaurantes registrados para este paquete.
                                     </div>
                                 )}
                             </div>
 
-                            {/* Botón submit */}
-                            <button
-                                type="submit"
-                                disabled={processing}
-                                className="w-full bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-600 text-slate-900 font-bold py-3 rounded-xl transition text-lg mt-4"
-                            >
+                            <button type="submit" disabled={processing}
+                                className="w-full bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-600 text-slate-900 font-bold py-3 rounded-xl transition text-lg">
                                 {processing ? 'Procesando...' : 'Confirmar Reserva'}
                             </button>
 
@@ -306,19 +282,11 @@ export default function Create({ package: pkg, offer }) {
 
                         {/* Info del paquete */}
                         <div className="bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden">
-                            <img
-                                src={pkg.image_url}
-                                alt={pkg.title}
-                                className="w-full h-40 object-cover"
-                            />
+                            <img src={pkg.image_url} alt={pkg.title} className="w-full h-40 object-cover"/>
                             <div className="p-4">
-                                <p className="text-slate-400 text-sm">
-                                    📍 {pkg.location?.city}, {pkg.location?.region}
-                                </p>
+                                <p className="text-slate-400 text-sm">📍 {pkg.location?.city}, {pkg.location?.region}</p>
                                 <h3 className="text-white font-bold text-lg">{pkg.title}</h3>
-                                <p className="text-slate-400 text-sm mt-1">
-                                    📅 {pkg.duration_days} día(s)
-                                </p>
+                                <p className="text-slate-400 text-sm mt-1">📅 {pkg.duration_days} día(s)</p>
                             </div>
                         </div>
 
@@ -326,68 +294,44 @@ export default function Create({ package: pkg, offer }) {
                         <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5">
                             <h3 className="font-bold text-lg mb-4">Resumen de costos</h3>
 
-                            <div className="space-y-4 text-sm">
-                                <div className="grid grid-cols-[1fr_auto] items-center gap-4 text-slate-300">
-                                    <span>Paquete base</span>
+                            <div className="space-y-3 text-sm">
+
+                                {/* Paquete base */}
+                                <div className="flex justify-between text-slate-300">
+                                    <span>Paquete base × {data.persons_quantity}</span>
                                     <span>S/. {baseTotal.toFixed(2)}</span>
                                 </div>
-                                {offer && discountAmt > 0 && (
-                                    <div className="flex justify-between text-green-400">
-                                        <span>Descuento ({offer.discount_percentage}%)</span>
-                                        <span>- S/. {discountAmt.toFixed(2)}</span>
-                                    </div>
-                                )}
 
-                                {data.include_hotel && (
-                                    <div className="grid grid-cols-[1fr_auto] items-center gap-4 text-slate-300">
-                                        <span>{pkg.includes_hotel ? 'Hotel incluido' : `Hotel × ${data.persons_quantity} persona(s)`}</span>
+                                {/* Hotel */}
+                                {data.include_hotel && selectedHotel && (
+                                    <div className="flex justify-between text-slate-300">
+                                        <span>🏨 {selectedHotel.nombre} × {data.persons_quantity}</span>
                                         <span>S/. {hotelExtra.toFixed(2)}</span>
                                     </div>
                                 )}
 
-                                {selectedHotel && (
-                                    <div className="rounded-2xl bg-slate-950/60 border border-slate-700 p-3">
-                                        <div className="grid grid-cols-[1fr_auto] items-center gap-4">
-                                            <div>
-                                                <p className="font-medium text-slate-100">Hotel elegido</p>
-                                                <p className="text-slate-300 text-sm mt-1">{selectedHotel.nombre}</p>
-                                            </div>
-                                            <span className="text-cyan-300 font-semibold">S/. {hotelPricePerPerson.toFixed(2)}</span>
-                                        </div>
-                                        <p className="text-slate-500 text-xs mt-2">por persona</p>
-                                    </div>
-                                )}
-
-                                {selectedRestaurant && (
-                                    <div className="rounded-2xl bg-slate-950/60 border border-slate-700 p-3">
-                                        <div className="grid grid-cols-[1fr_auto] items-center gap-4">
-                                            <div>
-                                                <p className="font-medium text-slate-100">Restaurante elegido</p>
-                                                <p className="text-slate-300 text-sm mt-1">{selectedRestaurant.nombre}</p>
-                                            </div>
-                                            <span className="text-cyan-300 font-semibold">S/. {restaurantPricePerPerson.toFixed(2)}</span>
-                                        </div>
-                                        <p className="text-slate-500 text-xs mt-2">por persona</p>
-                                    </div>
-                                )}
-
-                                {selectedRestaurant && (
-                                    <div className="grid grid-cols-[1fr_auto] items-center gap-4 text-slate-300">
-                                        <span>Restaurante × {data.persons_quantity} persona(s)</span>
+                                {/* Restaurante */}
+                                {selectedRestaurant && restaurantExtra > 0 && (
+                                    <div className="flex justify-between text-slate-300">
+                                        <span>🍽️ {selectedRestaurant.nombre} × {data.persons_quantity}</span>
                                         <span>S/. {restaurantExtra.toFixed(2)}</span>
                                     </div>
                                 )}
 
+                                {/* Descuento */}
+                                {offer && discountAmt > 0 && (
+                                    <div className="flex justify-between text-green-400">
+                                        <span>🎉 Descuento {offer.title} ({offer.discount_percentage}%)</span>
+                                        <span>- S/. {discountAmt.toFixed(2)}</span>
+                                    </div>
+                                )}
+
+                                {/* Total */}
                                 <div className="border-t border-slate-700 pt-3 flex justify-between font-bold text-lg">
-                                    {offer && discountAmt > 0 && (
-                                        <div className="flex justify-between text-green-400">
-                                            <span>Descuento ({offer.discount_percentage}%)</span>
-                                            <span>- S/. {discountAmt.toFixed(2)}</span>
-                                        </div>
-                                    )}
                                     <span>Total</span>
                                     <span className="text-cyan-400">S/. {totalFinal.toFixed(2)}</span>
                                 </div>
+
                             </div>
                         </div>
 

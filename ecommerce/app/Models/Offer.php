@@ -8,9 +8,8 @@ class Offer extends Model
 {
     protected $fillable = [
         'title', 'description', 'slug',
-        'discount_percentage', 'start_date',
+        'details','benefits','discount_percentage', 'start_date',
         'end_date', 'active', 'code',
-        'applicable_packages',
     ];
 
     protected $casts = [
