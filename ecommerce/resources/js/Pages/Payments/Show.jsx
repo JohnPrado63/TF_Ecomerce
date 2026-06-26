@@ -1,33 +1,44 @@
+import { useState } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import Navbar from '@/Components/Navbar';
 
 export default function Show({ booking, payment }) {
-
     const { data, setData, post, processing, errors } = useForm({
-        booking_id: booking.id,
-        method: 'yape',
-        voucher: null,
+        booking_id:      booking.id,
+        method:          'yape',
+        voucher:         null,
         order_reference: '',
     });
 
-    function handleSubmit(e) {
-        e.preventDefault();
-        post('/payments', {
-            forceFormData: true,
-        });
+    const [mpLoading, setMpLoading] = useState(false);
+
+    async function handleMercadoPago() {
+        setMpLoading(true);
+        try {
+            const response = await axios.post('/payments/mp/preference', {
+                booking_id: booking.id,
+            });
+
+            const result = response.data;
+
+            if (result.sandbox_init_point) {
+                window.location.href = result.sandbox_init_point;
+            } else {
+                alert('Error al procesar el pago');
+            }
+        } catch (error) {
+            console.error('Error completo:', error);
+            const errorMessage = error.response?.data?.error || error.message;
+            alert('Error: ' + errorMessage);
+        } finally {
+            setMpLoading(false);
+        }
     }
 
-    // Logos SVG de Yape y Plin
-    const YapeLogo = () => (
-        <svg viewBox="0 0 60 24" className="h-5 w-auto fill-white">
-            <text x="0" y="18" fontSize="18" fontWeight="bold" fontFamily="Arial">Yape</text>
-        </svg>
-    );
-
-    const qrImages = {
-        yape: '/images/QR.png', // reemplazar con tu QR real
-        plin: 'https://i.ibb.co/your-plin-qr/qr.png', // reemplazar con tu QR real
-    };
+    function handleSubmit(e) {
+        e.preventDefault();
+        post('/payments', { forceFormData: true });
+    }
 
     return (
         <div className="min-h-screen bg-slate-950 text-white">
@@ -62,58 +73,55 @@ export default function Show({ booking, payment }) {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-                    {/* Método de pago y QR */}
+                    {/* Método de pago */}
                     <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6">
                         <h2 className="text-xl font-bold mb-4">Método de pago</h2>
 
                         {/* Selector método */}
-                        <div className="flex gap-3 mb-6">
-                            {/* Yape */}
-                            {/* Yape */}
-                            <button
-                                type="button"
-                                onClick={() => setData('method', 'yape')}
-                                className={`flex-1 py-3 rounded-xl font-bold text-sm border transition flex items-center justify-center gap-2 ${
+                        <div className="grid grid-cols-2 gap-3 mb-6">
+                            <button type="button" onClick={() => setData('method', 'yape')}
+                                className={`py-3 rounded-xl font-bold text-sm border transition flex items-center justify-center gap-2 ${
                                     data.method === 'yape'
                                         ? 'bg-purple-600 border-purple-500 text-white'
                                         : 'bg-slate-800 border-slate-600 text-slate-400 hover:border-purple-500'
-                                }`}
-                            >
+                                }`}>
                                 <div className="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs font-black">Y</div>
-                                <span>Yape</span>
+                                Yape
                             </button>
 
-                            {/* Plin */}
-                            <button
-                                type="button"
-                                onClick={() => setData('method', 'plin')}
-                                className={`flex-1 py-3 rounded-xl font-bold text-sm border transition flex items-center justify-center gap-2 ${
+                            <button type="button" onClick={() => setData('method', 'plin')}
+                                className={`py-3 rounded-xl font-bold text-sm border transition flex items-center justify-center gap-2 ${
                                     data.method === 'plin'
                                         ? 'bg-green-600 border-green-500 text-white'
                                         : 'bg-slate-800 border-slate-600 text-slate-400 hover:border-green-500'
-                                }`}
-                            >
+                                }`}>
                                 <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-white text-xs font-black">P</div>
-                                <span>Plin</span>
+                                Plin
                             </button>
 
-                            {/* Efectivo */}
-                            <button
-                                type="button"
-                                onClick={() => setData('method', 'efectivo')}
-                                className={`flex-1 py-3 rounded-xl font-bold text-sm border transition flex items-center justify-center gap-2 ${
+                            <button type="button" onClick={() => setData('method', 'efectivo')}
+                                className={`py-3 rounded-xl font-bold text-sm border transition flex items-center justify-center gap-2 ${
                                     data.method === 'efectivo'
                                         ? 'bg-cyan-600 border-cyan-500 text-white'
                                         : 'bg-slate-800 border-slate-600 text-slate-400 hover:border-cyan-500'
-                                }`}
-                            >
+                                }`}>
                                 <div className="w-6 h-6 rounded-full bg-cyan-600 flex items-center justify-center text-white text-xs font-black">$</div>
-                                <span>Efectivo</span>
+                                Efectivo
+                            </button>
+
+                            <button type="button" onClick={() => setData('method', 'mercadopago')}
+                                className={`py-3 rounded-xl font-bold text-sm border transition flex items-center justify-center gap-2 ${
+                                    data.method === 'mercadopago'
+                                        ? 'bg-blue-600 border-blue-500 text-white'
+                                        : 'bg-slate-800 border-slate-600 text-slate-400 hover:border-blue-500'
+                                }`}>
+                                <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-black">MP</div>
+                                MercadoPago
                             </button>
                         </div>
 
-                        {/* QR */}
-                        {data.method !== 'efectivo' && (
+                        {/* QR Yape/Plin */}
+                        {(data.method === 'yape' || data.method === 'plin') && (
                             <div className="text-center">
                                 <p className="text-slate-400 text-sm mb-3">
                                     Escanea el QR para pagar con {data.method === 'yape' ? 'Yape' : 'Plin'}
@@ -128,7 +136,6 @@ export default function Show({ booking, payment }) {
                                         className="w-48 h-48 object-contain"
                                     />
                                 </div>
-
                                 <p className="text-slate-400 text-xs">
                                     Número: <span className="text-white font-bold">+51 927 496 713</span>
                                 </p>
@@ -138,6 +145,7 @@ export default function Show({ booking, payment }) {
                             </div>
                         )}
 
+                        {/* Efectivo */}
                         {data.method === 'efectivo' && (
                             <div className="bg-slate-800 rounded-xl p-4 text-center">
                                 <p className="text-slate-300 text-sm">
@@ -146,33 +154,42 @@ export default function Show({ booking, payment }) {
                                 <p className="text-slate-400 text-xs mt-2">📍 Jr. Lima 123, Huamanga, Ayacucho</p>
                             </div>
                         )}
+
+                        {/* MercadoPago */}
+                        {data.method === 'mercadopago' && (!payment || payment.status === 'rejected') && (
+                            <div className="mt-4">
+                                <p className="text-slate-400 text-sm mb-4">
+                                    Serás redirigido a MercadoPago para completar tu pago de forma segura con tarjeta o billetera digital.
+                                </p>
+                                <button
+                                    onClick={handleMercadoPago}
+                                    disabled={mpLoading}
+                                    className="w-full bg-blue-500 hover:bg-blue-400 disabled:bg-slate-600 text-white font-bold py-3 rounded-xl transition"
+                                >
+                                    {mpLoading ? 'Procesando...' : `💳 Pagar S/. ${Number(booking.total_amount).toFixed(2)} con MercadoPago`}
+                                </button>
+                            </div>
+                        )}
                     </div>
 
-                    {/* Resumen y subir comprobante */}
+                    {/* Resumen y comprobante */}
                     <div className="space-y-4">
 
                         {/* Número de orden */}
                         <div className="bg-slate-900 border border-cyan-500/30 rounded-2xl p-5">
-                            <p className="text-slate-400 text-xs uppercase tracking-widest mb-1">
-                                Número de orden
-                            </p>
-                            <p className="text-2xl font-black text-cyan-400 tracking-widest">
-                                {booking.order_number}
-                            </p>
+                            <p className="text-slate-400 text-xs uppercase tracking-widest mb-1">Número de orden</p>
+                            <p className="text-2xl font-black text-cyan-400 tracking-widest">{booking.order_number}</p>
                             <p className="text-slate-500 text-xs mt-2">
                                 💡 Incluye este número en el concepto de tu pago para identificarlo más rápido.
                             </p>
                         </div>
 
-                        {/* Resumen */}
+                        {/* Resumen reserva */}
                         <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5">
                             <h3 className="font-bold mb-4">Resumen de reserva</h3>
                             <div className="flex gap-3 mb-4">
-                                <img
-                                    src={booking.tour_package?.image_url}
-                                    alt={booking.tour_package?.title}
-                                    className="w-16 h-16 rounded-xl object-cover"
-                                />
+                                <img src={booking.tour_package?.image_url} alt={booking.tour_package?.title}
+                                    className="w-16 h-16 rounded-xl object-cover" />
                                 <div>
                                     <p className="font-semibold">{booking.tour_package?.title}</p>
                                     <p className="text-slate-400 text-sm">📍 {booking.tour_package?.location?.city}</p>
@@ -185,64 +202,46 @@ export default function Show({ booking, payment }) {
                             </div>
                         </div>
 
-                        {/* Subir comprobante */}
-                        {(!payment || payment.status === 'rejected') && (
+                        {/* Subir comprobante - solo para Yape, Plin, Efectivo */}
+                        {data.method !== 'mercadopago' && (!payment || payment.status === 'rejected') && (
                             <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5">
                                 <h3 className="font-bold mb-4">Subir comprobante</h3>
                                 <form onSubmit={handleSubmit} className="space-y-4">
 
-                                    {/* Referencia del pago */}
                                     <div>
                                         <label className="block text-slate-300 text-sm font-medium mb-2">
                                             📋 Referencia del pago (opcional)
                                         </label>
-                                        <input
-                                            type="text"
-                                            value={data.order_reference}
+                                        <input type="text" value={data.order_reference}
                                             onChange={e => setData('order_reference', e.target.value)}
                                             placeholder={`Ej: ${booking.order_number}`}
                                             className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition"
                                         />
-                                        <p className="text-slate-500 text-xs mt-1">
-                                            Escribe el número de orden que pusiste en el concepto del pago
-                                        </p>
                                     </div>
 
-                                    {/* Captura */}
                                     <div>
                                         <label className="block text-slate-300 text-sm font-medium mb-2">
                                             Captura del pago
                                         </label>
-                                        <input
-                                            type="file"
-                                            accept="image/*"
+                                        <input type="file" accept="image/*"
                                             onChange={e => setData('voucher', e.target.files[0])}
                                             className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-500 transition file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-cyan-500 file:text-slate-900 file:font-semibold file:text-xs"
                                         />
-                                        {errors.voucher && (
-                                            <p className="text-red-400 text-xs mt-1">{errors.voucher}</p>
-                                        )}
+                                        {errors.voucher && <p className="text-red-400 text-xs mt-1">{errors.voucher}</p>}
                                     </div>
 
-                                    {/* WhatsApp alternativo */}
                                     <div className="bg-green-900/20 border border-green-700/50 rounded-xl p-3">
-                                        <p className="text-green-300 text-xs font-semibold mb-1">
-                                            💬 ¿Prefieres pagar por WhatsApp?
-                                        </p>
-                                        {/* CORREGIDO: Se agregó la etiqueta de apertura <a> */}
+                                        <p className="text-green-300 text-xs font-semibold mb-1">💬 ¿Prefieres pagar por WhatsApp?</p>
                                         <a
                                             href={`https://wa.me/51927496713?text=Hola,%20quiero%20confirmar%20mi%20reserva%20ESKY%20TRIPS.%20N%C3%BAmero%20de%20orden:%20${booking.order_number}%20-%20${booking.tour_package?.title}%20-%20S/.%20${booking.total_amount}`}
-                                            target="_blank"
-                                            rel="noreferrer"
+                                            target="_blank" rel="noreferrer"
                                             className="text-green-400 hover:text-green-300 text-xs underline transition"
                                         >
                                             Enviar comprobante por WhatsApp →
                                         </a>
                                     </div>
 
-                                    <button
-                                        type="submit"
-                                        disabled={processing || !data.voucher}
+                                    <button type="submit" disabled={processing || !data.voucher}
                                         className="w-full bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-600 text-slate-900 font-bold py-3 rounded-xl transition"
                                     >
                                         {processing ? 'Enviando...' : 'Enviar comprobante'}
@@ -252,10 +251,9 @@ export default function Show({ booking, payment }) {
                             </div>
                         )}
 
-
                     </div>
                 </div>
             </div>
         </div>
     );
-}  //ayudame a corregir
+}

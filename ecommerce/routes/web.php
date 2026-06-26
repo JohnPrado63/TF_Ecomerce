@@ -191,7 +191,17 @@ Route::get('/ofertas/{slug}', function ($slug) {
 Route::get('/contacto', function () {
     return Inertia::render('Contacto');
 })->name('contacto');
+// ============================================================
+// LEGAL (público)
+// ============================================================
 
+Route::get('/privacidad', function () {
+    return Inertia::render('Legal/Privacidad');
+})->name('privacidad');
+
+Route::get('/terminos', function () {
+    return Inertia::render('Legal/Terminos');
+})->name('terminos');
 // ============================================================
 // RESERVAS (público con redirect a login si no auth)
 // ============================================================
@@ -225,7 +235,13 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/payments/{bookingId}', [PaymentController::class, 'show'])->name('payments.show');
     Route::post('/payments', [PaymentController::class, 'store'])->name('payments.store');
+    // MercadoPago
+    Route::post('/payments/mp/preference', [App\Http\Controllers\MercadoPagoController::class, 'createPreference'])->name('mp.preference');
+    Route::get('/payments/mp/success', [App\Http\Controllers\MercadoPagoController::class, 'success'])->name('mp.success');
+    Route::get('/payments/mp/failure', [App\Http\Controllers\MercadoPagoController::class, 'failure'])->name('mp.failure');
+    Route::get('/payments/mp/pending', [App\Http\Controllers\MercadoPagoController::class, 'pending'])->name('mp.pending');
 });
+Route::post('/payments/mp/webhook', [App\Http\Controllers\MercadoPagoController::class, 'webhook'])->name('mp.webhook');
 
 // ============================================================
 // PANEL DE ADMINISTRACIÓN
@@ -249,7 +265,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/bookings/{id}/status', [AdminController::class, 'updateBookingStatus'])->name('bookings.status');
 
     // Pagos
-    Route::get('/payments', [PaymentController::class, 'payments'] ?? [AdminController::class, 'payments'])->name('payments');
+    Route::get('/payments', [AdminController::class, 'payments'])->name('payments');
     Route::put('/payments/{id}/verify', [PaymentController::class, 'verify'])->name('payments.verify');
 
     // Categorías
@@ -292,5 +308,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
 
 });
+Route::get('/privacidad', function () {
+    return Inertia::render('Legal/Privacidad');
+})->name('privacidad');
+
+Route::get('/terminos', function () {
+    return Inertia::render('Legal/Terminos');
+})->name('terminos');
 
 require __DIR__.'/auth.php';

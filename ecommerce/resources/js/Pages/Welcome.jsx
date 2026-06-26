@@ -437,7 +437,8 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                             <ul className="space-y-2 text-sm">
                                 <li><a href="#" className="hover:text-white">Preguntas frecuentes</a></li>
                                 <li><Link href="/contacto" className="hover:text-white">Contacto</Link></li>
-                                <li><a href="#" className="hover:text-white">Política de privacidad</a></li>
+                                <li><Link href="/privacidad" className="hover:text-white">Política de privacidad</Link></li>
+                                <li><Link href="/terminos" className="hover:text-white">Términos y condiciones</Link></li>
                             </ul>
                         </div>
                     </div>
@@ -452,7 +453,7 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                     </div>
                 </div>
 
-                <div className="mt-8 border-t border-slate-800 pt-6 text-sm text-slate-500 text-center">© 2026 VoyageEase. Todos los derechos reservados.</div>
+                <div className="mt-8 border-t border-slate-800 pt-6 text-sm text-slate-500 text-center">© 2026 ESKYTRIPS. Todos los derechos reservados.</div>
             </footer>
         </div>
     );
