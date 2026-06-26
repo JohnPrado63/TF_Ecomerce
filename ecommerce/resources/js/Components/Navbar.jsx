@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import Flash from '@/Components/Flash';
+import CookieBanner from '@/Components/CookieBanner';
 
 export default function Navbar() {
     const { auth } = usePage().props;
@@ -145,6 +146,8 @@ export default function Navbar() {
                     )}
                 </div>
             )}
+            <CookieBanner />
         </nav>
+        
     );
 }
