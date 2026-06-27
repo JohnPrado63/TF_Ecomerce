@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import Icon from '@/Components/Icon';
 import Navbar from '@/Components/Navbar';
 import StarRating from '@/Components/StarRating';
 
@@ -20,8 +21,9 @@ export default function Index({ recommendations, preference }) {
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
                     <div>
-                        <p className="text-sm uppercase tracking-[0.3em] text-cyan-400 mb-2">
-                            🎯 Travel Match
+                        <p className="text-sm uppercase tracking-[0.3em] text-cyan-400 mb-2 flex items-center gap-2">
+                            <Icon name="target" size={18} />
+                            Travel Match
                         </p>
                         <h1 className="text-3xl font-bold mb-2">Recomendado para ti</h1>
                         <p className="text-slate-400 text-sm">
@@ -31,16 +33,16 @@ export default function Index({ recommendations, preference }) {
                     </div>
                     <Link
                         href="/preferences"
-                        className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold px-5 py-2.5 rounded-xl transition text-sm whitespace-nowrap"
+                        className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold px-5 py-2.5 rounded-xl transition text-sm whitespace-nowrap flex items-center gap-2"
                     >
-                        ⚙️ Editar preferencias
+                        <Icon name="sparkles" size={16} /> Editar preferencias
                     </Link>
                 </div>
 
                 {/* Recomendaciones */}
                 {recommendations.length === 0 ? (
                     <div className="text-center py-20">
-                        <p className="text-6xl mb-4">🔍</p>
+                        <Icon name="search" size={48} className="mx-auto mb-4 text-slate-600" />
                         <p className="text-slate-400 text-xl mb-2">
                             No encontramos paquetes que coincidan
                         </p>
@@ -73,16 +75,16 @@ export default function Index({ recommendations, preference }) {
                                         {pkg.match_score}% match
                                     </div>
                                     {index === 0 && (
-                                        <div className="absolute top-3 left-3 bg-yellow-500 text-slate-900 text-xs font-bold px-3 py-1 rounded-full">
-                                            ⭐ Mejor opción
+                                        <div className="absolute top-3 left-3 bg-yellow-500 text-slate-900 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                            <Icon name="star" size={12} /> Mejor opción
                                         </div>
                                     )}
                                 </div>
 
                                 {/* Info */}
                                 <div className="p-5">
-                                    <p className="text-slate-500 text-xs mb-1">
-                                        📍 {pkg.location?.city}, {pkg.location?.region}
+                                    <p className="text-slate-500 text-xs mb-1 flex items-center gap-1">
+                                        <Icon name="map-pin" size={12} /> {pkg.location?.city}, {pkg.location?.region}
                                     </p>
                                     <h3 className="text-white font-bold text-lg mb-1 group-hover:text-cyan-400 transition">
                                         {pkg.title}
@@ -112,8 +114,8 @@ export default function Index({ recommendations, preference }) {
                                             <p className="text-cyan-400 font-bold text-xl">
                                                 S/. {Number(pkg.price).toFixed(2)}
                                             </p>
-                                            <p className="text-slate-500 text-xs">
-                                                📅 {pkg.duration_days} día(s)
+                                            <p className="text-slate-500 text-xs flex items-center gap-1">
+                                                <Icon name="calendar" size={12} /> {pkg.duration_days} día(s)
                                             </p>
                                         </div>
                                         <Link

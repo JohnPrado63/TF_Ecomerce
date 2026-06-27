@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import AdminNavbar from '@/Components/AdminNavbar';
+import Icon from '@/Components/Icon';
 export default function Reports({ salesByMonth, topPackages, summary }) {
 
     const months = [
@@ -75,7 +76,7 @@ export default function Reports({ salesByMonth, topPackages, summary }) {
 
                     {/* Paquetes más reservados */}
                     <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6">
-                        <h2 className="text-xl font-bold mb-6">🏆 Paquetes más reservados</h2>
+                        <h2 className="text-xl font-bold mb-6 flex items-center gap-2"><Icon name="trophy" size={20} /> Paquetes más reservados</h2>
                         {topPackages.length === 0 ? (
                             <p className="text-slate-400 text-sm text-center py-8">
                                 No hay reservas aún

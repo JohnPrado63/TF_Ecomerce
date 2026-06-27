@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import Icon from '@/Components/Icon';
 import Navbar from '@/Components/Navbar';
 import StarRating from '@/Components/StarRating';
 
@@ -71,8 +72,8 @@ export default function Show({ offer, packages }) {
 
                             {/* Info */}
                             <div className="p-5">
-                                <p className="text-slate-500 text-xs mb-1">
-                                    📍 {pkg.location?.city}, {pkg.location?.region}
+                                <p className="text-slate-500 text-xs mb-1 flex items-center gap-1">
+                                    <Icon name="map-pin" size={12} /> {pkg.location?.city}, {pkg.location?.region}
                                 </p>
                                 <h3 className="text-white font-bold mb-1 group-hover:text-cyan-400 transition">
                                     {pkg.title}
@@ -96,8 +97,8 @@ export default function Show({ offer, packages }) {
                                 </div>
 
                                 <div className="flex items-center justify-between">
-                                    <p className="text-slate-500 text-xs">
-                                        📅 {pkg.duration_days} día(s)
+                                    <p className="text-slate-500 text-xs flex items-center gap-1">
+                                        <Icon name="calendar" size={12} /> {pkg.duration_days} día(s)
                                     </p>
                                     <Link
                                         href={`/bookings/create?package_id=${pkg.id}&offer=${offer.slug}`}

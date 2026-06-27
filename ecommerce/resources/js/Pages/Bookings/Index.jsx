@@ -1,4 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
+import Icon from '@/Components/Icon';
 import Navbar from '@/Components/Navbar';
 
 export default function Index({ bookings }) {
@@ -10,9 +11,9 @@ export default function Index({ bookings }) {
     };
 
     const statusLabel = {
-        pending:   '⏳ Pendiente',
-        confirmed: '✅ Confirmado',
-        cancelled: '❌ Cancelado',
+        pending:   'Pendiente',
+        confirmed: 'Confirmado',
+        cancelled: 'Cancelado',
     };
 
     function cancelBooking(id) {
@@ -48,7 +49,7 @@ export default function Index({ bookings }) {
 
                 {bookings.length === 0 ? (
                     <div className="text-center py-32 bg-slate-900/20 rounded-3xl border border-slate-900/50 backdrop-blur-sm">
-                        <p className="text-4xl mb-4 grayscale opacity-40">🧳</p>
+                        <Icon name="briefcase" size={48} className="mx-auto mb-4 text-slate-600" />
                         <p className="text-slate-400/80 text-base font-light mb-6">
                             No tienes reservas activas en este momento.
                         </p>
@@ -81,20 +82,22 @@ export default function Index({ bookings }) {
                                         </h3>
                                         <div className="flex items-center gap-3 mt-1.5 text-xs text-slate-400/60 font-light">
                                             <span className="flex items-center gap-1">
-                                                <span className="text-slate-500">📍</span> {booking.tour_package?.location?.city}
+                                                <Icon name="map-pin" size={12} className="text-slate-500" />
+                                                {booking.tour_package?.location?.city}
                                             </span>
                                             <span className="text-slate-800">•</span>
                                             <span className="flex items-center gap-1">
-                                                <span className="text-slate-500">📅</span> {booking.booking_date}
+                                                <Icon name="calendar" size={12} className="text-slate-500" />
+                                                {booking.booking_date}
                                             </span>
                                             <span className="text-slate-800">•</span>
                                             <span className="flex items-center gap-1">
-                                                <span className="text-slate-500 text-sm">👥</span> 
+                                                <Icon name="users" size={12} className="text-slate-500" />
                                                 {booking.persons_quantity} {booking.persons_quantity === 1 ? 'persona' : 'personas'}
                                             </span>
                                             {booking.guide && (
-                                                <p className="text-cyan-400/70 text-xs mt-0.5">
-                                                    🧭 Guía: {booking.guide.nombre} {booking.guide.apellido}
+                                                <p className="text-cyan-400/70 text-xs mt-0.5 flex items-center gap-1">
+                                                    <Icon name="sparkles" size={12} /> Guía: {booking.guide.nombre} {booking.guide.apellido}
                                                 </p>
                                             )}
                                         </div>
@@ -112,7 +115,7 @@ export default function Index({ bookings }) {
                                         </p>
                                     </div>
                                     
-                                    {booking.status === 'pending' && (
+                                    {booking.status === 'pending' && booking.payment_status !== 'verified' && (
                                         <div className="flex items-center gap-4 w-full md:w-auto justify-end mt-1">
                                             <button
                                                 onClick={() => cancelBooking(booking.id)}
@@ -126,9 +129,10 @@ export default function Index({ bookings }) {
                                                 href={`/payments/${booking.id}`}
                                                 className="relative group/btn overflow-hidden bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold px-5 py-2.5 rounded-xl transition-all duration-300 text-xs tracking-wide shadow-[0_4px_20px_rgba(6,182,212,0.15)] hover:shadow-[0_4px_25px_rgba(6,182,212,0.35)] hover:-translate-y-0.5 active:translate-y-0 transform flex items-center gap-1.5"
                                             >
-                                                <span>💳 Pagar ahora</span>
-                                                <span className="inline-block transition-transform duration-300 group-hover/btn:translate-x-0.5">→</span>
-                                                
+                                                <Icon name="credit-card" size={14} />
+                                                <span>Pagar ahora</span>
+                                                <Icon name="arrow-right" size={14} className="inline-block transition-transform duration-300 group-hover/btn:translate-x-0.5" />
+
                                                 {/* Destello de luz interno al pasar el cursor */}
                                                 <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:animate-[shimmer_1s_infinite] text-transparent" />
                                             </Link>

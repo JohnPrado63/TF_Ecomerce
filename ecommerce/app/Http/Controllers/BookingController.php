@@ -162,10 +162,15 @@ class BookingController extends Controller
         $client = Client::where('user_id', auth()->id())->first();
 
         $bookings = $client
-            ? Booking::with(['tourPackage.location', 'guide'])
+            ? Booking::with(['tourPackage.location', 'guide', 'payments'])
                 ->where('client_id', $client->id)
                 ->orderBy('created_at', 'desc')
                 ->get()
+                ->map(function ($booking) {
+                    $payment = $booking->payments->first();
+                    $booking->payment_status = $payment ? $payment->status : null;
+                    return $booking;
+                })
             : collect();
 
         return Inertia::render('Bookings/Index', [
@@ -177,10 +182,19 @@ class BookingController extends Controller
     public function destroy($id)
     {
         $client  = Client::where('user_id', auth()->id())->first();
-        $booking = Booking::where('id', $id)
+        $booking = Booking::with('payments')
+            ->where('id', $id)
             ->where('client_id', $client->id)
             ->firstOrFail();
 
+        // Verificar si existe un pago ya verificado (confirmado)
+        $verifiedPayment = $booking->payments->firstWhere('status', 'verified');
+
+        if ($verifiedPayment) {
+            return redirect()->back()->with('error', 'No puedes cancelar una reserva cuyo pago ya fue confirmado. Contacta a soporte.');
+        }
+
+        // Reintegrar slots solo si la reserva estaba activa (pending o confirmed)
         if (in_array($booking->status, ['pending', 'confirmed'])){
             TourPackage::where('id', $booking->package_id)
                 ->increment('available_slots', $booking->persons_quantity);

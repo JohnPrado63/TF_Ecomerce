@@ -1,4 +1,5 @@
 import { Head, useForm, Link } from '@inertiajs/react';
+import Icon from '@/Components/Icon';
 import Navbar from '@/Components/Navbar';
 
 export default function Create({ package: pkg, offer }) {
@@ -84,8 +85,9 @@ export default function Create({ package: pkg, offer }) {
 
                             {/* Fecha */}
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">
-                                    📅 Fecha de viaje
+                                <label className="block text-slate-300 text-sm font-medium mb-2 flex items-center gap-2">
+                                    <Icon name="calendar" size={16} />
+                                    Fecha de viaje
                                 </label>
                                 <input
                                     type="date"
@@ -101,8 +103,9 @@ export default function Create({ package: pkg, offer }) {
 
                             {/* Personas */}
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">
-                                    👥 Número de personas
+                                <label className="block text-slate-300 text-sm font-medium mb-2 flex items-center gap-2">
+                                    <Icon name="users" size={16} />
+                                    Número de personas
                                 </label>
                                 <div className="flex items-center gap-4">
                                     <button type="button"
@@ -123,8 +126,9 @@ export default function Create({ package: pkg, offer }) {
                             <div>
                                 <div className="flex items-center justify-between mb-3">
                                     <div>
-                                        <label className="block text-slate-300 text-sm font-medium mb-1">
-                                            🏨 Selecciona un hotel
+                                        <label className="block text-slate-300 text-sm font-medium mb-1 flex items-center gap-2">
+                                            <Icon name="hotel" size={16} />
+                                            Selecciona un hotel
                                         </label>
                                         <p className="text-slate-500 text-xs">
                                             {pkg.includes_hotel
@@ -158,13 +162,15 @@ export default function Create({ package: pkg, offer }) {
                                                     <div>
                                                         <p className="font-semibold text-white">{hotel.nombre}</p>
                                                         <p className="text-slate-400 text-xs mt-1">
-                                                            {'⭐'.repeat(hotel.estrellas || 0)}
+                                                            {Array.from({ length: hotel.estrellas || 0 }, (_, i) => (
+                                                                <Icon key={i} name="star" size={12} className="text-yellow-400 inline" />
+                                                            ))}
                                                         </p>
                                                         <p className="text-slate-500 text-xs">{hotel.direccion}</p>
                                                     </div>
                                                     <div className="text-right">
                                                         <p className="text-cyan-300 font-bold">
-                                                            S/. {Number(hotel.precio_por_noche).toFixed(2)}
+                                                            S/. {Number(hotel.price_per_person).toFixed(2)}
                                                         </p>
                                                         <p className="text-slate-500 text-xs">por noche</p>
                                                         {data.hotel_id === hotel.id && (
@@ -187,8 +193,9 @@ export default function Create({ package: pkg, offer }) {
                             {/* Guía */}
                             {pkg.guias?.length > 0 && (
                                 <div>
-                                    <label className="block text-slate-300 text-sm font-medium mb-2">
-                                        🧭 Elige tu guía turístico
+                                    <label className="block text-slate-300 text-sm font-medium mb-2 flex items-center gap-2">
+                                        <Icon name="sparkles" size={16} />
+                                        Elige tu guía turístico
                                     </label>
                                     <div className="space-y-2">
                                         {pkg.guias.map((guia) => (
@@ -284,9 +291,9 @@ export default function Create({ package: pkg, offer }) {
                         <div className="bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden">
                             <img src={pkg.image_url} alt={pkg.title} className="w-full h-40 object-cover"/>
                             <div className="p-4">
-                                <p className="text-slate-400 text-sm">📍 {pkg.location?.city}, {pkg.location?.region}</p>
+                                <p className="text-slate-400 text-sm flex items-center gap-1"><Icon name="map-pin" size={14} /> {pkg.location?.city}, {pkg.location?.region}</p>
                                 <h3 className="text-white font-bold text-lg">{pkg.title}</h3>
-                                <p className="text-slate-400 text-sm mt-1">📅 {pkg.duration_days} día(s)</p>
+                                <p className="text-slate-400 text-sm mt-1 flex items-center gap-1"><Icon name="calendar" size={14} /> {pkg.duration_days} día(s)</p>
                             </div>
                         </div>
 
@@ -305,7 +312,7 @@ export default function Create({ package: pkg, offer }) {
                                 {/* Hotel */}
                                 {data.include_hotel && selectedHotel && (
                                     <div className="flex justify-between text-slate-300">
-                                        <span>🏨 {selectedHotel.nombre} × {data.persons_quantity}</span>
+                                        <span className="flex items-center gap-1"><Icon name="hotel" size={14} /> {selectedHotel.nombre} × {data.persons_quantity}</span>
                                         <span>S/. {hotelExtra.toFixed(2)}</span>
                                     </div>
                                 )}

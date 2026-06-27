@@ -163,9 +163,16 @@ class AdminController extends Controller
     // Gestión de reservas
     public function bookings()
     {
-        $bookings = Booking::with(['tourPackage', 'client', 'guide'])
+        $bookings = Booking::with(['tourPackage', 'client', 'guide', 'payments'])
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->get()
+            ->map(function ($booking) {
+                $payment = $booking->payments->first();
+                $booking->payment_status = $payment ? $payment->status : null;
+                $booking->payment_voucher = $payment ? $payment->voucher_path : null;
+                $booking->payment_method = $payment ? $payment->method : null;
+                return $booking;
+            });
 
         return Inertia::render('Admin/Bookings', [
             'bookings' => $bookings,

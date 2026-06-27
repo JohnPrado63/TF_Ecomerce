@@ -1,4 +1,5 @@
 import StarRating from '@/Components/StarRating';
+import Icon from '@/Components/Icon';
 import { Link, Head, router } from '@inertiajs/react';
 import { useMemo, useState } from 'react';
 
@@ -33,18 +34,18 @@ export default function Welcome({ auth, packages, destinations, offers }) {
     const ayacuchoDestinations = useMemo(() => {
         if (!destinations) return [];
 
-        const emojiMap = {
-            Huamanga: '🏛️',
-            Cangallo: '🌊',
-            Vilcashuamán: '⛰️',
-            Quinua: '🌾',
-            Huanta: '🌄',
+        const iconMap = {
+            Huamanga: 'landmark',
+            Cangallo: 'waves',
+            Vilcashuamán: 'mountain',
+            Quinua: 'wheat',
+            Huanta: 'sunrise',
         };
 
         return destinations.map((dest) => ({
             slug: dest.slug,
             name: dest.name,
-            emoji: emojiMap[dest.name] || '📍',
+            icon: iconMap[dest.name] || 'map-pin',
             desc: dest.description,
         }));
     }, [destinations]);
@@ -300,9 +301,7 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                                     {/* Contenido */}
                                     <div className="p-5">
                                         <div className="flex items-center gap-1 text-slate-400 text-sm mb-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                            </svg>
+                                            <Icon name="map-pin" size={16} className="text-slate-400" />
                                             {pkg.location?.city}, {pkg.location?.region}
                                         </div>
 
@@ -323,7 +322,8 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                                                 </p>
                                             </div>
                                             <div className="flex items-center gap-3 text-slate-400 text-sm">
-                                                <span>📅 {pkg.duration_days} día(s)</span>
+                                                <Icon name="calendar" size={14} className="inline mr-1" />
+                                                {pkg.duration_days} día(s)
                                             </div>
                                         </div>
 
@@ -358,7 +358,9 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                         {ayacuchoDestinations.map((dest) => (
                             <div key={dest.slug} className="group relative overflow-hidden rounded-3xl border border-slate-700 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/20 transition hover:-translate-y-1 hover:border-sky-500">
-                                <div className="absolute top-4 right-4 rounded-full bg-sky-500/10 px-3 py-2 text-xs uppercase tracking-[0.24em] text-sky-200">{dest.emoji}</div>
+                                <div className="absolute top-4 right-4 rounded-full bg-sky-500/10 p-2 text-sky-200">
+                                    <Icon name={dest.icon} size={18} className="text-sky-400" />
+                                </div>
                                 <div className="mt-6">
                                     <h3 className="text-xl font-bold text-white mb-2">{dest.name}</h3>
                                     <p className="text-slate-400 text-sm leading-6">{dest.desc}</p>

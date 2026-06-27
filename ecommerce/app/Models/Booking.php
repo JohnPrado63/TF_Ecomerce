@@ -54,4 +54,10 @@ class Booking extends Model
     {
         return $this->belongsTo(GuiaTuristico::class, 'guide_id');
     }
+
+    // Una reserva tiene muchos pagos
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
 }

@@ -20,8 +20,18 @@ class PaymentController extends Controller
             ->where('client_id', $client->id)
             ->firstOrFail();
 
-        // Ver si ya tiene pago pendiente
-        $payment = Payment::where('booking_id', $bookingId)->first();
+        // Si no existe registro Payment, lo creamos con estado pending y sin método
+        // así el admin puede ver que hay una reserva pendiente de pago
+        $payment = Payment::firstOrCreate(
+            ['booking_id' => $bookingId],
+            [
+                'amount'       => $booking->total_amount,
+                'method'       => null,
+                'status'       => 'pending',
+                'voucher_path' => null,
+                'notes'        => 'Esperando selección de método de pago',
+            ]
+        );
 
         return Inertia::render('Payments/Show', [
             'booking' => $booking,
@@ -69,14 +79,17 @@ class PaymentController extends Controller
             'status' => 'required|in:verified,rejected',
         ]);
 
-        $payment = Payment::with(['booking.client.user', 'booking.tourPackage.location'])
+        $payment = Payment::with(['booking.client.user', 'booking.tourPackage'])
             ->findOrFail($id);
 
-        $payment->update(['status' => $request->status]);
+        $booking = $payment->booking;
 
         if ($request->status === 'verified') {
-            // Confirmar la reserva
-            $payment->booking->update(['status' => 'confirmed']);
+            // Confirmar la reserva SOLO si no estaba ya confirmada
+            if ($booking->status !== 'confirmed') {
+                $booking->update(['status' => 'confirmed']);
+            }
+            $payment->update(['status' => 'verified']);
 
             // Enviar correo de confirmación de pago
             try {
@@ -86,13 +99,24 @@ class PaymentController extends Controller
                 \Log::info("Correo de confirmación enviado exitosamente a: $userEmail");
             } catch (\Exception $e) {
                 \Log::error("Error al enviar correo de confirmación: " . $e->getMessage());
-                // Si falla el correo no interrumpe el flujo
             }
+
+            return redirect()->back()
+                ->with('success', '✅ Pago verificado y reserva confirmada');
+        }
+
+        // Rechazo: reintegrar slots y cancelar reserva
+        $payment->update(['status' => 'rejected']);
+
+        if (in_array($booking->status, ['pending'])) {
+            // Solo reintegramos slots si la reserva aún no ha sido confirmada
+            // (si ya estaba confirmada, el pago ya se concretó y no se toca)
+            \App\Models\TourPackage::where('id', $booking->package_id)
+                ->increment('available_slots', $booking->persons_quantity);
+            $booking->update(['status' => 'cancelled']);
         }
 
         return redirect()->back()
-            ->with('success', $request->status === 'verified'
-                ? '✅ Pago verificado, reserva confirmada y correo enviado'
-                : '❌ Pago rechazado');
+            ->with('success', '❌ Pago rechazado' . ($booking->status === 'confirmed' ? ' (reserva ya estaba confirmada)' : ' y reserva cancelada'));
     }
 }

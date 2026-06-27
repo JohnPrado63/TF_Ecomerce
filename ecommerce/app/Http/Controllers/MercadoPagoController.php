@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\Client;
 use App\Models\Payment;
+use App\Models\TourPackage;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use MercadoPago\MercadoPagoConfig;
@@ -143,6 +144,18 @@ class MercadoPagoController extends Controller
         $booking = Booking::findOrFail($request->booking_id);
         $booking->update(['status' => 'pending']);
 
+        // Crear registro Payment para que el admin lo vea
+        Payment::updateOrCreate(
+            ['booking_id' => $booking->id],
+            [
+                'amount'       => $booking->total_amount,
+                'method'       => 'mercadopago',
+                'status'       => 'pending',
+                'voucher_path' => null,
+                'notes'        => 'MercadoPago: pago en proceso de verificación',
+            ]
+        );
+
         return redirect()->route('bookings.index')
             ->with('info', 'Tu pago está siendo procesado. Te notificaremos cuando se confirme.');
     }
@@ -150,8 +163,27 @@ class MercadoPagoController extends Controller
     // Pago fallido
     public function failure(Request $request)
     {
+        $booking = Booking::findOrFail($request->booking_id);
+
+        // Crear registro Payment rechazado para que el admin lo vea
+        Payment::updateOrCreate(
+            ['booking_id' => $booking->id],
+            [
+                'amount'       => $booking->total_amount,
+                'method'       => 'mercadopago',
+                'status'       => 'rejected',
+                'voucher_path' => null,
+                'notes'        => 'MercadoPago: pago rechazado o fallido',
+            ]
+        );
+
+        // Reintegrar slots y cancelar reserva
+        TourPackage::where('id', $booking->package_id)
+            ->increment('available_slots', $booking->persons_quantity);
+        $booking->update(['status' => 'cancelled']);
+
         return redirect()->route('bookings.index')
-            ->with('error', 'El pago no pudo procesarse. Por favor intenta de nuevo.');
+            ->with('error', 'El pago no pudo procesarse. Tu reserva ha sido cancelada y los cupos fueron reintegrados.');
     }
 
     // Webhook de MercadoPago
