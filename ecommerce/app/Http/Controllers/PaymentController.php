@@ -87,6 +87,9 @@ class PaymentController extends Controller
         if ($request->status === 'verified') {
             // Confirmar la reserva SOLO si no estaba ya confirmada
             if ($booking->status !== 'confirmed') {
+                // Decrementar slots SOLO la primera vez que se confirma
+                \App\Models\TourPackage::where('id', $booking->package_id)
+                    ->decrement('available_slots', $booking->persons_quantity);
                 $booking->update(['status' => 'confirmed']);
             }
             $payment->update(['status' => 'verified']);
@@ -102,7 +105,7 @@ class PaymentController extends Controller
             }
 
             return redirect()->back()
-                ->with('success', '✅ Pago verificado y reserva confirmada');
+                ->with('success', 'Pago verificado y reserva confirmada');
         }
 
         // Rechazo: reintegrar slots y cancelar reserva
@@ -116,7 +119,7 @@ class PaymentController extends Controller
             $booking->update(['status' => 'cancelled']);
         }
 
-        return redirect()->back()
-            ->with('success', '❌ Pago rechazado' . ($booking->status === 'confirmed' ? ' (reserva ya estaba confirmada)' : ' y reserva cancelada'));
+return redirect()->back()
+                ->with('success', 'Pago rechazado' . ($booking->status === 'confirmed' ? ' (reserva ya estaba confirmada)' : ' y reserva cancelada'));
     }
 }

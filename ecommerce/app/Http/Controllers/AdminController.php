@@ -186,8 +186,23 @@ class AdminController extends Controller
             'status' => 'required|in:pending,confirmed,cancelled',
         ]);
 
-        Booking::findOrFail($id)->update([
-            'status' => $request->status,
+        $booking = Booking::findOrFail($id);
+        $oldStatus = $booking->status;
+        $newStatus = $request->status;
+
+        // Gestionar slots del paquete
+        if ($newStatus === 'confirmed' && $oldStatus === 'pending') {
+            // Admin confirma una reserva pendiente - decrementar slots
+            \App\Models\TourPackage::where('id', $booking->package_id)
+                ->decrement('available_slots', $booking->persons_quantity);
+        } elseif ($newStatus === 'cancelled' && in_array($oldStatus, ['pending', 'confirmed'])) {
+            // Admin cancela una reserva - reintegrar slots
+            \App\Models\TourPackage::where('id', $booking->package_id)
+                ->increment('available_slots', $booking->persons_quantity);
+        }
+
+        $booking->update([
+            'status' => $newStatus,
         ]);
 
         return redirect()->back()->with('success', 'Estado actualizado correctamente');

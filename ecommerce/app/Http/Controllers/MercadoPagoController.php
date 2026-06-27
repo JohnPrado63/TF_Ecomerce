@@ -118,6 +118,18 @@ class MercadoPagoController extends Controller
         $booking = Booking::with(['tourPackage.location', 'client'])
             ->findOrFail($request->booking_id);
 
+        // Verificar si ya existe un pago verificado para esta reserva (idempotencia)
+        $existingVerifiedPayment = Payment::where('booking_id', $booking->id)
+            ->where('status', 'verified')
+            ->exists();
+
+        if ($existingVerifiedPayment) {
+            // Ya fue pagado anteriormente, no crear duplicado
+            return Inertia::render('Bookings/Confirmation', [
+                'booking' => $booking,
+            ]);
+        }
+
         // Registrar pago
         Payment::updateOrCreate(
             ['booking_id' => $booking->id],
@@ -130,8 +142,13 @@ class MercadoPagoController extends Controller
             ]
         );
 
-        // Confirmar reserva
-        $booking->update(['status' => 'confirmed']);
+        // Confirmar reserva solo si no estaba ya confirmada
+        if ($booking->status !== 'confirmed') {
+            // Decrementar slots al confirmar por MercadoPago
+            TourPackage::where('id', $booking->package_id)
+                ->decrement('available_slots', $booking->persons_quantity);
+            $booking->update(['status' => 'confirmed']);
+        }
 
         return Inertia::render('Bookings/Confirmation', [
             'booking' => $booking,
@@ -204,16 +221,30 @@ class MercadoPagoController extends Controller
 
                 if ($booking) {
                     if ($mpPayment->status === 'approved') {
-                        Payment::updateOrCreate(
-                            ['booking_id' => $booking->id],
-                            [
-                                'amount'    => $mpPayment->transaction_amount,
-                                'method'    => 'mercadopago',
-                                'status'    => 'verified',
-                                'notes'     => 'Webhook MP - ID: ' . $data['id'],
-                            ]
-                        );
-                        $booking->update(['status' => 'confirmed']);
+                        // Verificar si ya existe pago verified (idempotencia)
+                        $existingVerifiedPayment = Payment::where('booking_id', $booking->id)
+                            ->where('status', 'verified')
+                            ->exists();
+
+                        if (!$existingVerifiedPayment) {
+                            Payment::updateOrCreate(
+                                ['booking_id' => $booking->id],
+                                [
+                                    'amount'    => $mpPayment->transaction_amount,
+                                    'method'    => 'mercadopago',
+                                    'status'    => 'verified',
+                                    'notes'     => 'Webhook MP - ID: ' . $data['id'],
+                                ]
+                            );
+                        }
+
+                        // Confirmar reserva solo si no estaba ya confirmada
+                        if ($booking->status !== 'confirmed') {
+                            // Decrementar slots al confirmar por webhook
+                            TourPackage::where('id', $booking->package_id)
+                                ->decrement('available_slots', $booking->persons_quantity);
+                            $booking->update(['status' => 'confirmed']);
+                        }
 
                     } elseif (in_array($mpPayment->status, ['rejected', 'cancelled'])) {
                         $booking->update(['status' => 'cancelled']);
