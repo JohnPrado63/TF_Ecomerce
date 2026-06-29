@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class GuiaTuristico extends Model
 {
+    use HasFactory;
     protected $table = 'guias_turisticos';
 
     protected $fillable = [

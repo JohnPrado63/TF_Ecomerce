@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class TourPackage extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'category_id', 'location_id', 'title',
         'description', 'price', 'duration_days',

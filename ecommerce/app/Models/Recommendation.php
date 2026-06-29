@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Recommendation extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'client_id', 'package_id',
         'score', 'viewed'
