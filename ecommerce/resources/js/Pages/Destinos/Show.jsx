@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import Icon from '@/Components/Icon';
 import Navbar from '@/Components/Navbar';
 
 export default function Show({ destination, packages }) {
@@ -119,8 +120,8 @@ export default function Show({ destination, packages }) {
 
                                     {/* Info */}
                                     <div className="p-4">
-                                        <p className="text-slate-500 text-xs mb-1">
-                                            📍 {pkg.location?.city}, {pkg.location?.region}
+                                        <p className="text-slate-500 text-xs mb-1 flex items-center gap-1">
+                                            <Icon name="map-pin" size={12} /> {pkg.location?.city}, {pkg.location?.region}
                                         </p>
                                         <h3 className="text-white font-bold mb-2 group-hover:text-cyan-400 transition">
                                             {pkg.title}
@@ -129,18 +130,18 @@ export default function Show({ destination, packages }) {
                                         {/* Badges */}
                                         <div className="flex gap-2 mb-3 flex-wrap">
                                             {pkg.includes_guide == 1 && (
-                                                <span className="text-xs bg-blue-900/50 text-blue-300 px-2 py-0.5 rounded-full">
-                                                    🧭 Guía
+                                                <span className="text-xs bg-blue-900/50 text-blue-300 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                                    <Icon name="sparkles" size={12} /> Guía
                                                 </span>
                                             )}
                                             {pkg.includes_food == 1 && (
-                                                <span className="text-xs bg-green-900/50 text-green-300 px-2 py-0.5 rounded-full">
-                                                    🍽️ Comida
+                                                <span className="text-xs bg-green-900/50 text-green-300 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                                    <Icon name="utensils" size={12} /> Comida
                                                 </span>
                                             )}
                                             {pkg.includes_hotel == 1 && (
-                                                <span className="text-xs bg-purple-900/50 text-purple-300 px-2 py-0.5 rounded-full">
-                                                    🏨 Hotel
+                                                <span className="text-xs bg-purple-900/50 text-purple-300 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                                    <Icon name="building" size={12} /> Hotel
                                                 </span>
                                             )}
                                         </div>
@@ -150,8 +151,8 @@ export default function Show({ destination, packages }) {
                                                 <p className="text-cyan-400 font-bold text-lg">
                                                     S/. {Number(pkg.price).toFixed(2)}
                                                 </p>
-                                                <p className="text-slate-500 text-xs">
-                                                    📅 {pkg.duration_days} día(s)
+                                                <p className="text-slate-500 text-xs flex items-center gap-1">
+                                                    <Icon name="calendar" size={12} /> {pkg.duration_days} día(s)
                                                 </p>
                                             </div>
                                             <Link

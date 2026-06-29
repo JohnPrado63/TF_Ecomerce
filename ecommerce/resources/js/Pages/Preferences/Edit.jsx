@@ -1,4 +1,5 @@
 import { Head, Link, useForm } from '@inertiajs/react';
+import Icon from '@/Components/Icon';
 import Navbar from '@/Components/Navbar';
 
 export default function Edit({ preference, categories }) {
@@ -21,10 +22,10 @@ export default function Edit({ preference, categories }) {
 
             <div className="container mx-auto px-6 py-10 max-w-2xl">
 
-                {/* Header */}
-                <div className="text-center mb-10">
-                    <div className="text-5xl mb-3">🎯</div>
-                    <h1 className="text-3xl font-bold mb-2">Travel Match</h1>
+                    {/* Header */}
+                    <div className="text-center mb-10">
+                        <Icon name="target" size={48} className="mx-auto mb-3 text-cyan-400" />
+                        <h1 className="text-3xl font-bold mb-2">Travel Match</h1>
                     <p className="text-slate-400">
                         Cuéntanos qué te gusta y te recomendaremos los paquetes perfectos para ti
                     </p>
@@ -55,11 +56,12 @@ export default function Edit({ preference, categories }) {
                             )}
                         </div>
 
-                        {/* Duración */}
-                        <div>
-                            <label className="block text-slate-300 text-sm font-medium mb-2">
-                                📅 ¿Cuántos días sueles viajar?
-                            </label>
+                            {/* Duración */}
+                            <div>
+                                <label className="block text-slate-300 text-sm font-medium mb-2 flex items-center gap-2">
+                                    <Icon name="calendar" size={16} />
+                                    ¿Cuántos días sueles viajar?
+                                </label>
                             <div className="grid grid-cols-4 gap-3">
                                 {[1, 2, 3, 4].map((days) => (
                                     <button
@@ -104,8 +106,8 @@ export default function Edit({ preference, categories }) {
 
                         {/* Actividad */}
                         <div>
-                            <label className="block text-slate-300 text-sm font-medium mb-2">
-                                ✨ ¿Hay algo específico que te gustaría hacer? (opcional)
+                            <label className="block text-slate-300 text-sm font-medium mb-2 flex items-center gap-2">
+                                <Icon name="sparkles" size={16} /> ¿Hay algo específico que te gustaría hacer? (opcional)
                             </label>
                             <input
                                 type="text"
@@ -119,9 +121,13 @@ export default function Edit({ preference, categories }) {
                         <button
                             type="submit"
                             disabled={processing}
-                            className="w-full bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-600 text-slate-900 font-bold py-3 rounded-xl transition text-base"
+                            className="w-full bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-600 text-slate-900 font-bold py-3 rounded-xl transition text-base flex items-center justify-center gap-2"
                         >
-                            {processing ? 'Buscando...' : '🎯 Encontrar mis paquetes ideales'}
+                            {processing ? (
+                                <><Icon name="loader" size={18} className="animate-spin" /> Buscando...</>
+                            ) : (
+                                <><Icon name="target" size={18} /> Encontrar mis paquetes ideales</>
+                            )}
                         </button>
 
                     </form>

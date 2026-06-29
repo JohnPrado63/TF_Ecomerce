@@ -163,9 +163,16 @@ class AdminController extends Controller
     // Gestión de reservas
     public function bookings()
     {
-        $bookings = Booking::with(['tourPackage', 'client', 'guide'])
+        $bookings = Booking::with(['tourPackage', 'client', 'guide', 'payments'])
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->get()
+            ->map(function ($booking) {
+                $payment = $booking->payments->first();
+                $booking->payment_status = $payment ? $payment->status : null;
+                $booking->payment_voucher = $payment ? $payment->voucher_path : null;
+                $booking->payment_method = $payment ? $payment->method : null;
+                return $booking;
+            });
 
         return Inertia::render('Admin/Bookings', [
             'bookings' => $bookings,
@@ -179,8 +186,23 @@ class AdminController extends Controller
             'status' => 'required|in:pending,confirmed,cancelled',
         ]);
 
-        Booking::findOrFail($id)->update([
-            'status' => $request->status,
+        $booking = Booking::findOrFail($id);
+        $oldStatus = $booking->status;
+        $newStatus = $request->status;
+
+        // Gestionar slots del paquete
+        if ($newStatus === 'confirmed' && $oldStatus === 'pending') {
+            // Admin confirma una reserva pendiente - decrementar slots
+            \App\Models\TourPackage::where('id', $booking->package_id)
+                ->decrement('available_slots', $booking->persons_quantity);
+        } elseif ($newStatus === 'cancelled' && in_array($oldStatus, ['pending', 'confirmed'])) {
+            // Admin cancela una reserva - reintegrar slots
+            \App\Models\TourPackage::where('id', $booking->package_id)
+                ->increment('available_slots', $booking->persons_quantity);
+        }
+
+        $booking->update([
+            'status' => $newStatus,
         ]);
 
         return redirect()->back()->with('success', 'Estado actualizado correctamente');

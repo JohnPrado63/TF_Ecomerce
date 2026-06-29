@@ -308,12 +308,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
 
 });
-Route::get('/privacidad', function () {
-    return Inertia::render('Legal/Privacidad');
-})->name('privacidad');
-
-Route::get('/terminos', function () {
-    return Inertia::render('Legal/Terminos');
-})->name('terminos');
 
 require __DIR__.'/auth.php';

@@ -1,5 +1,6 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
+import Icon from '@/Components/Icon';
 import AdminNavbar from '@/Components/AdminNavbar';
 
 export default function Offers({ offers }) {
@@ -233,12 +234,16 @@ export default function Offers({ offers }) {
                                                 <p>→ {offer.end_date}</p>
                                             </td>
                                             <td className="p-4">
-                                                <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+                                                <span className={`text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 ${
                                                     isValid
                                                         ? 'bg-green-900/50 text-green-300'
                                                         : 'bg-slate-800 text-slate-500'
                                                 }`}>
-                                                    {isValid ? '✅ Activa' : '⏸️ Inactiva'}
+                                                    {isValid ? (
+                                                        <><Icon name="check-circle" size={12} /> Activa</>
+                                                    ) : (
+                                                        <><Icon name="x-circle" size={12} /> Inactiva</>
+                                                    )}
                                                 </span>
                                             </td>
                                             <td className="p-4">

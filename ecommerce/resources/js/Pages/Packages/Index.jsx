@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import StarRating from '@/Components/StarRating';
+import Icon from '@/Components/Icon';
 import { useState } from 'react';
 import Navbar from '@/Components/Navbar';
 
@@ -57,13 +58,16 @@ export default function Index({ packages, locations }) {
                 <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 mb-8 grid grid-cols-1 md:grid-cols-4 gap-4">
 
                     {/* Buscador */}
-                    <input
-                        type="text"
-                        placeholder="🔍 Buscar destino o paquete..."
-                        value={search}
-                        onChange={e => setSearch(e.target.value)}
-                        className="bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 col-span-1 md:col-span-1"
-                    />
+                    <div className="relative">
+                        <Icon name="search" size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                        <input
+                            type="text"
+                            placeholder="Buscar destino o paquete..."
+                            value={search}
+                            onChange={e => setSearch(e.target.value)}
+                            className="bg-slate-800 border border-slate-600 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 col-span-1 md:col-span-1 w-full"
+                        />
+                    </div>
 
                     {/* Filtro ubicación */}
                     <select
@@ -143,8 +147,9 @@ export default function Index({ packages, locations }) {
                                     />
                                 </div>
                                 <div className="p-5">
-                                    <p className="text-slate-400 text-sm mb-1">
-                                        📍 {pkg.location?.city}, {pkg.location?.region}
+                                    <p className="text-slate-400 text-sm mb-1 flex items-center gap-1">
+                                        <Icon name="map-pin" size={14} className="text-slate-400" />
+                                        {pkg.location?.city}, {pkg.location?.region}
                                     </p>
                                     <h2 className="text-white font-bold text-lg mb-2">{pkg.title}</h2>
                                     <div className="mb-2">

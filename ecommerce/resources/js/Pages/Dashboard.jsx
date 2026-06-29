@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import Icon from '@/Components/Icon';
 import Authenticated from '@/Layouts/AuthenticatedLayout';
 
 export default function Dashboard({ auth, bookings, stats }) {
@@ -88,8 +89,12 @@ export default function Dashboard({ auth, bookings, stats }) {
                                     />
                                     <div className="flex-1">
                                         <p className="font-semibold">{booking.tour_package?.title}</p>
-                                        <p className="text-slate-400 text-sm">
-                                            📍 {booking.tour_package?.location?.city} · 📅 {booking.booking_date}
+                                        <p className="text-slate-400 text-sm flex items-center gap-1">
+                                            <Icon name="map-pin" size={14} className="text-slate-500" />
+                                            {booking.tour_package?.location?.city}
+                                            <span className="mx-1">·</span>
+                                            <Icon name="calendar" size={14} className="text-slate-500" />
+                                            {booking.booking_date}
                                         </p>
                                     </div>
                                     <div className="text-right">

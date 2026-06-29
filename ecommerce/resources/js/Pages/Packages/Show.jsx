@@ -1,5 +1,6 @@
 import MapView from '@/Components/MapView';
 import StarRating from '@/Components/StarRating';
+import Icon from '@/Components/Icon';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import Navbar from '@/Components/Navbar';
 
@@ -48,8 +49,9 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels }) 
                     {/* Columna izquierda */}
                     <div className="lg:col-span-2">
 
-                        <p className="text-slate-400 text-sm mb-2">
-                            📍 {pkg.location?.city}, {pkg.location?.region}
+                        <p className="text-slate-400 text-sm mb-2 flex items-center gap-1">
+                            <Icon name="map-pin" size={16} className="text-slate-400" />
+                            {pkg.location?.city}, {pkg.location?.region}
                         </p>
                         <h1 className="text-3xl font-bold mb-4">{pkg.title}</h1>
                         <div className="mb-4">
@@ -66,24 +68,29 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels }) 
                         {/* Servicios incluidos */}
                         <h2 className="text-xl font-bold mb-4">¿Qué incluye?</h2>
                         <div className="grid grid-cols-2 gap-3 mb-6">
-                            <div className={`p-3 rounded-xl border ${pkg.includes_guide ? 'border-blue-500 bg-blue-900/30 text-blue-300' : 'border-slate-700 bg-slate-800 text-slate-500'}`}>
-                                🧭 Guía turístico {pkg.includes_guide ? '✓' : '✗'}
+                            <div className={`p-3 rounded-xl border flex items-center gap-2 ${pkg.includes_guide ? 'border-blue-500 bg-blue-900/30 text-blue-300' : 'border-slate-700 bg-slate-800 text-slate-500'}`}>
+                                <Icon name="sparkles" size={18} />
+                                Guía turístico {pkg.includes_guide ? <Icon name="check" size={14} className="text-green-400" /> : <Icon name="x" size={14} />}
                             </div>
-                            <div className={`p-3 rounded-xl border ${pkg.includes_food ? 'border-green-500 bg-green-900/30 text-green-300' : 'border-slate-700 bg-slate-800 text-slate-500'}`}>
-                                🍽️ Alimentación {pkg.includes_food ? '✓' : '✗'}
+                            <div className={`p-3 rounded-xl border flex items-center gap-2 ${pkg.includes_food ? 'border-green-500 bg-green-900/30 text-green-300' : 'border-slate-700 bg-slate-800 text-slate-500'}`}>
+                                <Icon name="utensils" size={18} />
+                                Alimentación {pkg.includes_food ? <Icon name="check" size={14} className="text-green-400" /> : <Icon name="x" size={14} />}
                             </div>
-                            <div className={`p-3 rounded-xl border ${pkg.includes_hotel ? 'border-purple-500 bg-purple-900/30 text-purple-300' : 'border-slate-700 bg-slate-800 text-slate-500'}`}>
-                                🏨 Alojamiento {pkg.includes_hotel ? '✓' : '✗'}
+                            <div className={`p-3 rounded-xl border flex items-center gap-2 ${pkg.includes_hotel ? 'border-purple-500 bg-purple-900/30 text-purple-300' : 'border-slate-700 bg-slate-800 text-slate-500'}`}>
+                                <Icon name="hotel" size={18} />
+                                Alojamiento {pkg.includes_hotel ? <Icon name="check" size={14} className="text-green-400" /> : <Icon name="x" size={14} />}
                             </div>
-                            <div className="p-3 rounded-xl border border-cyan-500 bg-cyan-900/30 text-cyan-300">
-                                📅 {pkg.duration_days} día(s)
+                            <div className="p-3 rounded-xl border border-cyan-500 bg-cyan-900/30 text-cyan-300 flex items-center gap-2">
+                                <Icon name="calendar" size={18} />
+                                {pkg.duration_days} día(s)
                             </div>
                         </div>
                         {/* Guía asignado */}
                         {pkg.guias?.length > 0 && (
                             <div className="mb-6">
-                                <h2 className="text-lg font-bold mb-3 text-slate-300">
-                                    🧭 Guías disponibles para este tour
+                                <h2 className="text-lg font-bold mb-3 text-slate-300 flex items-center gap-2">
+                                    <Icon name="sparkles" size={18} className="text-cyan-400" />
+                                    Guías disponibles para este tour
                                 </h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {pkg.guias.map((guia) => (
@@ -96,11 +103,13 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels }) 
                                                     <p className="font-semibold text-white">
                                                         {guia.nombre} {guia.apellido}
                                                     </p>
-                                                    <p className="text-slate-400 text-sm">
-                                                        🗣️ {guia.idiomas}
+                                                    <p className="text-slate-400 text-sm flex items-center gap-1">
+                                                        <Icon name="globe" size={14} /> {guia.idiomas}
                                                     </p>
-                                                    <p className="text-slate-500 text-xs mt-1">
-                                                        📞 {guia.telefono} · 🪪 {guia.credencial_nro}
+                                                    <p className="text-slate-500 text-xs mt-1 flex items-center gap-1">
+                                                        <Icon name="phone" size={12} /> {guia.telefono}
+                                                        <span className="mx-1">·</span>
+                                                        <Icon name="shield" size={12} /> {guia.credencial_nro}
                                                     </p>
                                                 </div>
                                             </div>
@@ -140,8 +149,9 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels }) 
                         {/* Otros hoteles en la zona */}
                         {nearbyHotels?.length > 0 && (
                             <div className="mb-6">
-                                <h2 className="text-lg font-bold mb-3 text-slate-300">
-                                    🏨 Otros hoteles en {pkg.location?.city}
+                                <h2 className="text-lg font-bold mb-3 text-slate-300 flex items-center gap-2">
+                                    <Icon name="building" size={18} className="text-slate-400" />
+                                    Otros hoteles en {pkg.location?.city}
                                 </h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {nearbyHotels.map((hotel) => (
@@ -160,7 +170,9 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels }) 
                                                     <span className="text-slate-500 text-xs font-normal"> / noche</span>
                                                 </p>
                                             )}
-                                            <p className="text-slate-500 text-xs">📍 {hotel.direccion}</p>
+                                            <p className="text-slate-500 text-xs flex items-center gap-1">
+                                                <Icon name="map-pin" size={12} /> {hotel.direccion}
+                                            </p>
                                         </div>
                                     ))}
                                 </div>
@@ -176,7 +188,9 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels }) 
                                         <div key={restaurante.id} className="p-4 rounded-2xl border border-slate-700 bg-slate-900">
                                             <p className="font-semibold text-white">{restaurante.nombre}</p>
                                             <p className="text-slate-400 text-sm">{restaurante.tipo_comida}</p>
-                                            <p className="text-slate-500 text-sm mt-2">{restaurante.direccion}</p>
+                                            <p className="text-slate-500 text-sm mt-2 flex items-center gap-1">
+                                                <Icon name="map-pin" size={14} /> {restaurante.direccion}
+                                            </p>
                                         </div>
                                     ))}
                                 </div>
@@ -189,15 +203,18 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels }) 
                         {/* Otros restaurantes en la zona */}
                         {nearbyRestaurants?.length > 0 && (
                             <div className="mb-6">
-                                <h2 className="text-lg font-bold mb-3 text-slate-300">
-                                    🍽️ Otros restaurantes en {pkg.location?.city}
+                                <h2 className="text-lg font-bold mb-3 text-slate-300 flex items-center gap-2">
+                                    <Icon name="utensils" size={18} className="text-slate-400" />
+                                    Otros restaurantes en {pkg.location?.city}
                                 </h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {nearbyRestaurants.map((restaurante) => (
                                         <div key={restaurante.id} className="p-4 rounded-2xl border border-slate-800 bg-slate-900/50 hover:border-slate-600 transition">
                                             <p className="font-semibold text-white">{restaurante.nombre}</p>
                                             <p className="text-slate-400 text-sm">{restaurante.tipo_comida}</p>
-                                            <p className="text-slate-500 text-xs mt-2">📍 {restaurante.direccion}</p>
+                                            <p className="text-slate-500 text-xs mt-2 flex items-center gap-1">
+                                                <Icon name="map-pin" size={12} /> {restaurante.direccion}
+                                            </p>
                                         </div>
                                     ))}
                                 </div>
@@ -206,8 +223,9 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels }) 
 
                         {/*ubicacion en el mapa */}
                         <div className="mb-6">
-                            <h2 className="text-xl font-bold mb-4">
-                                📍 Ubicación del destino
+                            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                <Icon name="map-pin" size={20} className="text-cyan-400" />
+                                Ubicación del destino
                             </h2>
                             <p className="text-slate-400 text-sm mb-3">
                                 {pkg.location?.city}, {pkg.location?.region}-Ayacucho, Perú
