@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Preference extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'client_id', 'preferred_budget',
         'preferred_duration', 'preferred_category',
