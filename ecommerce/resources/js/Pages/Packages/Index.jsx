@@ -1,42 +1,48 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import StarRating from '@/Components/StarRating';
 import Icon from '@/Components/Icon';
 import { useState } from 'react';
 import Navbar from '@/Components/Navbar';
 
 
-export default function Index({ packages, locations }) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const [search, setSearch] = useState(urlParams.get('search') || '');
-    const [ubicacion, setUbicacion] = useState('');
-    const [categoria, setCategoria] = useState('');
-    const [duracion, setDuracion]   = useState('');
-    const [orden, setOrden]         = useState('');
-
-    const filtrados = packages
-        .filter(pkg => ubicacion ? pkg.location?.city === ubicacion : true)
-        .filter(pkg =>
-            pkg.title.toLowerCase().includes(search.toLowerCase()) ||
-            pkg.location?.city.toLowerCase().includes(search.toLowerCase())
-        )
-        .filter(pkg => categoria ? pkg.category?.name === categoria : true)
-        .filter(pkg => {
-            if (duracion === '1')  return pkg.duration_days === 1;
-            if (duracion === '2')  return pkg.duration_days === 2;
-            if (duracion === '3+') return pkg.duration_days >= 3;
-            return true;
-        })
-        .sort((a, b) => {
-            if (orden === 'precio_asc')  return a.price - b.price;
-            if (orden === 'precio_desc') return b.price - a.price;
-            return 0;
-        });
+export default function Index({ packages, locations, filters = {} }) {
+    const [search, setSearch] = useState(filters.search || '');
+    const [ubicacion, setUbicacion] = useState(filters.ubicacion || '');
+    const [categoria, setCategoria] = useState(filters.categoria || '');
+    const [duracion, setDuracion] = useState(filters.duracion || '');
+    const [orden, setOrden] = useState(filters.orden || 'recientes');
 
     const categorias = [...new Set(packages.map(p => p.category?.name).filter(Boolean))];
 
+    const applyFilters = () => {
+        const params = {};
+        if (search) params.search = search;
+        if (ubicacion) params.ubicacion = ubicacion;
+        if (categoria) params.categoria = categoria;
+        if (duracion) params.duracion = duracion;
+        if (orden && orden !== 'recientes') params.orden = orden;
+
+        router.get('/packages', params, { preserveState: true, replace: true });
+    };
+
+    const clearFilters = () => {
+        setSearch('');
+        setUbicacion('');
+        setCategoria('');
+        setDuracion('');
+        setOrden('recientes');
+        router.get('/packages', {}, { preserveState: true, replace: true });
+    };
+
+    const handleSearch = (e) => {
+        if (e.key === 'Enter') {
+            applyFilters();
+        }
+    };
+
     return (
         <div className="min-h-screen bg-slate-950 text-white">
-            <Navbar />  
+            <Navbar />
             <Head title="Paquetes Turísticos - ESKY TRIPS" />
 
             <div className="container mx-auto px-6 py-10">
@@ -55,7 +61,7 @@ export default function Index({ packages, locations }) {
                 </div>
 
                 {/* Filtros */}
-                <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 mb-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 mb-8 grid grid-cols-1 md:grid-cols-5 gap-4">
 
                     {/* Buscador */}
                     <div className="relative">
@@ -65,6 +71,7 @@ export default function Index({ packages, locations }) {
                             placeholder="Buscar destino o paquete..."
                             value={search}
                             onChange={e => setSearch(e.target.value)}
+                            onKeyDown={handleSearch}
                             className="bg-slate-800 border border-slate-600 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 col-span-1 md:col-span-1 w-full"
                         />
                     </div>
@@ -101,8 +108,9 @@ export default function Index({ packages, locations }) {
                     >
                         <option value="">Cualquier duración</option>
                         <option value="1">1 día</option>
-                        <option value="2">2 días</option>
-                        <option value="3+">3 días o más</option>
+                        <option value="2-3">2-3 días</option>
+                        <option value="4-7">4-7 días</option>
+                        <option value="8+">8+ días</option>
                     </select>
 
                     {/* Ordenar por precio */}
@@ -111,25 +119,43 @@ export default function Index({ packages, locations }) {
                         onChange={e => setOrden(e.target.value)}
                         className="bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                     >
-                        <option value="">Ordenar por</option>
-                        <option value="precio_asc">Precio: menor a mayor</option>
-                        <option value="precio_desc">Precio: mayor a menor</option>
+                        <option value="recientes">Más recientes</option>
+                        <option value="precio-bajo">Precio: menor a mayor</option>
+                        <option value="precio-alto">Precio: mayor a menor</option>
+                        <option value="duracion">Por duración</option>
                     </select>
+
+                    {/* Botones de filtro */}
+                    <div className="flex gap-2 items-center">
+                        <button
+                            onClick={applyFilters}
+                            className="flex-1 bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold py-3 rounded-xl transition text-sm"
+                        >
+                            Aplicar filtros
+                        </button>
+                        <button
+                            onClick={clearFilters}
+                            className="px-4 py-3 text-slate-400 hover:text-white transition text-sm"
+                            title="Limpiar filtros"
+                        >
+                            ✕
+                        </button>
+                    </div>
                 </div>
 
                 {/* Resultado */}
                 <p className="text-slate-400 text-sm mb-4">
-                    {filtrados.length} paquete(s) encontrado(s)
+                    {packages.length} paquete(s) encontrado(s)
                 </p>
 
                 {/* Grid de paquetes */}
-                {filtrados.length === 0 ? (
+                {packages.length === 0 ? (
                     <div className="text-center py-20">
                         <p className="text-slate-400 text-xl">
                             No se encontraron paquetes con esos filtros
                         </p>
                         <button
-                            onClick={() => { setSearch(''); setCategoria(''); setDuracion(''); setOrden(''); }}
+                            onClick={clearFilters}
                             className="mt-4 text-cyan-400 hover:text-cyan-300 transition"
                         >
                             Limpiar filtros
@@ -137,7 +163,7 @@ export default function Index({ packages, locations }) {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filtrados.map((pkg) => (
+                        {packages.map((pkg) => (
                             <div key={pkg.id} className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 hover:border-cyan-500 transition group">
                                 <div className="h-48 overflow-hidden">
                                     <img

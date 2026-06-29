@@ -1,5 +1,6 @@
 import StarRating from '@/Components/StarRating';
 import Icon from '@/Components/Icon';
+import Navbar from '@/Components/Navbar';
 import { Link, Head, router } from '@inertiajs/react';
 import { useMemo, useState } from 'react';
 
@@ -86,60 +87,7 @@ export default function Welcome({ auth, packages, destinations, offers }) {
             <div className="relative overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(30,58,138,0.35),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(219,39,119,0.20),_transparent_28%)] pointer-events-none"></div>
 
-                <header className="relative z-10 container mx-auto px-6 py-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                    <div className="flex items-center justify-between">
-                        <div className="text-2xl font-bold tracking-tight text-white">ESKY TRIPS</div>
-                        <button className="inline-flex items-center justify-center rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 lg:hidden">
-                            <span className="mr-2">Menu</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-4 w-4">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <nav className="hidden lg:flex items-center gap-4 text-slate-300">
-                        <Link href="/packages" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Paquetes</Link>
-                        <a href="#destinos" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Destinos</a>
-                        <a href="#ofertas" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Ofertas</a>
-                        <Link href="/contacto" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Contacto</Link>
-                        {auth?.user ? (
-                            <>
-                                <Link href="/bookings" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Mis Reservas</Link>
-                            </>
-                        ) : (
-                            <>
-                                <Link href="/login" className="px-5 py-3 text-base font-semibold rounded-xl bg-transparent text-slate-100 hover:bg-slate-800 transition">Iniciar sesión</Link>
-                                <Link href="/register" className="px-5 py-3 text-base font-semibold rounded-xl bg-cyan-500 text-slate-900 hover:bg-cyan-400 transition">Registrarse</Link>
-                            </>
-                        )}
-                    </nav>
-
-
-                    <div className="hidden lg:flex items-center gap-4">
-
-                        {auth?.user ? (
-                            <Link href="/profile" className="inline-flex items-center gap-3 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-200 transition hover:border-sky-500 hover:bg-slate-800">
-                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sky-500 text-sm font-semibold text-slate-950">
-                                    {auth.user.name?.split(' ').map((word) => word[0]).join('').slice(0, 2).toUpperCase()}
-                                </div>
-                                <div className="hidden sm:block text-left">
-                                    <p className="text-sm font-semibold text-white">{auth.user.name || auth.user.email}</p>
-                                    <p className="text-xs text-slate-400">Gold Member</p>
-                                </div>
-                            </Link>
-                        ) : (
-                            <div className="inline-flex items-center gap-3 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-200">
-                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-sm font-semibold text-slate-300">
-                                    <span>G</span>
-                                </div>
-                                <div className="hidden sm:block text-left">
-                                    <p className="text-sm font-semibold text-white">Invitado</p>
-                                    <p className="text-xs text-slate-400">Conéctate para más</p>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </header>
+                <Navbar />
 
                 <section className="relative">
                     <div className="relative mx-auto max-w-screen-2xl overflow-hidden rounded-[2rem] bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=90')" }}>
@@ -214,7 +162,7 @@ export default function Welcome({ auth, packages, destinations, offers }) {
 
             <main className="relative z-10 container mx-auto px-6 pb-20 lg:px-12">
                 <section className="grid gap-10 lg:grid-cols-[280px_minmax(0,1fr)]">
-                    <aside className="rounded-[2rem] border border-slate-800 bg-slate-900/90 p-6 text-slate-300 shadow-xl shadow-slate-950/10">
+                    <aside className="rounded-[2rem] border border-slate-800 bg-slate-900/90 p-6 text-slate-300 shadow-xl shadow-slate-950/10 self-start mt-8">
                         <h2 className="text-sm font-semibold tracking-[0.24em] uppercase text-sky-300 mb-6">Refinar búsqueda</h2>
                         <div className="space-y-4">
                             {categoryOptions.map((item) => (
@@ -232,7 +180,13 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                         <div className="mt-6">
                             <button
                                 type="button"
-                                onClick={() => setAppliedCategories(selectedCategories)}
+                                onClick={() => {
+                                    if (selectedCategories.length > 0) {
+                                        router.get('/packages', { categoria: selectedCategories[0] });
+                                    } else {
+                                        router.get('/packages');
+                                    }
+                                }}
                                 className="w-full rounded-full bg-sky-500 px-4 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition"
                             >
                                 Aplicar filtros
@@ -253,20 +207,6 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                                 <span>S/. 10,000+</span>
                             </div>
                         </div>
-                        <div className="mt-8 rounded-[1.75rem] border border-slate-800 bg-slate-950/90 p-5">
-                            <p className="text-xs uppercase tracking-[0.24em] text-slate-500 mb-3">Servicios populares</p>
-                            {['Cancelación gratis', 'Todo incluido', 'Solo adultos'].map((option) => (
-                                <label key={option} className="flex items-center gap-3 rounded-3xl border border-slate-800 bg-slate-900/80 px-4 py-3 text-sm cursor-pointer hover:border-slate-700 mb-3">
-                                    <input type="checkbox" className="h-4 w-4 rounded border-slate-700 bg-slate-800 text-sky-500" />
-                                    <span className="text-slate-300">{option}</span>
-                                </label>
-                            ))}
-                        </div>
-                        <div className="mt-8 rounded-[1.75rem] border border-slate-800 bg-slate-950/90 p-5 text-slate-300">
-                            <p className="font-semibold text-white mb-2">Conserje experto</p>
-                            <p className="text-sm text-slate-400">¿Necesitas ayuda para planificar tu viaje perfecto? Nuestros expertos están en línea.</p>
-                            <button className="mt-5 w-full rounded-full bg-sky-500 px-4 py-3 text-sm font-semibold text-white hover:bg-sky-400 transition">Iniciar chat en vivo</button>
-                        </div>
                     </aside>
 
                     <section id="packages" className="space-y-8">
@@ -281,9 +221,9 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                             </div>
                         </div>
 
-                        <div className="grid gap-6 xl:grid-cols-3">
+                    <div className="grid gap-6 xl:grid-cols-3">
                             {filteredPackages.map((pkg) => (
-                                <div key={pkg.id} className="relative rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 hover:border-slate-600 transition group">
+                                <div key={pkg.id} className="relative rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 hover:border-cyan-500/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group">
                                     {/* Imagen */}
                                     <div className="relative h-52 overflow-hidden">
                                         <img

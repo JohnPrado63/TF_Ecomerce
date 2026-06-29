@@ -3,8 +3,9 @@ import StarRating from '@/Components/StarRating';
 import Icon from '@/Components/Icon';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import Navbar from '@/Components/Navbar';
+import PackageCard from '@/Components/PackageCard';
 
-export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels }) {
+export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels, similarPackages }) {
     const { auth } = usePage().props;
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -237,6 +238,25 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels }) 
                                 city={pkg.location?.city}
                             />
                         </div>
+
+                        {/* Paquetes similares */}
+                        {similarPackages && similarPackages.length > 0 && (
+                            <div className="mb-8">
+                                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                    <Icon name="layers" size={20} className="text-cyan-400" />
+                                    Paquetes similares
+                                </h2>
+                                <p className="text-slate-400 text-sm mb-4">
+                                    También te pueden interesar estos destinos
+                                </p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    {similarPackages.map((similar) => (
+                                        <PackageCard key={similar.id} pkg={similar} />
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         {/* Reseñas */}
                         <div className="mb-6">
                             <h2 className="text-xl font-bold mb-4">
