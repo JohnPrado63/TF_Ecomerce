@@ -179,7 +179,7 @@ export default function Show({ booking, payment }) {
                             </div>
                         )}
 
-                        {/* Efectivo */}
+                        {/* Efectivo s*/}
                         {data.method === 'efectivo' && (
                             <div className="bg-slate-800 rounded-xl p-4 text-center">
                                 <p className="text-slate-300 text-sm">
