@@ -132,7 +132,7 @@ export default function Index({ recommendations, preference, behavioralProfile }
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
-                            className="bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                            className="bg-slate-800 border border-slate-700 text-slate-400 text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
                         >
                             {sortOptions.map((option) => (
                                 <option key={option.key} value={option.key}>
@@ -163,7 +163,7 @@ export default function Index({ recommendations, preference, behavioralProfile }
                         <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-slate-900 flex items-center justify-center">
                             <Icon name="search" size={40} className="text-slate-600" />
                         </div>
-                        <p className="text-slate-300 text-xl mb-2">
+                        <p className="text-slate-400 text-xl mb-2">
                             No encontramos paquetes con esos filtros
                         </p>
                         <p className="text-slate-500 text-sm mb-8">
@@ -179,7 +179,7 @@ export default function Index({ recommendations, preference, behavioralProfile }
                                         else if (suggestion.text.includes('duración')) setSortBy('score');
                                         else setFilterBy('all');
                                     }}
-                                    className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-4 py-2 rounded-full text-sm transition"
+                                    className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-400 px-4 py-2 rounded-full text-sm transition"
                                 >
                                     <Icon name={suggestion.icon} size={14} />
                                     {suggestion.text}

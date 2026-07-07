@@ -132,7 +132,7 @@ export default function Contacto() {
                     <h1 className="mb-4 text-4xl font-extrabold tracking-tight sm:text-5xl">
                         Contáctanos
                     </h1>
-                    <p className="mx-auto max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">
+                    <p className="mx-auto max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">
                         ¿Tienes alguna pregunta sobre nuestros paquetes turísticos? Escríbenos y te respondemos a la brevedad.
                     </p>
                 </section>
@@ -188,7 +188,7 @@ export default function Contacto() {
                                     </svg>
                                 </div>
                                 <h2 className="mb-2 text-2xl font-bold">¡Mensaje enviado!</h2>
-                                <p className="mb-6 max-w-md text-slate-300">
+                                <p className="mb-6 max-w-md text-slate-400">
                                     Gracias por contactarnos. Te responderemos en menos de 24 horas.
                                 </p>
                                 <button
@@ -288,7 +288,7 @@ export default function Contacto() {
                                     <button
                                         type="submit"
                                         disabled={processing}
-                                        className="w-full rounded-xl bg-gradient-to-r from-cyan-400 to-sky-500 py-3 text-base font-extrabold text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:from-cyan-300 hover:to-sky-400 focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:cursor-not-allowed disabled:from-slate-600 disabled:to-slate-600 disabled:text-slate-300 disabled:shadow-none"
+                                        className="w-full rounded-xl bg-gradient-to-r from-cyan-400 to-sky-500 py-3 text-base font-extrabold text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:from-cyan-300 hover:to-sky-400 focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:cursor-not-allowed disabled:from-slate-600 disabled:to-slate-600 disabled:text-slate-400 disabled:shadow-none"
                                     >
                                         {processing ? 'Enviando...' : 'Enviar mensaje'}
                                     </button>

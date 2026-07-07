@@ -175,17 +175,17 @@ export default function Privacidad() {
                                         </h2>
 
                                         {section.subtitle && (
-                                            <p className="text-slate-300 mb-4">{section.subtitle}</p>
+                                            <p className="text-slate-400 mb-4">{section.subtitle}</p>
                                         )}
 
                                         {section.content && (
-                                            <p className="text-slate-300 leading-relaxed">{section.content}</p>
+                                            <p className="text-slate-400 leading-relaxed">{section.content}</p>
                                         )}
 
                                         {section.list && (
                                             <ul className="space-y-2 mt-1">
                                                 {section.list.map((item, i) => (
-                                                    <li key={i} className="flex items-start gap-3 text-slate-300">
+                                                    <li key={i} className="flex items-start gap-3 text-slate-400">
                                                         <svg className={`w-5 h-5 mt-0.5 flex-shrink-0 ${colors.icon}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                                         </svg>

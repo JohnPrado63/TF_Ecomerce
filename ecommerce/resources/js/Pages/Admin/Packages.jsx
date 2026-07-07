@@ -57,16 +57,16 @@ export default function Packages({ packages }) {
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="p-4 text-slate-300 text-sm">
+                                    <td className="p-4 text-slate-400 text-sm">
                                         {pkg.location?.city}
                                     </td>
                                     <td className="p-4 text-cyan-400 font-bold">
                                         S/. {Number(pkg.price).toFixed(2)}
                                     </td>
-                                    <td className="p-4 text-slate-300 text-sm">
+                                    <td className="p-4 text-slate-400 text-sm">
                                         {pkg.duration_days} día(s)
                                     </td>
-                                    <td className="p-4 text-slate-300 text-sm">
+                                    <td className="p-4 text-slate-400 text-sm">
                                         {pkg.available_slots}
                                     </td>
                                     <td className="p-4">

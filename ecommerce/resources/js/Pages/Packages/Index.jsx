@@ -80,6 +80,7 @@ export default function Index({ packages, locations, filters = {} }) {
                     <select
                         value={ubicacion}
                         onChange={e => setUbicacion(e.target.value)}
+                        aria-label="Filtrar por ubicación"
                         className="bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                     >
                         <option value="">Todas las ubicaciones</option>
@@ -92,6 +93,7 @@ export default function Index({ packages, locations, filters = {} }) {
                     <select
                         value={categoria}
                         onChange={e => setCategoria(e.target.value)}
+                        aria-label="Filtrar por categoría"
                         className="bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                     >
                         <option value="">Todas las categorías</option>
@@ -104,6 +106,7 @@ export default function Index({ packages, locations, filters = {} }) {
                     <select
                         value={duracion}
                         onChange={e => setDuracion(e.target.value)}
+                        aria-label="Filtrar por duración"
                         className="bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                     >
                         <option value="">Cualquier duración</option>
@@ -117,6 +120,7 @@ export default function Index({ packages, locations, filters = {} }) {
                     <select
                         value={orden}
                         onChange={e => setOrden(e.target.value)}
+                        aria-label="Ordenar paquetes"
                         className="bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                     >
                         <option value="recientes">Más recientes</option>
@@ -169,6 +173,8 @@ export default function Index({ packages, locations, filters = {} }) {
                                     <img
                                         src={pkg.image_url}
                                         alt={pkg.title}
+                                        loading="lazy"
+                                        decoding="async"
                                         className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                                     />
                                 </div>

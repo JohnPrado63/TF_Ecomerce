@@ -95,6 +95,8 @@ export default function Navbar() {
                 {/* Botón menú móvil */}
                 <button
                     onClick={() => setMenuOpen(!menuOpen)}
+                    aria-label={menuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
+                    aria-expanded={menuOpen}
                     className="md:hidden p-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition"
                 >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

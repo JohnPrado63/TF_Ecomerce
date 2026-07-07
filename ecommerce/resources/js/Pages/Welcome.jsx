@@ -98,7 +98,7 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-10">
                                     Descubre la magia de Ayacucho
                                 </h1>
-                                <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-10">
+                                <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto mb-10">
                                      Planifica tu aventura perfecta explorando paquetes turísticos y servicios que tenemos para cada destino.
                                 </p>
 
@@ -107,7 +107,7 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                                         <div className="grid gap-4 sm:grid-cols-3">
 
 
-                                            <div className="rounded-3xl bg-slate-900/90 px-4 py-4 text-left text-sm text-slate-300">
+                                            <div className="rounded-3xl bg-slate-900/90 px-4 py-4 text-left text-sm text-slate-400">
                                                 <span className="block text-xs uppercase tracking-[0.18em] text-slate-500">Destino</span>
                                                 <input
                                                     type="text"
@@ -117,7 +117,7 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                                                     className="mt-2 block w-full bg-transparent text-white placeholder-slate-500 focus:outline-none"
                                                 />
                                             </div>
-                                            <div className="rounded-3xl bg-slate-900/90 px-4 py-4 text-left text-sm text-slate-300">
+                                            <div className="rounded-3xl bg-slate-900/90 px-4 py-4 text-left text-sm text-slate-400">
                                                 <span className="block text-xs uppercase tracking-[0.18em] text-slate-500">Fecha de viaje</span>
                                                 <input
                                                     type="date"
@@ -126,7 +126,7 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                                                     className="mt-2 block w-full bg-transparent text-white focus:outline-none"
                                                 />
                                             </div>
-                                            <div className="rounded-3xl bg-slate-900/90 px-4 py-4 text-left text-sm text-slate-300">
+                                            <div className="rounded-3xl bg-slate-900/90 px-4 py-4 text-left text-sm text-slate-400">
                                                 <span className="block text-xs uppercase tracking-[0.18em] text-slate-500">Personas</span>
                                                 <input
                                                     type="number"
@@ -162,7 +162,7 @@ export default function Welcome({ auth, packages, destinations, offers }) {
 
             <main className="relative z-10 container mx-auto px-6 pb-20 lg:px-12">
                 <section className="grid gap-10 lg:grid-cols-[280px_minmax(0,1fr)]">
-                    <aside className="rounded-[2rem] border border-slate-800 bg-slate-900/90 p-6 text-slate-300 shadow-xl shadow-slate-950/10 self-start mt-8">
+                    <aside className="rounded-[2rem] border border-slate-800 bg-slate-900/90 p-6 text-slate-400 shadow-xl shadow-slate-950/10 self-start mt-8">
                         <h2 className="text-sm font-semibold tracking-[0.24em] uppercase text-sky-300 mb-6">Refinar búsqueda</h2>
                         <div className="space-y-4">
                             {categoryOptions.map((item) => (
@@ -173,7 +173,7 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                                         onChange={() => toggleCategory(item.value)}
                                         className="h-4 w-4 rounded border-slate-700 bg-slate-800 text-sky-500"
                                     />
-                                    <span className={selectedCategories.includes(item.value) ? 'font-semibold text-white' : 'text-slate-300'}>{item.label}</span>
+                                    <span className={selectedCategories.includes(item.value) ? 'font-semibold text-white' : 'text-slate-400'}>{item.label}</span>
                                 </label>
                             ))}
                         </div>
@@ -215,7 +215,7 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                                 <p className="text-sm uppercase tracking-[0.3em] text-sky-300">Colecciones seleccionadas</p>
                                 <h2 className="mt-3 text-3xl font-bold text-white">Paquetes exclusivos destacados</h2>
                             </div>
-                            <div className="inline-flex items-center gap-3 rounded-full border border-slate-800 bg-slate-900/90 px-4 py-2 text-sm text-slate-300">
+                            <div className="inline-flex items-center gap-3 rounded-full border border-slate-800 bg-slate-900/90 px-4 py-2 text-sm text-slate-400">
                                 Ordenar por:
                                 <span className="rounded-full bg-slate-800 px-3 py-1 text-white">Recomendado</span>
                             </div>
@@ -229,6 +229,8 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                                         <img
                                             src={pkg.image_url}
                                             alt={pkg.title}
+                                            loading="lazy"
+                                            decoding="async"
                                             className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                                         />
                                         {pkg.includes_guide && (
@@ -282,7 +284,7 @@ export default function Welcome({ auth, packages, destinations, offers }) {
 
                 <section className="mt-16 grid gap-6 md:grid-cols-3">
                     {highlights.map((item) => (
-                        <div key={item.id} className="rounded-[1.75rem] border border-slate-800 bg-slate-900/90 p-6 text-slate-300 shadow-xl shadow-slate-950/20">
+                        <div key={item.id} className="rounded-[1.75rem] border border-slate-800 bg-slate-900/90 p-6 text-slate-400 shadow-xl shadow-slate-950/20">
                             <h3 className="text-xl font-semibold text-white mb-3">{item.title}</h3>
                             <p className="text-sm leading-6 text-slate-400">{item.detail}</p>
                         </div>
@@ -326,7 +328,7 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                                     {offer.discount_percentage}%
                                 </div>
                                 <h3 className="text-2xl font-bold text-white mb-2 relative z-10">{offer.title}</h3>
-                                <p className="text-slate-300 mb-4 relative z-10">{offer.description}</p>
+                                <p className="text-slate-400 mb-4 relative z-10">{offer.description}</p>
                                 <Link
                                     href={`/ofertas/${offer.slug}`}
                                     className="relative z-10 inline-flex rounded-full bg-cyan-500 px-6 py-2 text-sm font-bold text-slate-900 hover:bg-cyan-400 transition"
@@ -340,62 +342,16 @@ export default function Welcome({ auth, packages, destinations, offers }) {
                 </section>
             </main>
 
-            <footer className="border-t border-slate-800 bg-slate-950/95 py-12 text-slate-400">
-                <div className="container mx-auto px-6 grid gap-8 md:grid-cols-3">
-                    <div>
-                        <p className="font-semibold text-white text-lg">ESKY TRIPS</p>
-                        <p className="mt-2 text-sm text-slate-400">Setting the standard for premium travel logistics since 2012.</p>
-
-                        <div className="mt-4 flex items-center gap-3 text-slate-300">
-                            <a href="#" className="p-2 rounded-full bg-slate-900/60 hover:bg-slate-800 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M18 2h4v4" />
-                                </svg>
-                            </a>
-                            <a href="#" className="p-2 rounded-full bg-slate-900/60 hover:bg-slate-800 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 12.79A9 9 0 1111.21 3" />
-                                </svg>
-                            </a>
-                            <a href="#" className="p-2 rounded-full bg-slate-900/60 hover:bg-slate-800 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M22 12v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2h6" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div className="flex justify-between md:col-span-1">
-                        <div>
-                            <h4 className="text-sm font-semibold text-white mb-3">Explorar</h4>
-                            <ul className="space-y-2 text-sm">
-                                <li><a href="#" className="hover:text-white">Destinos</a></li>
-                                <li><a href="#packages" className="hover:text-white">Paquetes</a></li>
-                                <li><a href="#" className="hover:text-white">Ofertas</a></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="text-sm font-semibold text-white mb-3">Soporte</h4>
-                            <ul className="space-y-2 text-sm">
-                                <li><a href="#" className="hover:text-white">Preguntas frecuentes</a></li>
-                                <li><Link href="/contacto" className="hover:text-white">Contacto</Link></li>
-                                <li><Link href="/privacidad" className="hover:text-white">Política de privacidad</Link></li>
-                                <li><Link href="/terminos" className="hover:text-white">Términos y condiciones</Link></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 className="text-sm font-semibold text-white mb-3">Suscríbete</h4>
-                        <p className="text-sm text-slate-400 mb-4">Recibe nuestras mejores ofertas y guías de viaje en tu correo.</p>
-                        <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
-                            <input aria-label="Correo" type="email" placeholder="Tu email" className="flex-1 rounded-full bg-slate-900/80 border border-slate-800 px-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none" />
-                            <button className="rounded-full bg-sky-500 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-400 transition">Suscribir</button>
-                        </form>
-                    </div>
+            <footer className="border-t border-slate-800 bg-slate-950 py-8 text-slate-400">
+                <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p className="font-semibold text-white">ESKY TRIPS</p>
+                    <nav className="flex items-center gap-6 text-sm">
+                        <Link href="/contacto" className="hover:text-white transition">Contacto</Link>
+                        <Link href="/privacidad" className="hover:text-white transition">Privacidad</Link>
+                        <Link href="/terminos" className="hover:text-white transition">Términos</Link>
+                    </nav>
+                    <p className="text-sm text-slate-500">© {new Date().getFullYear()} ESKYTRIPS</p>
                 </div>
-
-                <div className="mt-8 border-t border-slate-800 pt-6 text-sm text-slate-500 text-center">© 2026 ESKYTRIPS. Todos los derechos reservados.</div>
             </footer>
         </div>
     );

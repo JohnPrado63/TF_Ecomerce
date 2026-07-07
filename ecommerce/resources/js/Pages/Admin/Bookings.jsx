@@ -102,13 +102,13 @@ export default function Bookings({ bookings }) {
                                                 <p className="text-slate-500 text-xs font-normal">{booking.order_number}</p>
                                             </div>
                                         </td>
-                                        <td className="p-4 text-slate-300 text-sm">
+                                        <td className="p-4 text-slate-400 text-sm">
                                             {booking.client?.first_name}
                                         </td>
-                                        <td className="p-4 text-slate-300 text-sm">
+                                        <td className="p-4 text-slate-400 text-sm">
                                             {booking.booking_date}
                                         </td>
-                                        <td className="p-4 text-slate-300 text-sm">
+                                        <td className="p-4 text-slate-400 text-sm">
                                             {booking.persons_quantity}
                                         </td>
                                         <td className="p-4 text-sm">

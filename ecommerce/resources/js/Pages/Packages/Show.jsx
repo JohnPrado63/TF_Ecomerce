@@ -1,9 +1,11 @@
-import MapView from '@/Components/MapView';
+import { lazy, Suspense } from 'react';
 import StarRating from '@/Components/StarRating';
 import Icon from '@/Components/Icon';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import Navbar from '@/Components/Navbar';
 import PackageCard from '@/Components/PackageCard';
+
+const MapView = lazy(() => import('@/Components/MapView'));
 
 export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels, similarPackages }) {
     const { auth } = usePage().props;
@@ -41,6 +43,8 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels, si
                     <img
                         src={pkg.image_url}
                         alt={pkg.title}
+                        loading="eager"
+                        fetchPriority="high"
                         className="w-full h-full object-cover"
                     />
                 </div>
@@ -62,7 +66,7 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels, si
                                 size="md"
                             />
                         </div>
-                        <p className="text-slate-300 leading-relaxed mb-6">
+                        <p className="text-slate-400 leading-relaxed mb-6">
                             {pkg.description}
                         </p>
 
@@ -89,7 +93,7 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels, si
                         {/* Guía asignado */}
                         {pkg.guias?.length > 0 && (
                             <div className="mb-6">
-                                <h2 className="text-lg font-bold mb-3 text-slate-300 flex items-center gap-2">
+                                <h2 className="text-lg font-bold mb-3 text-slate-400 flex items-center gap-2">
                                     <Icon name="sparkles" size={18} className="text-cyan-400" />
                                     Guías disponibles para este tour
                                 </h2>
@@ -150,7 +154,7 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels, si
                         {/* Otros hoteles en la zona */}
                         {nearbyHotels?.length > 0 && (
                             <div className="mb-6">
-                                <h2 className="text-lg font-bold mb-3 text-slate-300 flex items-center gap-2">
+                                <h2 className="text-lg font-bold mb-3 text-slate-400 flex items-center gap-2">
                                     <Icon name="building" size={18} className="text-slate-400" />
                                     Otros hoteles en {pkg.location?.city}
                                 </h2>
@@ -204,7 +208,7 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels, si
                         {/* Otros restaurantes en la zona */}
                         {nearbyRestaurants?.length > 0 && (
                             <div className="mb-6">
-                                <h2 className="text-lg font-bold mb-3 text-slate-300 flex items-center gap-2">
+                                <h2 className="text-lg font-bold mb-3 text-slate-400 flex items-center gap-2">
                                     <Icon name="utensils" size={18} className="text-slate-400" />
                                     Otros restaurantes en {pkg.location?.city}
                                 </h2>
@@ -231,12 +235,14 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels, si
                             <p className="text-slate-400 text-sm mb-3">
                                 {pkg.location?.city}, {pkg.location?.region}-Ayacucho, Perú
                             </p>
-                            <MapView
-                                latitude={pkg.location?.latitude}
-                                longitude={pkg.location?.longitude}
-                                title={pkg.title}
-                                city={pkg.location?.city}
-                            />
+                            <Suspense fallback={<div className="w-full h-72 bg-slate-800 rounded-2xl animate-pulse flex items-center justify-center border border-slate-700"><p className="text-slate-500 text-sm">Cargando mapa...</p></div>}>
+                                <MapView
+                                    latitude={pkg.location?.latitude}
+                                    longitude={pkg.location?.longitude}
+                                    title={pkg.title}
+                                    city={pkg.location?.city}
+                                />
+                            </Suspense>
                         </div>
 
                         {/* Paquetes similares */}
@@ -285,7 +291,7 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels, si
                                                 </div>
                                             </div>
                                             {review.comment && (
-                                                <p className="text-slate-300 text-sm">{review.comment}</p>
+                                                <p className="text-slate-400 text-sm">{review.comment}</p>
                                             )}
                                         </div>
                                     ))}
@@ -303,7 +309,7 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels, si
                                     <form onSubmit={submitReview} className="space-y-4">
 
                                         <div>
-                                            <label className="block text-slate-300 text-sm font-medium mb-2">
+                                            <label className="block text-slate-400 text-sm font-medium mb-2">
                                                 Calificación
                                             </label>
                                             <div className="flex gap-2">
@@ -312,6 +318,7 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels, si
                                                         key={star}
                                                         type="button"
                                                         onClick={() => setData('rating', star)}
+                                                        aria-label={`Calificación ${star} de 5`}
                                                         className={`text-3xl transition ${
                                                             star <= data.rating
                                                                 ? 'text-yellow-400'
@@ -325,7 +332,7 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels, si
                                         </div>
 
                                         <div>
-                                            <label className="block text-slate-300 text-sm font-medium mb-2">
+                                            <label className="block text-slate-400 text-sm font-medium mb-2">
                                                 Comentario (opcional)
                                             </label>
                                             <textarea

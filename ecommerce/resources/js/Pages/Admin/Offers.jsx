@@ -88,7 +88,7 @@ export default function Offers({ offers }) {
                         </h2>
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Título</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Título</label>
                                 <input
                                     type="text"
                                     value={data.title}
@@ -103,7 +103,7 @@ export default function Offers({ offers }) {
                             </div>
 
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Código de descuento</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Código de descuento</label>
                                 <input
                                     type="text"
                                     value={data.code}
@@ -114,7 +114,7 @@ export default function Offers({ offers }) {
                             </div>
 
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">% de descuento</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">% de descuento</label>
                                 <input
                                     type="number"
                                     value={data.discount_percentage}
@@ -127,7 +127,7 @@ export default function Offers({ offers }) {
                             </div>
 
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Descripción</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Descripción</label>
                                 <input
                                     type="text"
                                     value={data.description}
@@ -138,7 +138,7 @@ export default function Offers({ offers }) {
                             </div>
 
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Fecha inicio</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Fecha inicio</label>
                                 <input
                                     type="date"
                                     value={data.start_date}
@@ -148,7 +148,7 @@ export default function Offers({ offers }) {
                             </div>
 
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Fecha fin</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Fecha fin</label>
                                 <input
                                     type="date"
                                     value={data.end_date}
@@ -165,7 +165,7 @@ export default function Offers({ offers }) {
                                     onChange={e => setData('active', e.target.checked)}
                                     className="w-4 h-4"
                                 />
-                                <label htmlFor="active" className="text-slate-300 text-sm">Oferta activa</label>
+                                <label htmlFor="active" className="text-slate-400 text-sm">Oferta activa</label>
                             </div>
 
                             <div className="md:col-span-2 flex gap-3">

@@ -68,7 +68,7 @@ export default function Categories({ categories }) {
                         </h2>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Nombre</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Nombre</label>
                                 <input
                                     type="text"
                                     value={data.name}
@@ -79,7 +79,7 @@ export default function Categories({ categories }) {
                                 {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
                             </div>
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Descripción</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Descripción</label>
                                 <textarea
                                     value={data.description}
                                     onChange={e => setData('description', e.target.value)}

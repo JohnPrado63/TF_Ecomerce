@@ -79,14 +79,14 @@ export default function Transports({ transports, locations }) {
                         <h2 className="text-lg font-bold mb-4">{editing ? 'Editar empresa' : 'Nueva empresa'}</h2>
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Nombre de empresa</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Nombre de empresa</label>
                                 <input type="text" value={data.nombre_empresa} onChange={e => setData('nombre_empresa', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Transportes Ayacucho S.A." />
                                 {errors.nombre_empresa && <p className="text-red-400 text-xs mt-1">{errors.nombre_empresa}</p>}
                             </div>
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Ubicación</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Ubicación</label>
                                 <select value={data.location_id} onChange={e => setData('location_id', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500">
                                     <option value="">Selecciona ubicación</option>
@@ -96,7 +96,7 @@ export default function Transports({ transports, locations }) {
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Tipo de transporte</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Tipo de transporte</label>
                                 <select value={data.tipo_transporte} onChange={e => setData('tipo_transporte', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500">
                                     {tiposTransporte.map(tipo => (
@@ -105,7 +105,7 @@ export default function Transports({ transports, locations }) {
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Contacto</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Contacto</label>
                                 <input type="text" value={data.contacto} onChange={e => setData('contacto', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="+51 999 999 999" />
@@ -148,7 +148,7 @@ export default function Transports({ transports, locations }) {
                                         <td className="p-4 font-semibold">{t.nombre_empresa}</td>
                                         <td className="p-4 text-slate-400 text-sm">{t.location?.city}</td>
                                         <td className="p-4">
-                                            <span className="bg-slate-800 text-slate-300 text-xs font-bold px-3 py-1 rounded-full">
+                                            <span className="bg-slate-800 text-slate-400 text-xs font-bold px-3 py-1 rounded-full">
                                                 {tipoIcon[t.tipo_transporte]} {t.tipo_transporte}
                                             </span>
                                         </td>
