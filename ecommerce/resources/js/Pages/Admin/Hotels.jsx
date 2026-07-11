@@ -7,12 +7,12 @@ export default function Hotels({ hotels, locations }) {
     const [editing, setEditing]   = useState(null);
 
     const { data, setData, processing, errors, reset } = useForm({
-        nombre:           '',
+        name:           '',
         location_id:      '',
-        estrellas:        3,
-        precio_por_noche: '',
-        direccion:        '',
-        telefono:         '',
+        stars:        3,
+        price_per_person: '',
+        address:        '',
+        phone:         '',
     });
 
     function handleCreate() {
@@ -24,12 +24,12 @@ export default function Hotels({ hotels, locations }) {
     function handleEdit(hotel) {
         setEditing(hotel);
         setData({
-            nombre:           hotel.nombre,
+            name:           hotel.name,
             location_id:      hotel.location_id,
-            estrellas:        hotel.estrellas || 3,
-            precio_por_noche: hotel.precio_por_noche || '',
-            direccion:        hotel.direccion || '',
-            telefono:         hotel.telefono || '',
+            stars:        hotel.stars || 3,
+            price_per_person: hotel.price_per_person || '',
+            address:        hotel.address || '',
+            phone:         hotel.phone || '',
         });
         setShowForm(true);
     }
@@ -75,10 +75,10 @@ export default function Hotels({ hotels, locations }) {
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Nombre</label>
-                                <input type="text" value={data.nombre} onChange={e => setData('nombre', e.target.value)}
+                                <input type="text" value={data.name} onChange={e => setData('name', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Nombre del hotel" />
-                                {errors.nombre && <p className="text-red-400 text-xs mt-1">{errors.nombre}</p>}
+                                {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
                             </div>
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Ubicación</label>
@@ -92,7 +92,7 @@ export default function Hotels({ hotels, locations }) {
                             </div>
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Estrellas</label>
-                                <select value={data.estrellas} onChange={e => setData('estrellas', e.target.value)}
+                                <select value={data.stars} onChange={e => setData('stars', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500">
                                     {[1,2,3,4,5].map(n => (
                                         <option key={n} value={n}>{n} estrella{n > 1 ? 's' : ''}</option>
@@ -101,19 +101,19 @@ export default function Hotels({ hotels, locations }) {
                             </div>
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Precio por noche (S/.)</label>
-                                <input type="number" value={data.precio_por_noche} onChange={e => setData('precio_por_noche', e.target.value)}
+                                <input type="number" value={data.price_per_person} onChange={e => setData('price_per_person', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="0.00" min="0" step="0.01" />
                             </div>
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Dirección</label>
-                                <input type="text" value={data.direccion} onChange={e => setData('direccion', e.target.value)}
+                                <input type="text" value={data.address} onChange={e => setData('address', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Jr. Lima 123" />
                             </div>
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Teléfono</label>
-                                <input type="text" value={data.telefono} onChange={e => setData('telefono', e.target.value)}
+                                <input type="text" value={data.phone} onChange={e => setData('phone', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="066 123456" />
                             </div>
@@ -146,19 +146,19 @@ export default function Hotels({ hotels, locations }) {
                         <tbody>
                             {hotels.map((hotel) => (
                                 <tr key={hotel.id} className="border-b border-slate-800 hover:bg-slate-800/50 transition">
-                                    <td className="p-4 font-semibold">{hotel.nombre}</td>
+                                    <td className="p-4 font-semibold">{hotel.name}</td>
                                     <td className="p-4 text-slate-400 text-sm">{hotel.location?.city}</td>
                                     <td className="p-4">
                                         <div className="flex">
-                                            {[...Array(hotel.estrellas || 0)].map((_, i) => (
+                                            {[...Array(hotel.stars || 0)].map((_, i) => (
                                                 <span key={i} className="text-yellow-400 text-sm">★</span>
                                             ))}
                                         </div>
                                     </td>
                                     <td className="p-4 text-cyan-400 font-bold">
-                                        {hotel.precio_por_noche ? `S/. ${Number(hotel.precio_por_noche).toFixed(2)}` : '-'}
+                                        {hotel.price_per_person ? `S/. ${Number(hotel.price_per_person).toFixed(2)}` : '-'}
                                     </td>
-                                    <td className="p-4 text-slate-400 text-sm">{hotel.telefono || '-'}</td>
+                                    <td className="p-4 text-slate-400 text-sm">{hotel.phone || '-'}</td>
                                     <td className="p-4">
                                         <div className="flex gap-2">
                                             <button onClick={() => handleEdit(hotel)}

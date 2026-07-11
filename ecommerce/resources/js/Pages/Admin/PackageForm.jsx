@@ -150,11 +150,11 @@ export default function PackageForm({ package: pkg, categories, locations }) {
                         <div>
                             <label className="block text-sm font-medium text-slate-300">Imagen URL</label>
                             <input
-                                type="url"
+                                type="text"
                                 value={data.image_url}
                                 onChange={(e) => setData('image_url', e.target.value)}
                                 className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-white focus:border-cyan-500 focus:outline-none"
-                                placeholder="https://..."
+                                placeholder="/images/packages/foto.jpg"
                             />
                             {errors.image_url && <p className="text-sm text-red-400 mt-2">{errors.image_url}</p>}
                         </div>

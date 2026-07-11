@@ -8,10 +8,10 @@ export default function Transports({ transports, locations }) {
     const tiposTransporte = ['Autobús', 'Miniván', 'Avión', 'Tren', 'Marítimo'];
 
     const { data, setData, processing, errors, reset } = useForm({
-        nombre_empresa:  '',
+        company_name:  '',
         location_id:     '',
-        tipo_transporte: 'Autobús',
-        contacto:        '',
+        transport_type: 'Autobús',
+        contact:        '',
     });
 
     function handleCreate() {
@@ -23,10 +23,10 @@ export default function Transports({ transports, locations }) {
     function handleEdit(transport) {
         setEditing(transport);
         setData({
-            nombre_empresa:  transport.nombre_empresa,
+            company_name:  transport.company_name,
             location_id:     transport.location_id,
-            tipo_transporte: transport.tipo_transporte,
-            contacto:        transport.contacto || '',
+            transport_type: transport.transport_type,
+            contact:        transport.contact || '',
         });
         setShowForm(true);
     }
@@ -80,10 +80,10 @@ export default function Transports({ transports, locations }) {
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Nombre de empresa</label>
-                                <input type="text" value={data.nombre_empresa} onChange={e => setData('nombre_empresa', e.target.value)}
+                                <input type="text" value={data.company_name} onChange={e => setData('company_name', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Transportes Ayacucho S.A." />
-                                {errors.nombre_empresa && <p className="text-red-400 text-xs mt-1">{errors.nombre_empresa}</p>}
+                                {errors.company_name && <p className="text-red-400 text-xs mt-1">{errors.company_name}</p>}
                             </div>
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Ubicación</label>
@@ -97,7 +97,7 @@ export default function Transports({ transports, locations }) {
                             </div>
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Tipo de transporte</label>
-                                <select value={data.tipo_transporte} onChange={e => setData('tipo_transporte', e.target.value)}
+                                <select value={data.transport_type} onChange={e => setData('transport_type', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500">
                                     {tiposTransporte.map(tipo => (
                                         <option key={tipo} value={tipo}>{tipoIcon[tipo]} {tipo}</option>
@@ -106,7 +106,7 @@ export default function Transports({ transports, locations }) {
                             </div>
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Contacto</label>
-                                <input type="text" value={data.contacto} onChange={e => setData('contacto', e.target.value)}
+                                <input type="text" value={data.contact} onChange={e => setData('contact', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="+51 999 999 999" />
                             </div>
@@ -145,14 +145,14 @@ export default function Transports({ transports, locations }) {
                             ) : (
                                 transports.map((t) => (
                                     <tr key={t.id} className="border-b border-slate-800 hover:bg-slate-800/50 transition">
-                                        <td className="p-4 font-semibold">{t.nombre_empresa}</td>
+                                        <td className="p-4 font-semibold">{t.company_name}</td>
                                         <td className="p-4 text-slate-400 text-sm">{t.location?.city}</td>
                                         <td className="p-4">
                                             <span className="bg-slate-800 text-slate-400 text-xs font-bold px-3 py-1 rounded-full">
-                                                {tipoIcon[t.tipo_transporte]} {t.tipo_transporte}
+                                                {tipoIcon[t.transport_type]} {t.transport_type}
                                             </span>
                                         </td>
-                                        <td className="p-4 text-slate-400 text-sm">{t.contacto || '-'}</td>
+                                        <td className="p-4 text-slate-400 text-sm">{t.contact || '-'}</td>
                                         <td className="p-4">
                                             <div className="flex gap-2">
                                                 <button onClick={() => handleEdit(t)}
