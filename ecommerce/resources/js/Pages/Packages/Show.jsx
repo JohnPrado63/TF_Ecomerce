@@ -58,7 +58,18 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels, si
                             <Icon name="map-pin" size={16} className="text-slate-400" />
                             {pkg.location?.city}, {pkg.location?.region}
                         </p>
-                        <h1 className="text-3xl font-bold mb-4">{pkg.title}</h1>
+                        <h1 className="text-3xl font-bold mb-4">{pkg.title}
+                            {pkg.status === false && (
+                                <span className="ml-3 inline-block bg-red-600/90 text-white text-sm font-bold px-3 py-1.5 rounded-full align-middle">
+                                    No disponible
+                                </span>
+                            )}
+                            {pkg.status === true && (
+                                <span className="ml-3 inline-block bg-emerald-600/80 text-white text-sm font-bold px-3 py-1.5 rounded-full align-middle">
+                                    ✓ Activo
+                                </span>
+                            )}
+                        </h1>
                         <div className="mb-4">
                             <StarRating 
                                 rating={pkg.reviews_avg_rating} 
@@ -420,7 +431,14 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels, si
                         </div>
                 
 
-                        {pkg.available_slots > 0 ? (
+                        {pkg.status === false ? (
+                            <button
+                                disabled
+                                className="block w-full text-center bg-slate-700 text-slate-400 font-bold py-3 rounded-xl cursor-not-allowed text-lg mb-3"
+                            >
+                                Paquete no disponible
+                            </button>
+                        ) : pkg.available_slots > 0 ? (
                             <Link
                                 href={auth?.user
                                     ? `/bookings/create?package_id=${pkg.id}`

@@ -1,102 +1,343 @@
+import { useState, useMemo } from 'react';
 import AdminNavbar from '@/Components/AdminNavbar';
+import Icon from '@/Components/Icon';
 import { Head, Link, router } from '@inertiajs/react';
-export default function Packages({ packages }) {
 
-    function deletePackage(id) {
-        if (confirm('¿Estás seguro de eliminar este paquete?')) {
-            router.delete(`/admin/packages/${id}`);
+export default function Packages({ packages, locations, categories }) {
+    const [search, setSearch] = useState('');
+    const [filterLocation, setFilterLocation] = useState('');
+    const [filterCategory, setFilterCategory] = useState('');
+    const [filterStatus, setFilterStatus] = useState('');
+    const [sortField, setSortField] = useState('created_at');
+    const [sortDir, setSortDir] = useState('desc');
+    const [page, setPage] = useState(1);
+    const [deleteModal, setDeleteModal] = useState({ open: false, pkg: null });
+    const perPage = 10;
+
+    function handleSort(field) {
+        if (sortField === field) {
+            setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortField(field);
+            setSortDir('asc');
         }
+    }
+
+    function getSortIcon(field) {
+        if (sortField !== field) return null;
+        return sortDir === 'asc' ? ' ↑' : ' ↓';
+    }
+
+    const filteredPackages = useMemo(() => {
+        return packages.filter(pkg => {
+            const matchSearch = !search ||
+                pkg.title.toLowerCase().includes(search.toLowerCase()) ||
+                pkg.location?.city.toLowerCase().includes(search.toLowerCase());
+            const matchLocation = !filterLocation || pkg.location?.city === filterLocation;
+            const matchCategory = !filterCategory || pkg.category?.name === filterCategory;
+            const matchStatus = !filterStatus ||
+                (filterStatus === 'active' && pkg.status) ||
+                (filterStatus === 'inactive' && !pkg.status) ||
+                (filterStatus === 'agotado' && pkg.available_slots === 0);
+            return matchSearch && matchLocation && matchCategory && matchStatus;
+        });
+    }, [packages, search, filterLocation, filterCategory, filterStatus]);
+
+    const sortedPackages = useMemo(() => {
+        return [...filteredPackages].sort((a, b) => {
+            let aVal, bVal;
+            switch (sortField) {
+                case 'price': aVal = a.price; bVal = b.price; break;
+                case 'duration_days': aVal = a.duration_days; bVal = b.duration_days; break;
+                case 'available_slots': aVal = a.available_slots; bVal = b.available_slots; break;
+                case 'title': aVal = a.title.toLowerCase(); bVal = b.title.toLowerCase(); break;
+                default: aVal = new Date(a.created_at); bVal = new Date(b.created_at);
+            }
+            if (aVal < bVal) return sortDir === 'asc' ? -1 : 1;
+            if (aVal > bVal) return sortDir === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }, [filteredPackages, sortField, sortDir]);
+
+    const totalPages = Math.ceil(sortedPackages.length / perPage);
+    const paginatedPackages = sortedPackages.slice((page - 1) * perPage, page * perPage);
+
+    function confirmDelete(pkg) {
+        setDeleteModal({ open: true, pkg });
+    }
+
+    function executeDelete() {
+        if (deleteModal.pkg) {
+            router.delete(`/admin/packages/${deleteModal.pkg.id}`);
+        }
+        setDeleteModal({ open: false, pkg: null });
+    }
+
+    function getStatusBadge(pkg) {
+        if (pkg.available_slots === 0) {
+            return <span className="bg-yellow-600/80 text-yellow-100 text-xs font-bold px-2 py-0.5 rounded-full">Agotado</span>;
+        }
+        if (pkg.status === false) {
+            return <span className="bg-red-600/80 text-red-100 text-xs font-bold px-2 py-0.5 rounded-full">Inactivo</span>;
+        }
+        return <span className="bg-emerald-600/80 text-emerald-100 text-xs font-bold px-2 py-0.5 rounded-full">Activo</span>;
+    }
+
+    function getSlotsClass(slots) {
+        if (slots === 0) return 'text-red-400 font-bold';
+        if (slots <= 3) return 'text-yellow-400 font-semibold';
+        return 'text-slate-300';
     }
 
     return (
         <div className="min-h-screen bg-slate-950 text-white">
             <Head title="Gestión de Paquetes - Admin" />
-
-            {/* Navbar admin */}
             <AdminNavbar />
 
             <div className="container mx-auto px-6 py-10">
-                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8">
+                {/* Header */}
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
                     <div>
                         <h1 className="text-3xl font-bold">Gestión de Paquetes</h1>
-                        <p className="text-slate-400">Crea, edita y elimina los paquetes que aparecen en el sitio.</p>
+                        <p className="text-slate-400 text-sm mt-1">
+                            {sortedPackages.length} paquete(s) en total
+                        </p>
                     </div>
                     <Link
                         href="/admin/packages/create"
-                        className="inline-flex items-center rounded-2xl bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-400 transition"
+                        className="inline-flex items-center rounded-xl bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-slate-950 hover:bg-cyan-400 transition"
                     >
-                        Nuevo paquete
+                        + Nuevo paquete
                     </Link>
                 </div>
 
-                <div className="bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden">
-                    <table className="w-full">
-                        <thead>
-                            <tr className="border-b border-slate-700 text-slate-400 text-sm">
-                                <th className="text-left p-4">Paquete</th>
-                                <th className="text-left p-4">Ubicación</th>
-                                <th className="text-left p-4">Precio</th>
-                                <th className="text-left p-4">Duración</th>
-                                <th className="text-left p-4">Slots</th>
-                                <th className="text-left p-4">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {packages.map((pkg) => (
-                                <tr key={pkg.id} className="border-b border-slate-800 hover:bg-slate-800/50 transition">
-                                    <td className="p-4">
-                                        <div className="flex items-center gap-3">
-                                            <img
-                                                src={pkg.image_url}
-                                                alt={pkg.title}
-                                                className="w-12 h-12 rounded-lg object-cover"
-                                            />
-                                            <div>
-                                                <p className="font-semibold">{pkg.title}</p>
-                                                <p className="text-slate-400 text-xs">{pkg.category?.name}</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="p-4 text-slate-400 text-sm">
-                                        {pkg.location?.city}
-                                    </td>
-                                    <td className="p-4 text-cyan-400 font-bold">
-                                        S/. {Number(pkg.price).toFixed(2)}
-                                    </td>
-                                    <td className="p-4 text-slate-400 text-sm">
-                                        {pkg.duration_days} día(s)
-                                    </td>
-                                    <td className="p-4 text-slate-400 text-sm">
-                                        {pkg.available_slots}
-                                    </td>
-                                    <td className="p-4">
-                                        <div className="flex gap-2 flex-wrap">
-                                            <Link
-                                                href={`/packages/${pkg.id}`}
-                                                className="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg transition"
-                                            >
-                                                Ver
-                                            </Link>
-                                            <Link
-                                                href={route('admin.packages.edit', pkg.id)}
-                                                className="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg transition"
-                                            >
-                                                Editar
-                                            </Link>
-                                            <button
-                                                onClick={() => deletePackage(pkg.id)}
-                                                className="text-xs bg-red-900 hover:bg-red-800 text-red-300 px-3 py-1 rounded-lg transition"
-                                            >
-                                                Eliminar
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
+                {/* Filtros */}
+                <div className="bg-slate-900 border border-slate-700 rounded-2xl p-4 mb-6">
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                        {/* Buscador */}
+                        <div className="relative md:col-span-2">
+                            <input
+                                type="text"
+                                placeholder="Buscar por nombre o ubicación..."
+                                value={search}
+                                onChange={e => { setSearch(e.target.value); setPage(1); }}
+                                className="w-full bg-slate-800 border border-slate-600 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 text-sm"
+                            />
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">🔍</span>
+                        </div>
+
+                        {/* Filtro ubicación */}
+                        <select
+                            value={filterLocation}
+                            onChange={e => { setFilterLocation(e.target.value); setPage(1); }}
+                            className="bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500 text-sm"
+                        >
+                            <option value="">Todas las ubicaciones</option>
+                            {locations?.map(loc => (
+                                <option key={loc.id} value={loc.city}>{loc.city}</option>
                             ))}
-                        </tbody>
-                    </table>
+                        </select>
+
+                        {/* Filtro categoría */}
+                        <select
+                            value={filterCategory}
+                            onChange={e => { setFilterCategory(e.target.value); setPage(1); }}
+                            className="bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500 text-sm"
+                        >
+                            <option value="">Todas las categorías</option>
+                            {categories?.map(cat => (
+                                <option key={cat.id} value={cat.name}>{cat.name}</option>
+                            ))}
+                        </select>
+
+                        {/* Filtro estado */}
+                        <select
+                            value={filterStatus}
+                            onChange={e => { setFilterStatus(e.target.value); setPage(1); }}
+                            className="bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500 text-sm"
+                        >
+                            <option value="">Todos los estados</option>
+                            <option value="active">Activo</option>
+                            <option value="inactive">Inactivo</option>
+                            <option value="agotado">Agotado</option>
+                        </select>
+                    </div>
+                </div>
+
+                {/* Tabla */}
+                <div className="bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="w-full min-w-[900px]">
+                            <thead>
+                                <tr className="border-b border-slate-700 text-slate-400 text-sm">
+                                    <th className="text-left p-4">
+                                        <button onClick={() => handleSort('title')} className="hover:text-white transition flex items-center gap-1">
+                                            Paquete {getSortIcon('title')}
+                                        </button>
+                                    </th>
+                                    <th className="text-left p-4">Ubicación</th>
+                                    <th className="text-left p-4">
+                                        <button onClick={() => handleSort('price')} className="hover:text-white transition flex items-center gap-1">
+                                            Precio {getSortIcon('price')}
+                                        </button>
+                                    </th>
+                                    <th className="text-left p-4">
+                                        <button onClick={() => handleSort('duration_days')} className="hover:text-white transition flex items-center gap-1">
+                                            Duración {getSortIcon('duration_days')}
+                                        </button>
+                                    </th>
+                                    <th className="text-left p-4">
+                                        <button onClick={() => handleSort('available_slots')} className="hover:text-white transition flex items-center gap-1">
+                                            Slots {getSortIcon('available_slots')}
+                                        </button>
+                                    </th>
+                                    <th className="text-left p-4">Estado</th>
+                                    <th className="text-left p-4">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {paginatedPackages.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={7} className="p-8 text-center text-slate-500">
+                                            No se encontraron paquetes con los filtros aplicados.
+                                        </td>
+                                    </tr>
+                                ) : paginatedPackages.map((pkg) => (
+                                    <tr key={pkg.id} className="border-b border-slate-800 hover:bg-slate-800/50 transition">
+                                        <td className="p-4">
+                                            <div className="flex items-center gap-3">
+                                                <img
+                                                    src={pkg.image_url}
+                                                    alt={pkg.title}
+                                                    className="w-12 h-12 rounded-lg object-cover"
+                                                />
+                                                <div>
+                                                    <p className="font-semibold text-white">{pkg.title}</p>
+                                                    <p className="text-slate-400 text-xs">{pkg.category?.name}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="p-4 text-slate-400 text-sm">
+                                            {pkg.location?.city}
+                                        </td>
+                                        <td className="p-4 text-cyan-400 font-bold">
+                                            S/. {Number(pkg.price).toFixed(2)}
+                                        </td>
+                                        <td className="p-4 text-slate-400 text-sm">
+                                            {pkg.duration_days} día(s)
+                                        </td>
+                                        <td className={`p-4 text-sm ${getSlotsClass(pkg.available_slots)}`}>
+                                            {pkg.available_slots}
+                                        </td>
+                                        <td className="p-4">
+                                            {getStatusBadge(pkg)}
+                                        </td>
+                                        <td className="p-4">
+                                            <div className="flex gap-1">
+                                                <Link
+                                                    href={`/packages/${pkg.id}`}
+                                                    className="inline-flex items-center gap-1.5 text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1.5 rounded-lg transition"
+                                                >
+                                                    <Icon name="eye" size={14} /> Ver
+                                                </Link>
+                                                <Link
+                                                    href={route('admin.packages.edit', pkg.id)}
+                                                    className="inline-flex items-center gap-1.5 text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1.5 rounded-lg transition"
+                                                >
+                                                    <Icon name="pencil" size={14} /> Editar
+                                                </Link>
+                                                <button
+                                                    onClick={() => confirmDelete(pkg)}
+                                                    className="inline-flex items-center gap-1.5 text-xs bg-red-900/60 hover:bg-red-800 text-red-300 px-3 py-1.5 rounded-lg transition"
+                                                >
+                                                    <Icon name="trash2" size={14} /> Eliminar
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* Paginación */}
+                    {totalPages > 1 && (
+                        <div className="flex items-center justify-between px-6 py-4 border-t border-slate-700">
+                            <p className="text-slate-500 text-sm">
+                                Página {page} de {totalPages}
+                            </p>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => setPage(Math.max(1, page - 1))}
+                                    disabled={page === 1}
+                                    className="px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg text-sm disabled:opacity-40 hover:bg-slate-700 transition"
+                                >
+                                    ← Anterior
+                                </button>
+                                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                                    let pageNum;
+                                    if (totalPages <= 5) {
+                                        pageNum = i + 1;
+                                    } else if (page <= 3) {
+                                        pageNum = i + 1;
+                                    } else if (page >= totalPages - 2) {
+                                        pageNum = totalPages - 4 + i;
+                                    } else {
+                                        pageNum = page - 2 + i;
+                                    }
+                                    return (
+                                        <button
+                                            key={pageNum}
+                                            onClick={() => setPage(pageNum)}
+                                            className={`px-3 py-1.5 rounded-lg text-sm transition ${
+                                                page === pageNum
+                                                    ? 'bg-cyan-500 text-slate-900 font-bold'
+                                                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                                            }`}
+                                        >
+                                            {pageNum}
+                                        </button>
+                                    );
+                                })}
+                                <button
+                                    onClick={() => setPage(Math.min(totalPages, page + 1))}
+                                    disabled={page === totalPages}
+                                    className="px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg text-sm disabled:opacity-40 hover:bg-slate-700 transition"
+                                >
+                                    Siguiente →
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
+
+            {/* Modal confirmación eliminar */}
+            {deleteModal.open && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl">
+                        <h3 className="text-xl font-bold text-white mb-2">¿Eliminar paquete?</h3>
+                        <p className="text-slate-400 mb-6">
+                            Estás a punto de eliminar <span className="text-white font-semibold">"{deleteModal.pkg?.title}"</span>.
+                            Esta acción no se puede deshacer.
+                        </p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setDeleteModal({ open: false, pkg: null })}
+                                className="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-semibold py-2.5 rounded-xl transition"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={executeDelete}
+                                className="flex-1 bg-red-600 hover:bg-red-500 text-white font-semibold py-2.5 rounded-xl transition"
+                            >
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

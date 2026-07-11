@@ -51,6 +51,8 @@ class AdminController extends Controller
 
         return Inertia::render('Admin/Packages', [
             'packages' => $packages,
+            'locations' => Location::orderBy('city')->get(),
+            'categories' => Category::orderBy('name')->get(),
         ]);
     }
 

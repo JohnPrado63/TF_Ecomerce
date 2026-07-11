@@ -50,6 +50,8 @@ import {
     Sun,
     Droplet,
     Landmark,
+    Pencil,
+    Trash2,
 } from 'lucide-react';
 
 const iconMap = {
@@ -104,6 +106,8 @@ const iconMap = {
     'sunrise': Sun,
     'wheat': Droplet,
     'landmark': Landmark,
+    'pencil': Pencil,
+    'trash2': Trash2,
 };
 
 export default function Icon({ name, size = 16, className = '', ...props }) {
