@@ -1,6 +1,9 @@
+/* stylelint-disable at-rule-no-unknown */
 @tailwind base;
+/* stylelint-disable-next-line at-rule-no-unknown */
 @tailwind components;
 @tailwind utilities;
+/* stylelint-enable at-rule-no-unknown */
 
 @layer base {
   body {
