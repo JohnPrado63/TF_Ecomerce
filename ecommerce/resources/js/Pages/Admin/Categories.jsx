@@ -1,4 +1,5 @@
 import AdminNavbar from '@/Components/AdminNavbar';
+import Icon from '@/Components/Icon';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 
@@ -45,25 +46,27 @@ export default function Categories({ categories }) {
     return (
         <div className="min-h-screen bg-slate-950 text-white">
             <Head title="Categorías - Admin" />
-
-            {/* Navbar admin */}
             <AdminNavbar />
 
             <div className="container mx-auto px-6 py-10">
-                <div className="flex items-center justify-between mb-8">
-                    <h1 className="text-3xl font-bold">Gestión de Categorías</h1>
+                {/* Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                    <div>
+                        <h1 className="text-3xl font-bold text-white">Gestión de Categorías</h1>
+                        <p className="text-slate-400 text-sm mt-1">{categories.length} categoría(s)</p>
+                    </div>
                     <button
                         onClick={handleCreate}
-                        className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold px-5 py-2 rounded-xl transition"
+                        className="inline-flex items-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-5 py-2.5 transition shadow-lg shadow-cyan-500/20"
                     >
-                        + Nueva categoría
+                        <Icon name="plus" size={18} /> Nueva categoría
                     </button>
                 </div>
 
                 {/* Formulario */}
                 {showForm && (
-                    <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 mb-8">
-                        <h2 className="text-lg font-bold mb-4">
+                    <div className="bg-gradient-to-br from-slate-900 to-slate-900/80 border border-slate-700 rounded-2xl p-6 mb-8">
+                        <h2 className="text-lg font-bold mb-4 text-white">
                             {editing ? 'Editar categoría' : 'Nueva categoría'}
                         </h2>
                         <form onSubmit={handleSubmit} className="space-y-4">
@@ -73,7 +76,7 @@ export default function Categories({ categories }) {
                                     type="text"
                                     value={data.name}
                                     onChange={e => setData('name', e.target.value)}
-                                    className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
+                                    className="w-full bg-slate-800/80 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50"
                                     placeholder="Ej: Cultural e Histórico"
                                 />
                                 {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
@@ -84,7 +87,7 @@ export default function Categories({ categories }) {
                                     value={data.description}
                                     onChange={e => setData('description', e.target.value)}
                                     rows={3}
-                                    className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 resize-none"
+                                    className="w-full bg-slate-800/80 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 resize-none"
                                     placeholder="Descripción de la categoría..."
                                 />
                             </div>
@@ -92,14 +95,15 @@ export default function Categories({ categories }) {
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold px-6 py-2 rounded-xl transition"
+                                    className="inline-flex items-center gap-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-6 py-2.5 rounded-xl transition shadow-lg shadow-cyan-500/20"
                                 >
+                                    <Icon name={editing ? 'check' : 'plus'} size={18} />
                                     {editing ? 'Actualizar' : 'Crear'}
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => { setShowForm(false); reset(); setEditing(null); }}
-                                    className="bg-slate-700 hover:bg-slate-600 text-white font-bold px-6 py-2 rounded-xl transition"
+                                    className="bg-slate-700 hover:bg-slate-600 text-white font-semibold px-6 py-2.5 rounded-xl transition"
                                 >
                                     Cancelar
                                 </button>
@@ -109,48 +113,94 @@ export default function Categories({ categories }) {
                 )}
 
                 {/* Tabla */}
-                <div className="bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden">
-                    <table className="w-full">
-                        <thead>
-                            <tr className="border-b border-slate-700 text-slate-400 text-sm">
-                                <th className="text-left p-4">#</th>
-                                <th className="text-left p-4">Nombre</th>
-                                <th className="text-left p-4">Descripción</th>
-                                <th className="text-left p-4">Paquetes</th>
-                                <th className="text-left p-4">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {categories.map((cat) => (
-                                <tr key={cat.id} className="border-b border-slate-800 hover:bg-slate-800/50 transition">
-                                    <td className="p-4 text-slate-500 text-sm">{cat.id}</td>
-                                    <td className="p-4 font-semibold">{cat.name}</td>
-                                    <td className="p-4 text-slate-400 text-sm">{cat.description || '-'}</td>
-                                    <td className="p-4">
-                                        <span className="bg-cyan-900/50 text-cyan-300 text-xs font-bold px-3 py-1 rounded-full">
-                                            {cat.tour_packages_count} paquetes
+                <div className="bg-gradient-to-br from-slate-900 to-slate-900/80 border border-slate-700 rounded-2xl overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="w-full min-w-[600px]">
+                            <thead>
+                                <tr className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 border-b-2 border-cyan-500/30">
+                                    <th className="text-left p-4">
+                                        <span className="flex items-center gap-2 text-slate-300 font-bold uppercase tracking-wider text-xs">
+                                            <span className="w-7 h-7 rounded-lg bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center">
+                                                <Icon name="hash" size={14} className="text-cyan-400" />
+                                            </span>
+                                            #
                                         </span>
-                                    </td>
-                                    <td className="p-4">
-                                        <div className="flex gap-2">
-                                            <button
-                                                onClick={() => handleEdit(cat)}
-                                                className="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg transition"
-                                            >
-                                                ✏️ Editar
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(cat.id)}
-                                                className="text-xs bg-red-900 hover:bg-red-800 text-red-300 px-3 py-1 rounded-lg transition"
-                                            >
-                                                🗑️ Eliminar
-                                            </button>
-                                        </div>
-                                    </td>
+                                    </th>
+                                    <th className="text-left p-4">
+                                        <span className="flex items-center gap-2 text-slate-300 font-bold uppercase tracking-wider text-xs">
+                                            <span className="w-7 h-7 rounded-lg bg-violet-500/20 border border-violet-500/30 flex items-center justify-center">
+                                                <Icon name="tag" size={14} className="text-violet-400" />
+                                            </span>
+                                            Nombre
+                                        </span>
+                                    </th>
+                                    <th className="text-left p-4">
+                                        <span className="flex items-center gap-2 text-slate-300 font-bold uppercase tracking-wider text-xs">
+                                            <span className="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center">
+                                                <Icon name="file-text" size={14} className="text-amber-400" />
+                                            </span>
+                                            Descripción
+                                        </span>
+                                    </th>
+                                    <th className="text-left p-4">
+                                        <span className="flex items-center gap-2 text-slate-300 font-bold uppercase tracking-wider text-xs">
+                                            <span className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
+                                                <Icon name="compass" size={14} className="text-emerald-400" />
+                                            </span>
+                                            Paquetes
+                                        </span>
+                                    </th>
+                                    <th className="text-left p-4">
+                                        <span className="flex items-center gap-2 text-slate-300 font-bold uppercase tracking-wider text-xs">
+                                            <span className="w-7 h-7 rounded-lg bg-slate-500/20 border border-slate-500/30 flex items-center justify-center">
+                                                <Icon name="settings" size={14} className="text-slate-400" />
+                                            </span>
+                                            Acciones
+                                        </span>
+                                    </th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {categories.map((cat) => (
+                                    <tr key={cat.id} className="border-b border-slate-800/50 hover:bg-slate-800/30 transition">
+                                        <td className="p-4">
+                                            <span className="w-8 h-8 rounded-lg bg-slate-800/50 border border-slate-700 flex items-center justify-center text-slate-500 font-bold text-sm">
+                                                {cat.id}
+                                            </span>
+                                        </td>
+                                        <td className="p-4">
+                                            <span className="font-semibold text-white">{cat.name}</span>
+                                        </td>
+                                        <td className="p-4">
+                                            <span className="text-slate-400 text-sm line-clamp-1">{cat.description || '-'}</span>
+                                        </td>
+                                        <td className="p-4">
+                                            <span className="inline-flex items-center gap-1.5 bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 text-xs font-bold px-3 py-1.5 rounded-full">
+                                                <Icon name="compass" size={12} />
+                                                {cat.tour_packages_count} paquetes
+                                            </span>
+                                        </td>
+                                        <td className="p-4">
+                                            <div className="flex gap-1">
+                                                <button
+                                                    onClick={() => handleEdit(cat)}
+                                                    className="inline-flex items-center gap-1.5 text-xs bg-slate-700/80 hover:bg-slate-600 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg transition"
+                                                >
+                                                    <Icon name="pencil" size={14} /> Editar
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(cat.id)}
+                                                    className="inline-flex items-center gap-1.5 text-xs bg-red-500/20 hover:bg-red-500/40 text-red-300 hover:text-red-200 px-3 py-1.5 rounded-lg transition border border-red-500/30"
+                                                >
+                                                    <Icon name="trash2" size={14} /> Eliminar
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

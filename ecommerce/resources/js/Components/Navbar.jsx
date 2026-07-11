@@ -35,7 +35,7 @@ export default function Navbar() {
                         Contacto
                     </Link>
                     {auth?.user && (
-                        auth.user.rol === 'admin' ? (
+                        auth.user.role === 'admin' ? (
                             <Link href="/admin/dashboard" className="px-4 py-2 text-slate-300 hover:text-white hover:shadow-lg rounded-xl text-sm font-medium transition-all duration-200">
                                 Panel Admin
                             </Link>
@@ -118,7 +118,7 @@ export default function Navbar() {
 
                     {auth?.user ? (
                         <>
-                            {auth.user.rol === 'admin' ? (
+                            {auth.user.role === 'admin' ? (
                                 <Link href="/admin/dashboard" className="block px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-sm">
                                     Panel Admin
                                 </Link>

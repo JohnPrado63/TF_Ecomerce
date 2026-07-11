@@ -27,4 +27,23 @@ class Hotel extends Model
     {
         return $this->belongsToMany(TourPackage::class, 'package_hotels', 'hotel_id', 'package_id');
     }
+
+    public static function getHotelsNearby($locationId, $limit = 2)
+    {
+        $location = Location::find($locationId);
+
+        $hotels = Hotel::where('location_id', $locationId)->limit($limit)->get();
+
+        if ($hotels->isEmpty() && $location) {
+            $hotels = Hotel::whereHas('location', function ($query) use ($location) {
+                $query->where('region', $location->region);
+            })->limit($limit)->get();
+        }
+
+        if ($hotels->isEmpty()) {
+            $hotels = Hotel::limit($limit)->get();
+        }
+
+        return $hotels;
+    }
 }

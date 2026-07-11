@@ -1,6 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import Icon from '@/Components/Icon';
 import Navbar from '@/Components/Navbar';
+import SectionHeader from '@/Components/SectionHeader';
 
 export default function Show({ destination, packages }) {
     return (
@@ -11,93 +12,109 @@ export default function Show({ destination, packages }) {
             <div className="container mx-auto px-6 py-10">
                 <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between mb-10">
                     <div>
-                        <p className="text-sm uppercase tracking-[0.3em] text-sky-300">
+                        <p className="flex items-center gap-2 text-sm uppercase tracking-[0.3em] text-cyan-400">
+                            <Icon name="map-pin" size={14} />
                             Destino Ayacucho
                         </p>
-                        <h1 className="mt-3 text-4xl font-bold">{destination.name}</h1>
+                        <h1 className="mt-3 text-4xl font-bold text-white">{destination.name}</h1>
                         <p className="mt-3 max-w-2xl text-slate-400">{destination.description}</p>
                     </div>
                     <Link
                         href="/"
-                        className="inline-flex items-center rounded-full bg-slate-900/80 border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-100 hover:bg-slate-800 transition"
+                        className="inline-flex items-center gap-2 rounded-xl bg-slate-900/80 border border-slate-800/80 px-5 py-3 text-sm font-semibold text-slate-300 hover:bg-slate-800 hover:border-slate-700 transition"
                     >
-                        ← Volver al inicio
+                        <Icon name="arrow-left" size={16} />
+                        Volver al inicio
                     </Link>
                 </div>
 
-                {/* Info y lugares turísticos */}
                 <div className="grid gap-6 lg:grid-cols-3 mb-10">
-                    <div className="rounded-[2rem] border border-slate-800 bg-slate-900/90 p-6 shadow-xl">
-                        <p className="text-sm uppercase tracking-[0.24em] text-slate-500 mb-3">Provincia</p>
-                        <h2 className="text-3xl font-bold text-white mb-4">{destination.name}</h2>
+                    <div className="rounded-2xl border border-slate-800/80 bg-slate-900/80 p-6 shadow-xl">
+                        <p className="text-xs uppercase tracking-[0.24em] text-slate-500 mb-3">Provincia</p>
+                        <h2 className="text-2xl font-bold text-white mb-4">{destination.name}</h2>
                         <p className="text-slate-400 mb-6">{destination.summary}</p>
                         <div className="space-y-3">
-                            <p className="text-sm text-slate-400">Región: Ayacucho</p>
-                            <p className="text-sm text-slate-400">
+                            <div className="flex items-center gap-2 text-sm text-slate-400">
+                                <Icon name="map-pin" size={15} className="text-cyan-400" />
+                                Región: Ayacucho
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-slate-400">
+                                <Icon name="compass" size={15} className="text-cyan-400" />
                                 Sitios turísticos: {destination.sites.length}
-                            </p>
-                            <p className="text-sm text-slate-400">Estilo: {destination.style}</p>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-slate-400">
+                                <Icon name="sparkles" size={15} className="text-cyan-400" />
+                                Estilo: {destination.style}
+                            </div>
                         </div>
                     </div>
 
-                    <div className="lg:col-span-2 rounded-[2rem] border border-slate-800 bg-slate-900/90 p-6 shadow-xl">
-                        <h2 className="text-xl font-semibold text-white mb-6">Lugares turísticos</h2>
-                        <div className="grid gap-5 sm:grid-cols-2">
+                    <div className="lg:col-span-2 rounded-2xl border border-slate-800/80 bg-slate-900/80 p-6 shadow-xl">
+                        <h2 className="flex items-center gap-2 text-xl font-semibold text-white mb-6">
+                            <Icon name="map" size={20} className="text-cyan-400" />
+                            Lugares turísticos
+                        </h2>
+                        <div className="grid gap-4 sm:grid-cols-2">
                             {destination.sites.map((site) => (
                                 <div
                                     key={site.title}
-                                    className={`rounded-3xl border p-5 transition hover:border-sky-500 ${
+                                    className={`rounded-xl border p-5 transition ${
                                         site.has_package
-                                            ? 'border-cyan-500/40 bg-cyan-950/20'
-                                            : 'border-slate-800 bg-slate-950/80'
+                                            ? 'border-cyan-500/40 bg-cyan-500/5'
+                                            : 'border-slate-800/80 bg-slate-800/30'
                                     }`}
                                 >
                                     <div className="flex items-start justify-between gap-2 mb-2">
                                         <h3 className="text-lg font-semibold text-white">{site.title}</h3>
                                         {site.has_package && (
-                                            <span className="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded-full whitespace-nowrap flex items-center gap-1">
-                                                🎫 Incluido en tour
+                                            <span className="flex items-center gap-1 text-xs bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 px-2.5 py-1 rounded-full whitespace-nowrap">
+                                                <Icon name="check-circle" size={11} />
+                                                Incluido en tour
                                             </span>
                                         )}
                                     </div>
-                                    <p className="text-slate-400 text-sm leading-6">{site.detail}</p>
+                                    <p className="text-slate-400 text-sm leading-relaxed">{site.detail}</p>
                                 </div>
                             ))}
                         </div>
                     </div>
                 </div>
 
-                {/* Plan recomendado */}
-                <div className="mb-10 rounded-[2rem] border border-slate-800 bg-slate-900/90 p-6 shadow-xl">
-                    <h2 className="text-xl font-semibold text-white mb-4">Plan recomendado</h2>
-                    <p className="text-slate-400 leading-7">{destination.recommendation}</p>
+                <div className="mb-10 rounded-2xl border border-slate-800/80 bg-slate-900/80 p-6 shadow-xl">
+                    <h2 className="flex items-center gap-2 text-xl font-semibold text-white mb-4">
+                        <Icon name="target" size={20} className="text-cyan-400" />
+                        Plan recomendado
+                    </h2>
+                    <p className="text-slate-400 leading-relaxed">{destination.recommendation}</p>
                 </div>
 
-                {/* Paquetes disponibles */}
-                <div className="rounded-[2rem] border border-slate-800 bg-slate-900/90 p-6 shadow-xl">
+                <div className="rounded-2xl border border-slate-800/80 bg-slate-900/80 p-6 shadow-xl">
                     <div className="flex items-center justify-between mb-6">
                         <div>
-                            <h2 className="text-xl font-semibold text-white">
-                                🧳 Paquetes disponibles en {destination.name}
+                            <h2 className="flex items-center gap-2 text-xl font-semibold text-white">
+                                <Icon name="package" size={20} className="text-cyan-400" />
+                                Paquetes disponibles en {destination.name}
                             </h2>
                             <p className="text-slate-400 text-sm mt-1">
                                 {packages.length > 0
                                     ? `${packages.length} paquete(s) disponible(s)`
-                                    : 'Próximamente habrá paquetes para este destino'
-                                }
+                                    : 'Próximamente habrá paquetes para este destino'}
                             </p>
                         </div>
                         <Link
                             href="/packages"
-                            className="text-cyan-400 hover:text-cyan-300 text-sm transition"
+                            className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 text-sm font-medium transition"
                         >
-                            Ver todos →
+                            Ver todos
+                            <Icon name="arrow-right" size={14} />
                         </Link>
                     </div>
 
                     {packages.length === 0 ? (
-                        <div className="text-center py-10">
-                            <p className="text-5xl mb-4">🏔️</p>
+                        <div className="text-center py-12 bg-slate-800/30 rounded-xl border border-slate-800/50">
+                            <div className="w-16 h-16 rounded-full bg-slate-800/50 flex items-center justify-center mx-auto mb-4">
+                                <Icon name="package" size={32} className="text-slate-600" />
+                            </div>
                             <p className="text-slate-500 text-sm">
                                 Aún no hay paquetes para este destino.
                             </p>
@@ -107,41 +124,43 @@ export default function Show({ destination, packages }) {
                             {packages.map((pkg) => (
                                 <div
                                     key={pkg.id}
-                                    className="group bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden hover:border-cyan-500/50 hover:shadow-lg hover:shadow-cyan-500/10 hover:-translate-y-0.5 transition-all duration-300"
+                                    className="group bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden hover:border-cyan-500/50 hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1 transition-all duration-300"
                                 >
-                                    {/* Imagen */}
-                                    <div className="h-40 overflow-hidden">
+                                    <div className="relative h-40 overflow-hidden">
                                         <img
                                             src={pkg.image_url}
                                             alt={pkg.title}
                                             className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                                         />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent" />
                                     </div>
 
-                                    {/* Info */}
                                     <div className="p-4">
-                                        <p className="text-slate-500 text-xs mb-1 flex items-center gap-1">
-                                            <Icon name="map-pin" size={12} /> {pkg.location?.city}, {pkg.location?.region}
+                                        <p className="text-slate-400 text-xs mb-1 flex items-center gap-1.5">
+                                            <Icon name="map-pin" size={13} className="text-cyan-400" />
+                                            {pkg.location?.city}, {pkg.location?.region}
                                         </p>
-                                        <h3 className="text-white font-bold mb-2 group-hover:text-cyan-400 transition">
+                                        <h3 className="text-white font-bold mb-3 group-hover:text-cyan-400 transition line-clamp-1">
                                             {pkg.title}
                                         </h3>
 
-                                        {/* Badges */}
                                         <div className="flex gap-2 mb-3 flex-wrap">
                                             {pkg.includes_guide == 1 && (
-                                                <span className="text-xs bg-blue-900/50 text-blue-300 px-2 py-0.5 rounded-full flex items-center gap-1">
-                                                    <Icon name="sparkles" size={12} /> Guía
+                                                <span className="flex items-center gap-1 text-xs bg-blue-500/10 border border-blue-500/30 text-blue-400 px-2.5 py-1 rounded-full">
+                                                    <Icon name="users" size={11} />
+                                                    Guía
                                                 </span>
                                             )}
                                             {pkg.includes_food == 1 && (
-                                                <span className="text-xs bg-green-900/50 text-green-300 px-2 py-0.5 rounded-full flex items-center gap-1">
-                                                    <Icon name="utensils" size={12} /> Comida
+                                                <span className="flex items-center gap-1 text-xs bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-2.5 py-1 rounded-full">
+                                                    <Icon name="coffee" size={11} />
+                                                    Comida
                                                 </span>
                                             )}
                                             {pkg.includes_hotel == 1 && (
-                                                <span className="text-xs bg-purple-900/50 text-purple-300 px-2 py-0.5 rounded-full flex items-center gap-1">
-                                                    <Icon name="building" size={12} /> Hotel
+                                                <span className="flex items-center gap-1 text-xs bg-violet-500/10 border border-violet-500/30 text-violet-400 px-2.5 py-1 rounded-full">
+                                                    <Icon name="building" size={11} />
+                                                    Hotel
                                                 </span>
                                             )}
                                         </div>
@@ -151,14 +170,16 @@ export default function Show({ destination, packages }) {
                                                 <p className="text-cyan-400 font-bold text-lg">
                                                     S/. {Number(pkg.price).toFixed(2)}
                                                 </p>
-                                                <p className="text-slate-500 text-xs flex items-center gap-1">
-                                                    <Icon name="calendar" size={12} /> {pkg.duration_days} día(s)
+                                                <p className="text-slate-500 text-xs flex items-center gap-1.5">
+                                                    <Icon name="calendar" size={12} />
+                                                    {pkg.duration_days} día(s)
                                                 </p>
                                             </div>
                                             <Link
                                                 href={`/packages/${pkg.id}`}
-                                                className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold px-4 py-2 rounded-xl transition text-xs"
+                                                className="bg-gradient-to-r from-cyan-500 to-cyan-400 hover:from-cyan-400 hover:to-cyan-300 text-slate-950 font-bold px-4 py-2 rounded-xl transition shadow-lg shadow-cyan-500/20 text-sm flex items-center gap-2"
                                             >
+                                                <Icon name="eye" size={14} />
                                                 Ver más
                                             </Link>
                                         </div>

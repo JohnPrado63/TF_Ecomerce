@@ -45,7 +45,7 @@ export default function Confirmation({ booking }) {
                             {booking.guide && (
                             <div className="flex justify-between">
                                 <span className="text-slate-400">Guía asignado</span>
-                                <span>{booking.guide.nombre} {booking.guide.apellido}</span>
+                                <span>{booking.guide.first_name} {booking.guide.last_name}</span>
                             </div>
                             )}
                             <div className="flex justify-between border-t border-slate-700 pt-3 font-bold text-base">

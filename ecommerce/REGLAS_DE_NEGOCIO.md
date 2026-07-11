@@ -8,9 +8,9 @@ Este documento define las reglas de negocio, convenciones de nomenclatura y la a
 - **Integración:** Inertia.js
 
 ## 2. Convenciones de Idioma (Español)
-Para mantener consistencia en la lógica de negocio y facilitar la comprensión del dominio para todos los miembros del equipo, se aplicarán las siguientes convenciones en idioma **español**:
+Para mantener consistencia en la lógica de negocio y facilitar la comprensión del dominio para todos los miembros del equipo, se aplicarán las siguientes convenciones en idioma **ingles** para las tablas y campos en la base de datos y en idioma **español** para el resto del proyeeto.
 
-- **Tablas de Base de Datos:** Los nombres de las tablas deben estar en español, en plural y minúsculas (ej. `usuarios`, `productos`, `pedidos`).
+- **Tablas de Base de Datos:** Los nombres de las tablas deben estar en ingles, en plural y minúsculas 
 - **Controladores:** Los nombres de los controladores deben estar en español, usando PascalCase y terminando con la palabra `Controller` (ej. `UsuarioController`, `ProductoController`).
 - **Modelos:** Los nombres de los modelos deben estar en español y en singular, usando PascalCase (ej. `Usuario`, `Producto`).
 - **Rutas y URLs:** Las URLs expuestas y definidos en los archivos de rutas deben estar en español (ej. `/usuarios`, `/productos/crear`).
