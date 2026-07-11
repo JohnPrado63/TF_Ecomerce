@@ -46,24 +46,24 @@ class TourPackage extends Model
         return $this->hasMany(Review::class, 'package_id');
     }
 
-    public function hoteles()
+    public function hotels()
     {
-        return $this->belongsToMany(Hotel::class, 'package_hoteles', 'package_id', 'hotel_id');
+        return $this->belongsToMany(Hotel::class, 'package_hotels', 'package_id', 'hotel_id');
     }
 
-    public function guias()
+    public function tourGuides()
     {
-        return $this->belongsToMany(GuiaTuristico::class, 'package_guias', 'package_id', 'guia_id');
+        return $this->belongsToMany(TourGuide::class, 'package_tour_guides', 'package_id', 'tour_guide_id');
     }
 
-    public function restaurantes()
+    public function restaurants()
     {
-        return $this->belongsToMany(Restaurante::class, 'package_restaurantes', 'package_id', 'restaurante_id');
+        return $this->belongsToMany(Restaurant::class, 'package_restaurants', 'package_id', 'restaurant_id');
     }
 
-    public function Transportes()
+    public function transports()
     {
-        return $this->belongsToMany(EmpresaTransporte::class, 'package_transportes', 'package_id', 'empresa_transporte_id');
+        return $this->belongsToMany(TransportCompany::class, 'package_transports', 'package_id', 'transport_company_id');
     }
 
     public function packageInteractions()

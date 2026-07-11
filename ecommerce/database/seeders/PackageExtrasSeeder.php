@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\TourPackage;
 use App\Models\Hotel;
-use App\Models\Restaurante;
+use App\Models\Restaurant;
 
 class PackageExtrasSeeder extends Seeder
 {
@@ -13,20 +13,20 @@ class PackageExtrasSeeder extends Seeder
     {
         $packages = [
             'Aguas Turquesas de Millpu' => [
-                'hoteles' => ['Hostal Santa Rosa'],
-                'restaurantes' => ['Restaurante Millpu'],
+                'hotels' => ['Hostal Santa Rosa'],
+                'restaurants' => ['Restaurante Millpu'],
             ],
             'Vilcashuamán Imperial' => [
-                'hoteles' => ['Albergue Vilcashuamán'],
-                'restaurantes' => ['Restaurante Inka Wasi'],
+                'hotels' => ['Albergue Vilcashuamán'],
+                'restaurants' => ['Restaurante Inka Wasi'],
             ],
             'Templos Coloniales de Huamanga' => [
-                'hoteles' => ['Hotel Plaza Ayacucho'],
-                'restaurantes' => ['Restaurante La Casona'],
+                'hotels' => ['Hotel Plaza Ayacucho'],
+                'restaurants' => ['Restaurante La Casona'],
             ],
             'Huanta y sus Lagunas' => [
-                'hoteles' => ['Hotel Plaza Huanta'],
-                'restaurantes' => ['Restaurante el Huantino'],
+                'hotels' => ['Hotel Plaza Huanta'],
+                'restaurants' => ['Restaurante el Huantino'],
             ],
         ];
 
@@ -34,18 +34,18 @@ class PackageExtrasSeeder extends Seeder
             $package = TourPackage::where('title', $title)->first();
             if (!$package) continue;
 
-            if (!empty($lists['hoteles'])) {
-                $hotelIds = Hotel::whereIn('nombre', $lists['hoteles'])
+            if (!empty($lists['hotels'])) {
+                $hotelIds = Hotel::whereIn('name', $lists['hotels'])
                     ->pluck('id')
                     ->toArray();
-                $package->hoteles()->syncWithoutDetaching($hotelIds);
+                $package->hotels()->syncWithoutDetaching($hotelIds);
             }
 
-            if (!empty($lists['restaurantes'])) {
-                $restauranteIds = Restaurante::whereIn('nombre', $lists['restaurantes'])
+            if (!empty($lists['restaurants'])) {
+                $restaurantIds = Restaurant::whereIn('name', $lists['restaurants'])
                     ->pluck('id')
                     ->toArray();
-                $package->restaurantes()->syncWithoutDetaching($restauranteIds);
+                $package->restaurants()->syncWithoutDetaching($restaurantIds);
             }
         }
     }

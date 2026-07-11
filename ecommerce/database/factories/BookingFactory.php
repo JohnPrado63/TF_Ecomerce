@@ -4,10 +4,10 @@ namespace Database\Factories;
 
 use App\Models\Booking;
 use App\Models\Client;
-use App\Models\GuiaTuristico;
+use App\Models\TourGuide;
 use App\Models\Hotel;
 use App\Models\Offer;
-use App\Models\Restaurante;
+use App\Models\Restaurant;
 use App\Models\TourPackage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -27,7 +27,7 @@ class BookingFactory extends Factory
             'guide_id' => null,
             'offer_id' => null,
             'discount_amount' => 0,
-            'restaurante_id' => null,
+            'restaurant_id' => null,
             'total_amount' => fake()->randomFloat(2, 200, 5000),
             'status' => 'pending',
             'order_number' => 'ESKY-' . strtoupper(substr(uniqid(), -6)),
@@ -56,10 +56,10 @@ class BookingFactory extends Factory
         ]);
     }
 
-    public function withGuide(GuiaTuristico $guide = null): static
+    public function withGuide(TourGuide $guide = null): static
     {
         return $this->state(fn (array $attributes) => [
-            'guide_id' => $guide?->id ?? GuiaTuristico::factory(),
+            'guide_id' => $guide?->id ?? TourGuide::factory(),
         ]);
     }
 
@@ -70,10 +70,10 @@ class BookingFactory extends Factory
         ]);
     }
 
-    public function withRestaurant(Restaurante $restaurant = null): static
+    public function withRestaurant(Restaurant $restaurant = null): static
     {
         return $this->state(fn (array $attributes) => [
-            'restaurante_id' => $restaurant?->id ?? Restaurante::factory(),
+            'restaurant_id' => $restaurant?->id ?? Restaurant::factory(),
         ]);
     }
 }

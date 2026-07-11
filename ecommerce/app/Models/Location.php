@@ -20,15 +20,15 @@ class Location extends Model
         return $this->hasMany(TourPackage::class);
     }
 
-    // Una ubicación tiene muchos hoteles
-    public function hoteles()
+    // A location has many hotels
+    public function hotels()
     {
         return $this->hasMany(Hotel::class);
     }
 
-    // Una ubicación tiene muchos restaurantes
-    public function restaurantes()
+    // A location has many restaurants
+    public function restaurants()
     {
-        return $this->hasMany(Restaurante::class);
+        return $this->hasMany(Restaurant::class);
     }
 }

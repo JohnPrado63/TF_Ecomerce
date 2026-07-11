@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\TourPackage;
 use App\Models\Booking;
 use App\Models\Client;
-use App\Models\Usuario;
+use App\Models\User;
 use App\Models\Category;
 use App\Models\Location;
 use Illuminate\Http\Request;
@@ -23,7 +23,7 @@ class AdminController extends Controller
     {
         $totalPaquetes  = TourPackage::count();
         $totalReservas  = Booking::count();
-        $totalUsuarios  = Usuario::count();
+        $totalUsers  = User::count();
         $totalIngresos  = Booking::where('status', 'confirmed')->sum('total_amount');
 
         $reservasRecientes = Booking::with(['tourPackage', 'client'])
@@ -35,7 +35,7 @@ class AdminController extends Controller
             'stats' => [
                 'paquetes'  => $totalPaquetes,
                 'reservas'  => $totalReservas,
-                'usuarios'  => $totalUsuarios,
+                'users'  => $totalUsers,
                 'ingresos'  => $totalIngresos,
             ],
             'reservasRecientes' => $reservasRecientes,
@@ -120,7 +120,7 @@ class AdminController extends Controller
     // Listar guías
     public function guides()
     {
-        $guides = \App\Models\GuiaTuristico::orderBy('nombre')->get();
+        $guides = \App\Models\TourGuide::orderBy('first_name')->get();
         return Inertia::render('Admin/Guides', [
             'guides' => $guides,
         ]);
@@ -130,14 +130,14 @@ class AdminController extends Controller
     public function storeGuide(Request $request)
     {
         $request->validate([
-            'nombre'         => 'required|string|max:100',
-            'apellido'       => 'required|string|max:100',
-            'idiomas'        => 'nullable|string',
-            'telefono'       => 'nullable|string|max:20',
-            'credencial_nro' => 'nullable|string|max:50',
+            'first_name'         => 'required|string|max:100',
+            'last_name'       => 'required|string|max:100',
+            'languages'        => 'nullable|string',
+            'phone'       => 'nullable|string|max:20',
+            'credential_number' => 'nullable|string|max:50',
         ]);
 
-        \App\Models\GuiaTuristico::create($request->all());
+        \App\Models\TourGuide::create($request->all());
         return redirect()->back()->with('success', 'Guía creado correctamente');
     }
 
@@ -145,18 +145,18 @@ class AdminController extends Controller
     public function updateGuide(Request $request, $id)
     {
         $request->validate([
-            'nombre'   => 'required|string|max:100',
-            'apellido' => 'required|string|max:100',
+            'first_name'   => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
         ]);
 
-        \App\Models\GuiaTuristico::findOrFail($id)->update($request->all());
+        \App\Models\TourGuide::findOrFail($id)->update($request->all());
         return redirect()->back()->with('success', 'Guía actualizado correctamente');
     }
 
     // Eliminar guía
     public function deleteGuide($id)
     {
-        \App\Models\GuiaTuristico::findOrFail($id)->delete();
+        \App\Models\TourGuide::findOrFail($id)->delete();
         return redirect()->back()->with('success', 'Guía eliminado correctamente');
     }
 
@@ -211,7 +211,7 @@ class AdminController extends Controller
     public function hotels()
     {
         $hotels = \App\Models\Hotel::with('location')
-            ->orderBy('nombre')
+            ->orderBy('name')
             ->get();
 
         $locations = \App\Models\Location::orderBy('city')->get();
@@ -226,12 +226,12 @@ class AdminController extends Controller
     public function storeHotel(Request $request)
     {
         $request->validate([
-            'nombre'           => 'required|string|max:150',
+            'name'           => 'required|string|max:150',
             'location_id'      => 'required|exists:locations,id',
-            'estrellas'        => 'nullable|integer|min:1|max:5',
-            'precio_por_noche' => 'nullable|numeric',
-            'direccion'        => 'nullable|string',
-            'telefono'         => 'nullable|string|max:20',
+            'stars'        => 'nullable|integer|min:1|max:5',
+            'price_per_person' => 'nullable|numeric',
+            'address'        => 'nullable|string',
+            'phone'         => 'nullable|string|max:20',
         ]);
 
         \App\Models\Hotel::create($request->all());
@@ -242,7 +242,7 @@ class AdminController extends Controller
     public function updateHotel(Request $request, $id)
     {
         $request->validate([
-            'nombre'      => 'required|string|max:150',
+            'name'      => 'required|string|max:150',
             'location_id' => 'required|exists:locations,id',
         ]);
 
@@ -276,8 +276,8 @@ class AdminController extends Controller
     // Listar transportes
     public function transports()
     {
-        $transports = \App\Models\EmpresaTransporte::with('location')
-            ->orderBy('nombre_empresa')
+        $transports = \App\Models\TransportCompany::with('location')
+            ->orderBy('company_name')
             ->get();
 
         $locations = \App\Models\Location::orderBy('city')->get();
@@ -292,13 +292,13 @@ class AdminController extends Controller
     public function storeTransport(Request $request)
     {
         $request->validate([
-            'nombre_empresa'  => 'required|string|max:150',
+            'company_name'  => 'required|string|max:150',
             'location_id'     => 'required|exists:locations,id',
-            'tipo_transporte' => 'required|in:Autobús,Miniván,Avión,Tren,Marítimo',
-            'contacto'        => 'nullable|string|max:100',
+            'transport_type' => 'required|in:Autobús,Miniván,Avión,Tren,Marítimo',
+            'contact'        => 'nullable|string|max:100',
         ]);
 
-        \App\Models\EmpresaTransporte::create($request->all());
+        \App\Models\TransportCompany::create($request->all());
         return redirect()->back()->with('success', 'Empresa de transporte creada correctamente');
     }
 
@@ -306,19 +306,19 @@ class AdminController extends Controller
     public function updateTransport(Request $request, $id)
     {
         $request->validate([
-            'nombre_empresa'  => 'required|string|max:150',
+            'company_name'  => 'required|string|max:150',
             'location_id'     => 'required|exists:locations,id',
-            'tipo_transporte' => 'required|in:Autobús,Miniván,Avión,Tren,Marítimo',
+            'transport_type' => 'required|in:Autobús,Miniván,Avión,Tren,Marítimo',
         ]);
 
-        \App\Models\EmpresaTransporte::findOrFail($id)->update($request->all());
+        \App\Models\TransportCompany::findOrFail($id)->update($request->all());
         return redirect()->back()->with('success', 'Empresa actualizada correctamente');
     }
 
     // Eliminar transporte
     public function deleteTransport($id)
     {
-        \App\Models\EmpresaTransporte::findOrFail($id)->delete();
+        \App\Models\TransportCompany::findOrFail($id)->delete();
         return redirect()->back()->with('success', 'Empresa eliminada correctamente');
     }
 
@@ -363,8 +363,8 @@ public function reports()
     // Listar restaurantes
     public function restaurants()
     {
-        $restaurants = \App\Models\Restaurante::with('location')
-            ->orderBy('nombre')
+        $restaurants = \App\Models\Restaurant::with('location')
+            ->orderBy('name')
             ->get();
 
         $locations = \App\Models\Location::orderBy('city')->get();
@@ -379,13 +379,13 @@ public function reports()
     public function storeRestaurant(Request $request)
     {
         $request->validate([
-            'nombre'      => 'required|string|max:150',
+            'name'      => 'required|string|max:150',
             'location_id' => 'required|exists:locations,id',
-            'tipo_comida' => 'nullable|string|max:100',
-            'direccion'   => 'nullable|string',
+            'cuisine_type' => 'nullable|string|max:100',
+            'address'   => 'nullable|string',
         ]);
 
-        \App\Models\Restaurante::create($request->all());
+        \App\Models\Restaurant::create($request->all());
         return redirect()->back()->with('success', 'Restaurante creado correctamente');
     }
 
@@ -393,18 +393,18 @@ public function reports()
     public function updateRestaurant(Request $request, $id)
     {
         $request->validate([
-            'nombre'      => 'required|string|max:150',
+            'name'      => 'required|string|max:150',
             'location_id' => 'required|exists:locations,id',
         ]);
 
-        \App\Models\Restaurante::findOrFail($id)->update($request->all());
+        \App\Models\Restaurant::findOrFail($id)->update($request->all());
         return redirect()->back()->with('success', 'Restaurante actualizado correctamente');
     }
 
     // Eliminar restaurante
     public function deleteRestaurant($id)
     {
-        \App\Models\Restaurante::findOrFail($id)->delete();
+        \App\Models\Restaurant::findOrFail($id)->delete();
         return redirect()->back()->with('success', 'Restaurante eliminado correctamente');
     }
 

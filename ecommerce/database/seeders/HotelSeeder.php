@@ -9,34 +9,34 @@ class HotelSeeder extends Seeder
 {
     public function run(): void
     {
-        $hoteles = [
+        $hotels = [
             [
                 'location_id'       => 1,
-                'nombre'            => 'Hotel Plaza Ayacucho',
-                'estrellas'         => 4,
-                'direccion'         => 'Jr. 9 de Diciembre 184, Huamanga',
-                'telefono'          => '066312345',
+                'name'            => 'Hotel Plaza Ayacucho',
+                'stars'         => 4,
+                'address'         => 'Jr. 9 de Diciembre 184, Huamanga',
+                'phone'          => '066312345',
                 'price_per_person'  => 120.00,
             ],
             [
                 'location_id'       => 1,
-                'nombre'            => 'Hostal Santa Rosa',
-                'estrellas'         => 3,
-                'direccion'         => 'Jr. Lima 166, Huamanga',
-                'telefono'          => '066323456',
+                'name'            => 'Hostal Santa Rosa',
+                'stars'         => 3,
+                'address'         => 'Jr. Lima 166, Huamanga',
+                'phone'          => '066323456',
                 'price_per_person'  => 80.00,
             ],
             [
                 'location_id'       => 3,
-                'nombre'            => 'Albergue Vilcashuamán',
-                'estrellas'         => 2,
-                'direccion'         => 'Plaza Principal, Vilcashuamán',
-                'telefono'          => '966456789',
+                'name'            => 'Albergue Vilcashuamán',
+                'stars'         => 2,
+                'address'         => 'Plaza Principal, Vilcashuamán',
+                'phone'          => '966456789',
                 'price_per_person'  => 65.00,
             ],
         ];
 
-        foreach ($hoteles as $hotel) {
+        foreach ($hotels as $hotel) {
             Hotel::create($hotel);
         }
     }

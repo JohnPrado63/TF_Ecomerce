@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\Client;
 use App\Models\Payment;
 use App\Models\TourPackage;
-use App\Models\Usuario;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -15,7 +15,7 @@ class PaymentControllerTest extends TestCase
 
     public function test_user_can_view_payment_page(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create();
         $booking = \App\Models\Booking::factory()->create([
@@ -30,8 +30,8 @@ class PaymentControllerTest extends TestCase
 
     public function test_user_cannot_view_other_users_payment(): void
     {
-        $user = Usuario::factory()->create();
-        $otherUser = Usuario::factory()->create();
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
         $otherClient = Client::factory()->create(['user_id' => $otherUser->id]);
         $booking = \App\Models\Booking::factory()->create(['client_id' => $otherClient->id]);
 
@@ -42,7 +42,7 @@ class PaymentControllerTest extends TestCase
 
     public function test_payment_creates_pending_record_on_first_access(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create();
         $booking = \App\Models\Booking::factory()->create([
@@ -61,7 +61,7 @@ class PaymentControllerTest extends TestCase
 
     public function test_user_can_submit_manual_payment_voucher(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create();
         $booking = \App\Models\Booking::factory()->create([
@@ -80,8 +80,8 @@ class PaymentControllerTest extends TestCase
 
     public function test_admin_can_verify_payment(): void
     {
-        $admin = Usuario::factory()->create(['rol' => 'admin']);
-        $user = Usuario::factory()->create();
+        $admin = User::factory()->create(['role' => 'admin']);
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create(['available_slots' => 10]);
         $booking = \App\Models\Booking::factory()->create([
@@ -106,8 +106,8 @@ class PaymentControllerTest extends TestCase
 
     public function test_verified_payment_decrements_package_slots(): void
     {
-        $admin = Usuario::factory()->create(['rol' => 'admin']);
-        $user = Usuario::factory()->create();
+        $admin = User::factory()->create(['role' => 'admin']);
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create(['available_slots' => 10]);
         $booking = \App\Models\Booking::factory()->create([
@@ -130,8 +130,8 @@ class PaymentControllerTest extends TestCase
 
     public function test_admin_can_reject_payment(): void
     {
-        $admin = Usuario::factory()->create(['rol' => 'admin']);
-        $user = Usuario::factory()->create();
+        $admin = User::factory()->create(['role' => 'admin']);
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create(['available_slots' => 10]);
         $booking = \App\Models\Booking::factory()->create([

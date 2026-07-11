@@ -91,9 +91,9 @@ class TourPackageController extends Controller
             'category',
             'location',
             'reviews.client',
-            'hoteles',
-            'guias',
-            'restaurantes'
+            'hotels',
+            'tourGuides',
+            'restaurants'
         ])
         ->withAvg('reviews', 'rating')
         ->withCount('reviews')
@@ -106,13 +106,13 @@ class TourPackageController extends Controller
             return $pkg;
         })->sortByDesc('similarity_score')->values();
 
-        //restaurantes de la misma ubicacion que no esten asignados ya directamente al paquete
-        $assignedIds=$package->restaurantes->pluck('id')->toArray();
-        $nearbyRestaurants = \App\Models\Restaurante::where('location_id', $package->location_id)
+        //restaurants of the same location not already assigned to the package
+        $assignedIds=$package->restaurants->pluck('id')->toArray();
+        $nearbyRestaurants = \App\Models\Restaurant::where('location_id', $package->location_id)
             ->whereNotIn('id', $assignedIds)
             ->get();
-        //hoteles de la misma ubicacion que no esten asignados ya directamente al paquete
-        $assignedHotelIds=$package->hoteles->pluck('id')->toArray();
+        //hotels of the same location not already assigned to the package
+        $assignedHotelIds=$package->hotels->pluck('id')->toArray();
         $nearbyHotels = \App\Models\Hotel::where('location_id', $package->location_id)
             ->whereNotIn('id', $assignedHotelIds)
             ->get();

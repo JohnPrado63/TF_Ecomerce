@@ -14,10 +14,10 @@ class HotelFactory extends Factory
     {
         return [
             'location_id' => Location::factory(),
-            'nombre' => fake()->company() . ' Hotel',
-            'estrellas' => fake()->numberBetween(1, 5),
-            'direccion' => fake()->address(),
-            'telefono' => fake()->phoneNumber(),
+            'name' => fake()->company() . ' Hotel',
+            'stars' => fake()->numberBetween(1, 5),
+            'address' => fake()->address(),
+            'phone' => fake()->phoneNumber(),
             'price_per_person' => fake()->randomFloat(2, 50, 500),
         ];
     }

@@ -23,7 +23,7 @@ class BookingController extends Controller
                 ->with('info', 'Por favor, Inicia sesión para continuar con tu reserva');
         }
 
-        $package = TourPackage::with(['category', 'location', 'hoteles', 'restaurantes', 'guias'])
+        $package = TourPackage::with(['category', 'location', 'hotels', 'restaurants', 'tourGuides'])
             ->findOrFail($request->package_id);
 
         $offer = null;
@@ -50,9 +50,9 @@ class BookingController extends Controller
             'booking_date'     => 'required|date|after:today',
             'persons_quantity' => 'required|integer|min:1|max:20',
             'include_hotel'    => 'boolean',
-            'hotel_id'         => 'nullable|exists:hoteles,id',
-            'restaurante_id'   => 'nullable|exists:restaurantes,id',
-            'guide_id'         => 'nullable|exists:guias_turisticos,id',
+            'hotel_id'         => 'nullable|exists:hotels,id',
+            'restaurant_id'   => 'nullable|exists:restaurants,id',
+            'guide_id'         => 'nullable|exists:tour_guides,id',
         ]);
 
         // Usar transacción para evitar race conditions en la gestión de slots
@@ -63,7 +63,7 @@ class BookingController extends Controller
                 ->firstOrFail();
 
             // Cargar relaciones después del lock
-            $package->load(['hoteles', 'restaurantes']);
+            $package->load(['hotels', 'restaurants']);
 
             // 3. Validación de disponibilidad de cupos
             if ($package->available_slots <= 0){
@@ -78,18 +78,18 @@ class BookingController extends Controller
             $selectedHotel = null;
 
             if ($includeHotel) {
-                if ($package->hoteles->isNotEmpty() && !$request->hotel_id) {
+                if ($package->hotels->isNotEmpty() && !$request->hotel_id) {
                     return redirect()->back()->with('error', 'Debe seleccionar un hotel para continuar con la reserva.');
                 }
                 if ($request->hotel_id) {
-                    $selectedHotel = $package->hoteles->firstWhere('id', $request->hotel_id);
+                    $selectedHotel = $package->hotels->firstWhere('id', $request->hotel_id);
                     if (!$selectedHotel) {
                         return redirect()->back()->with('error', 'Hotel no válido para este paquete.');
                     }
                 }
             }
 
-            if ($request->restaurante_id && !$package->restaurantes->contains('id', $request->restaurante_id)) {
+            if ($request->restaurant_id && !$package->restaurants->contains('id', $request->restaurant_id)) {
                 return redirect()->back()->with('error', 'Restaurante no válido para este paquete.');
             }
 
@@ -113,8 +113,8 @@ class BookingController extends Controller
             }
 
             // Sumar costo de restaurante si aplica
-            if ($request->restaurante_id) {
-                $selectedRestaurant = $package->restaurantes->firstWhere('id', $request->restaurante_id);
+            if ($request->restaurant_id) {
+                $selectedRestaurant = $package->restaurants->firstWhere('id', $request->restaurant_id);
                 if ($selectedRestaurant) {
                     $total += ($selectedRestaurant->price_per_person??0) * $request->persons_quantity;
                 }
@@ -141,7 +141,7 @@ class BookingController extends Controller
                 'guide_id'         => $request->guide_id,
                 'offer_id'         =>$offer?->id,
                 'discount_amount'  =>$discountAmount,
-                'restaurante_id'   => $request->restaurante_id,
+                'restaurant_id'   => $request->restaurant_id,
                 'total_amount'     => $total,
                 'status'           => 'pending',
             ]);

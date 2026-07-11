@@ -7,7 +7,7 @@ use App\Models\Client;
 use App\Models\Payment;
 use App\Models\Review;
 use App\Models\TourPackage;
-use App\Models\Usuario;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -17,7 +17,7 @@ class ReviewControllerTest extends TestCase
 
     public function test_user_can_create_review_for_confirmed_booking(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create();
         $booking = Booking::factory()->create([
@@ -42,7 +42,7 @@ class ReviewControllerTest extends TestCase
 
     public function test_user_cannot_review_without_confirmed_booking(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create();
         Booking::factory()->create([
@@ -62,7 +62,7 @@ class ReviewControllerTest extends TestCase
 
     public function test_user_cannot_review_same_package_twice(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create();
         Booking::factory()->create([
@@ -86,7 +86,7 @@ class ReviewControllerTest extends TestCase
 
     public function test_user_can_delete_own_review(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $review = Review::factory()->create(['client_id' => $client->id]);
 
@@ -98,8 +98,8 @@ class ReviewControllerTest extends TestCase
 
     public function test_user_cannot_delete_other_users_review(): void
     {
-        $user = Usuario::factory()->create();
-        $otherUser = Usuario::factory()->create();
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
         $otherClient = Client::factory()->create(['user_id' => $otherUser->id]);
         $review = Review::factory()->create(['client_id' => $otherClient->id]);
 
@@ -110,7 +110,7 @@ class ReviewControllerTest extends TestCase
 
     public function test_rating_must_be_between_1_and_5(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create();
         Booking::factory()->create([

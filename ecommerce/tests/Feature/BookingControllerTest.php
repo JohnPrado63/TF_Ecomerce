@@ -7,7 +7,7 @@ use App\Models\Client;
 use App\Models\Hotel;
 use App\Models\Payment;
 use App\Models\TourPackage;
-use App\Models\Usuario;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -26,7 +26,7 @@ class BookingControllerTest extends TestCase
 
     public function test_authenticated_user_can_view_booking_form(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $package = TourPackage::factory()->create();
 
         $response = $this->actingAs($user)->get("/bookings/create?package_id={$package->id}");
@@ -36,7 +36,7 @@ class BookingControllerTest extends TestCase
 
     public function test_user_can_create_booking(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create(['available_slots' => 10]);
 
@@ -55,7 +55,7 @@ class BookingControllerTest extends TestCase
 
     public function test_booking_fails_when_no_slots_available(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create(['available_slots' => 0]);
 
@@ -70,7 +70,7 @@ class BookingControllerTest extends TestCase
 
     public function test_booking_fails_when_requesting_more_slots_than_available(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create(['available_slots' => 5]);
 
@@ -85,7 +85,7 @@ class BookingControllerTest extends TestCase
 
     public function test_user_can_view_their_bookings(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         Booking::factory()->count(3)->create(['client_id' => $client->id]);
 
@@ -96,8 +96,8 @@ class BookingControllerTest extends TestCase
 
     public function test_user_cannot_view_other_users_bookings(): void
     {
-        $user = Usuario::factory()->create();
-        $otherUser = Usuario::factory()->create();
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
         $otherClient = Client::factory()->create(['user_id' => $otherUser->id]);
         $booking = Booking::factory()->create(['client_id' => $otherClient->id]);
 
@@ -108,7 +108,7 @@ class BookingControllerTest extends TestCase
 
     public function test_user_can_cancel_pending_booking(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create(['available_slots' => 10]);
         $booking = Booking::factory()->create([
@@ -126,7 +126,7 @@ class BookingControllerTest extends TestCase
 
     public function test_user_cannot_cancel_booking_with_verified_payment(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $booking = Booking::factory()->create([
             'client_id' => $client->id,
@@ -144,7 +144,7 @@ class BookingControllerTest extends TestCase
 
     public function test_booking_increments_slots_when_cancelled(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create(['available_slots' => 8]);
         $booking = Booking::factory()->create([
