@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Usuario;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,11 +13,11 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        Usuario::firstOrCreate(
+        User::firstOrCreate(
             ['email' => 'admin@esky.com'],
             [
                 'name' => 'Administrador ESKY',
-                'rol' => 'admin',
+                'role' => 'admin',
                 'email_verified_at' => now(),
                 'password' => Hash::make('Admin1234!'),
                 'remember_token' => \Illuminate\Support\Str::random(10),

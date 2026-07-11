@@ -13,7 +13,7 @@ class Booking extends Model
         'client_id', 'package_id', 'booking_date',
         'persons_quantity', 'include_hotel','guide_id',
         'offer_id','discount_amount',
-        'hotel_id', 'restaurante_id',
+        'hotel_id', 'restaurant_id',
         'total_amount', 'status','order_number'
     ];
     public function offer()
@@ -47,14 +47,14 @@ class Booking extends Model
         return $this->belongsTo(Hotel::class, 'hotel_id');
     }
 
-    // Restaurante seleccionado para la reserva
-    public function restaurante()
+    // Restaurant selected for the booking
+    public function restaurant()
     {
-        return $this->belongsTo(Restaurante::class, 'restaurante_id');
+        return $this->belongsTo(Restaurant::class, 'restaurant_id');
     }
     public function guide()
     {
-        return $this->belongsTo(GuiaTuristico::class, 'guide_id');
+        return $this->belongsTo(TourGuide::class, 'guide_id');
     }
 
     // Una reserva tiene muchos pagos

@@ -5,17 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EmpresaTransporte extends Model
+class TransportCompany extends Model
 {
     use HasFactory;
-    protected $table = 'empresas_transporte';
+    protected $table = 'transport_companies';
 
     protected $fillable = [
-        'location_id', 'nombre_empresa',
-        'tipo_transporte', 'contacto'
+        'location_id', 'company_name',
+        'transport_type', 'contact'
     ];
 
-    // Una empresa pertenece a una ubicación
     public function location()
     {
         return $this->belongsTo(Location::class);

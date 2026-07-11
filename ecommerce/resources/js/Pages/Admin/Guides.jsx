@@ -6,11 +6,11 @@ export default function Guides({ guides }) {
     const [editing, setEditing]   = useState(null);
 
     const { data, setData, processing, errors, reset } = useForm({
-        nombre:         '',
-        apellido:       '',
-        idiomas:        '',
-        telefono:       '',
-        credencial_nro: '',
+        first_name:         '',
+        last_name:       '',
+        languages:        '',
+        phone:       '',
+        credential_number: '',
     });
 
     function handleCreate() {
@@ -22,11 +22,11 @@ export default function Guides({ guides }) {
     function handleEdit(guide) {
         setEditing(guide);
         setData({
-            nombre:         guide.nombre,
-            apellido:       guide.apellido,
-            idiomas:        guide.idiomas || '',
-            telefono:       guide.telefono || '',
-            credencial_nro: guide.credencial_nro || '',
+            first_name:         guide.first_name,
+            last_name:       guide.last_name,
+            languages:        guide.languages || '',
+            phone:       guide.phone || '',
+            credential_number: guide.credential_number || '',
         });
         setShowForm(true);
     }
@@ -76,32 +76,32 @@ export default function Guides({ guides }) {
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Nombre</label>
-                                <input type="text" value={data.nombre} onChange={e => setData('nombre', e.target.value)}
+                                <input type="text" value={data.first_name} onChange={e => setData('first_name', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Nombre del guía" />
-                                {errors.nombre && <p className="text-red-400 text-xs mt-1">{errors.nombre}</p>}
+                                {errors.first_name && <p className="text-red-400 text-xs mt-1">{errors.first_name}</p>}
                             </div>
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Apellido</label>
-                                <input type="text" value={data.apellido} onChange={e => setData('apellido', e.target.value)}
+                                <input type="text" value={data.last_name} onChange={e => setData('last_name', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Apellido del guía" />
                             </div>
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Idiomas</label>
-                                <input type="text" value={data.idiomas} onChange={e => setData('idiomas', e.target.value)}
+                                <input type="text" value={data.languages} onChange={e => setData('languages', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Español, Inglés, Quechua" />
                             </div>
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Teléfono</label>
-                                <input type="text" value={data.telefono} onChange={e => setData('telefono', e.target.value)}
+                                <input type="text" value={data.phone} onChange={e => setData('phone', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="+51 999 999 999" />
                             </div>
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Credencial N°</label>
-                                <input type="text" value={data.credencial_nro} onChange={e => setData('credencial_nro', e.target.value)}
+                                <input type="text" value={data.credential_number} onChange={e => setData('credential_number', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="GTA-001" />
                             </div>
@@ -134,13 +134,13 @@ export default function Guides({ guides }) {
                             {guides.map((guide) => (
                                 <tr key={guide.id} className="border-b border-slate-800 hover:bg-slate-800/50 transition">
                                     <td className="p-4 font-semibold">
-                                        {guide.nombre} {guide.apellido}
+                                        {guide.first_name} {guide.last_name}
                                     </td>
-                                    <td className="p-4 text-slate-400 text-sm">{guide.idiomas || '-'}</td>
-                                    <td className="p-4 text-slate-400 text-sm">{guide.telefono || '-'}</td>
+                                    <td className="p-4 text-slate-400 text-sm">{guide.languages || '-'}</td>
+                                    <td className="p-4 text-slate-400 text-sm">{guide.phone || '-'}</td>
                                     <td className="p-4">
                                         <span className="bg-blue-900/50 text-blue-300 text-xs font-bold px-3 py-1 rounded-full">
-                                            {guide.credencial_nro || 'Sin credencial'}
+                                            {guide.credential_number || 'Sin credencial'}
                                         </span>
                                     </td>
                                     <td className="p-4">

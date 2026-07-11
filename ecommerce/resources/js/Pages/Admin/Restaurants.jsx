@@ -7,10 +7,10 @@ export default function Restaurants({ restaurants, locations }) {
     const [editing, setEditing]   = useState(null);
 
     const { data, setData, processing, errors, reset } = useForm({
-        nombre:      '',
+        name:      '',
         location_id: '',
-        tipo_comida: '',
-        direccion:   '',
+        cuisine_type: '',
+        address:   '',
     });
 
     function handleCreate() {
@@ -22,10 +22,10 @@ export default function Restaurants({ restaurants, locations }) {
     function handleEdit(restaurant) {
         setEditing(restaurant);
         setData({
-            nombre:      restaurant.nombre,
+            name:      restaurant.name,
             location_id: restaurant.location_id,
-            tipo_comida: restaurant.tipo_comida || '',
-            direccion:   restaurant.direccion || '',
+            cuisine_type: restaurant.cuisine_type || '',
+            address:   restaurant.address || '',
         });
         setShowForm(true);
     }
@@ -71,10 +71,10 @@ export default function Restaurants({ restaurants, locations }) {
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Nombre</label>
-                                <input type="text" value={data.nombre} onChange={e => setData('nombre', e.target.value)}
+                                <input type="text" value={data.name} onChange={e => setData('name', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Nombre del restaurante" />
-                                {errors.nombre && <p className="text-red-400 text-xs mt-1">{errors.nombre}</p>}
+                                {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
                             </div>
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Ubicación</label>
@@ -88,13 +88,13 @@ export default function Restaurants({ restaurants, locations }) {
                             </div>
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Tipo de comida</label>
-                                <input type="text" value={data.tipo_comida} onChange={e => setData('tipo_comida', e.target.value)}
+                                <input type="text" value={data.cuisine_type} onChange={e => setData('cuisine_type', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Ej: Gastronomía ayacuchana" />
                             </div>
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Dirección</label>
-                                <input type="text" value={data.direccion} onChange={e => setData('direccion', e.target.value)}
+                                <input type="text" value={data.address} onChange={e => setData('address', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Jr. Lima 123" />
                             </div>
@@ -126,10 +126,10 @@ export default function Restaurants({ restaurants, locations }) {
                         <tbody>
                             {restaurants.map((r) => (
                                 <tr key={r.id} className="border-b border-slate-800 hover:bg-slate-800/50 transition">
-                                    <td className="p-4 font-semibold">{r.nombre}</td>
+                                    <td className="p-4 font-semibold">{r.name}</td>
                                     <td className="p-4 text-slate-400 text-sm">{r.location?.city}</td>
-                                    <td className="p-4 text-slate-400 text-sm">{r.tipo_comida || '-'}</td>
-                                    <td className="p-4 text-slate-400 text-sm">{r.direccion || '-'}</td>
+                                    <td className="p-4 text-slate-400 text-sm">{r.cuisine_type || '-'}</td>
+                                    <td className="p-4 text-slate-400 text-sm">{r.address || '-'}</td>
                                     <td className="p-4">
                                         <div className="flex gap-2">
                                             <button onClick={() => handleEdit(r)}

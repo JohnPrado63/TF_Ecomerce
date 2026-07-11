@@ -6,7 +6,7 @@ use App\Models\Category;
 use App\Models\Client;
 use App\Models\Preference;
 use App\Models\TourPackage;
-use App\Models\Usuario;
+use App\Models\User;
 use App\Models\Booking;
 use App\Models\Payment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,7 +18,7 @@ class TravelMatchTest extends TestCase
 
     public function test_travel_match_page_loads_for_authenticated_user(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
 
         $response = $this->actingAs($user)->get('/travel-match');
 
@@ -34,7 +34,7 @@ class TravelMatchTest extends TestCase
 
     public function test_user_without_preferences_gets_empty_recommendations(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         Client::factory()->create(['user_id' => $user->id]);
 
         $response = $this->actingAs($user)->get('/travel-match');
@@ -44,7 +44,7 @@ class TravelMatchTest extends TestCase
 
     public function test_user_with_preferences_gets_recommendations(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         Preference::factory()->create([
             'client_id' => $client->id,
@@ -61,7 +61,7 @@ class TravelMatchTest extends TestCase
 
     public function test_already_booked_packages_not_recommended(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create();
         Booking::factory()->create([
@@ -77,7 +77,7 @@ class TravelMatchTest extends TestCase
 
     public function test_user_can_update_preferences(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
 
         $response = $this->actingAs($user)->post('/preferences', [
@@ -96,7 +96,7 @@ class TravelMatchTest extends TestCase
 
     public function test_preferences_update_recalculates_recommendations(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         Preference::factory()->create([
             'client_id' => $client->id,

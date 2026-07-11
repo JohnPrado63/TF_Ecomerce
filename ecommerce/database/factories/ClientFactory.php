@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Client;
-use App\Models\Usuario;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ClientFactory extends Factory
@@ -13,10 +13,10 @@ class ClientFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => Usuario::factory(),
+            'user_id' => User::factory(),
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
-            'document_type' => fake()->randomElement(['DNI', 'Pasaporte']),
+            'document_type' => fake()->randomElement(['dni', 'passport']),
             'document_number' => fake()->numerify('########'),
             'phone' => fake()->phoneNumber(),
             'address' => fake()->address(),

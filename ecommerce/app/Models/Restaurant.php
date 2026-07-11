@@ -5,18 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Restaurante extends Model
+class Restaurant extends Model
 {
     use HasFactory;
-    protected $table = 'restaurantes';
+    protected $table = 'restaurants';
 
     protected $fillable = [
-        'location_id', 'nombre',
-        'tipo_comida', 'direccion',
+        'location_id', 'name',
+        'cuisine_type', 'address',
         'price_per_person'
     ];
 
-    // Un restaurante pertenece a una ubicación
     public function location()
     {
         return $this->belongsTo(Location::class);

@@ -8,23 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 class Hotel extends Model
 {
     use HasFactory;
-    protected $table = 'hoteles';
+    protected $table = 'hotels';
 
     protected $fillable = [
-        'location_id', 'nombre',
-        'estrellas', 'direccion', 'telefono',
+        'location_id', 'name',
+        'stars', 'address', 'phone',
         'price_per_person'
     ];
 
-    // Un hotel pertenece a una ubicación
+    // A hotel belongs to a location
     public function location()
     {
         return $this->belongsTo(Location::class);
     }
 
-    // Un hotel pertenece a muchos paquetes
+    // A hotel belongs to many packages
     public function tourPackages()
     {
-        return $this->belongsToMany(TourPackage::class, 'package_hoteles', 'hotel_id', 'package_id');
+        return $this->belongsToMany(TourPackage::class, 'package_hotels', 'hotel_id', 'package_id');
     }
 }

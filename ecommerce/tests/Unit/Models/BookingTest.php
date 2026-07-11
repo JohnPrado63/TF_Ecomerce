@@ -6,7 +6,7 @@ use App\Models\Booking;
 use App\Models\Client;
 use App\Models\Offer;
 use App\Models\TourPackage;
-use App\Models\Usuario;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -16,7 +16,7 @@ class BookingTest extends TestCase
 
     public function test_booking_generates_order_number_on_creation(): void
     {
-        $user = Usuario::factory()->create();
+        $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $package = TourPackage::factory()->create();
 
