@@ -45,7 +45,7 @@ export default function Index({ packages, locations, filters = {} }) {
             <Navbar />
             <Head title="Paquetes Turísticos - ESKY TRIPS" />
 
-            <div className="container mx-auto px-6 py-10">
+            <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10">
 
                 <SectionHeader
                     title="Paquetes Turísticos"
@@ -55,8 +55,8 @@ export default function Index({ packages, locations, filters = {} }) {
                     actionHref="/"
                 />
 
-                <div className="bg-gradient-to-br from-slate-900/90 to-slate-900/80 border border-slate-800/80 rounded-2xl p-6 mb-8 shadow-xl shadow-slate-950/20">
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div className="bg-gradient-to-br from-slate-900/90 to-slate-900/80 border border-slate-800/80 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 shadow-xl shadow-slate-950/20">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
 
                         <div className="relative md:col-span-1">
                             <Icon name="search" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />

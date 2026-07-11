@@ -21,7 +21,7 @@ export default function Edit({ preference, categories }) {
             <Navbar />
             <Head title="Mis Preferencias - ESKY TRIPS" />
 
-            <div className="container mx-auto px-6 py-10 max-w-2xl">
+            <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10 max-w-2xl">
 
                 <SectionHeader
                     title="Travel Match"
@@ -29,7 +29,7 @@ export default function Edit({ preference, categories }) {
                     icon="target"
                 />
 
-                <div className="bg-gradient-to-br from-slate-900/90 to-slate-900/80 border border-slate-800/80 rounded-2xl p-8 mt-6">
+                <div className="bg-gradient-to-br from-slate-900/90 to-slate-900/80 border border-slate-800/80 rounded-2xl p-5 sm:p-8 mt-6">
                     <form onSubmit={handleSubmit} className="space-y-6">
 
                         <div>

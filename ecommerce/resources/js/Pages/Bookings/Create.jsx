@@ -52,11 +52,11 @@ export default function Create({ package: pkg, offer }) {
             <Navbar />
             <Head title={`Reservar - ${pkg.title}`} />
 
-            <div className="container mx-auto px-6 py-10 max-w-5xl">
+            <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10 max-w-5xl">
 
                 <Link
                     href={`/packages/${pkg.id}`}
-                    className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 text-sm mb-6 transition w-fit"
+                    className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 text-sm mb-4 sm:mb-6 transition w-fit"
                 >
                     <Icon name="arrow-left" size={16} />
                     Volver al paquete
@@ -87,9 +87,9 @@ export default function Create({ package: pkg, offer }) {
                             </div>
                         )}
 
-                        <div className="bg-gradient-to-br from-slate-900/90 to-slate-900/80 border border-slate-800/80 rounded-2xl p-6">
-                            <h2 className="flex items-center gap-2 text-xl font-bold mb-6">
-                                <Icon name="file-text" size={20} className="text-cyan-400" />
+                        <div className="bg-gradient-to-br from-slate-900/90 to-slate-900/80 border border-slate-800/80 rounded-2xl p-4 sm:p-6">
+                            <h2 className="flex items-center gap-2 text-lg sm:text-xl font-bold mb-4 sm:mb-6">
+                                <Icon name="file-text" size={18} sm:size={20} className="text-cyan-400" />
                                 Datos del viaje
                             </h2>
 

@@ -36,7 +36,12 @@ export default function PackageCard({ pkg, showSimilarButton = false, onSimilarC
         }
 
         try {
-            navigator.sendBeacon('/travel-match/track', JSON.stringify(data));
+            fetch('/travel-match/track', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content },
+                body: JSON.stringify(data),
+                keepalive: true,
+            });
         } catch (e) {
             // Silent fail for tracking
         }

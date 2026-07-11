@@ -30,11 +30,11 @@ export default function Bookings({ bookings }) {
             <Head title="Gestión de Reservas - Admin" />
             <AdminNavbar />
 
-            <div className="container mx-auto px-6 py-10">
+            <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                     <div>
-                        <h1 className="text-3xl font-bold text-white">Gestión de Reservas</h1>
+                        <h1 className="text-2xl sm:text-3xl font-bold text-white">Gestión de Reservas</h1>
                         <p className="text-slate-400 text-sm mt-1">{bookings.length} reserva(s) en total</p>
                     </div>
                 </div>

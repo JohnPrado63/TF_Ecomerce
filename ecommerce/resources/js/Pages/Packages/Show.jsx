@@ -29,41 +29,41 @@ export default function Show({ package: pkg, nearbyRestaurants, nearbyHotels, si
             <Navbar />
             <Head title={`${pkg.title} - ESKY TRIPS`} />
 
-            <div className="container mx-auto px-6 py-10">
+            <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10">
 
                 <Link
                     href="/packages"
-                    className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 text-sm mb-6 transition"
+                    className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 text-sm mb-4 sm:mb-6 transition"
                 >
                     <Icon name="arrow-left" size={16} />
                     Volver a paquetes
                 </Link>
 
-                <div className="relative w-full h-96 rounded-2xl overflow-hidden mb-8">
+                <div className="relative w-full h-64 sm:h-80 lg:h-96 rounded-2xl overflow-hidden mb-6 sm:mb-8">
                     <img
                         src={pkg.image_url}
                         alt={pkg.title}
                         loading="eager"
-                        fetchPriority="high"
+                        fetchpriority="high"
                         className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent" />
-                    <div className="absolute bottom-6 left-6">
-                        <p className="flex items-center gap-2 text-slate-300 text-sm mb-2">
-                            <Icon name="map-pin" size={16} className="text-cyan-400" />
+                    <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6">
+                        <p className="flex items-center gap-2 text-slate-300 text-xs sm:text-sm mb-2">
+                            <Icon name="map-pin" size={14} sm:size={16} className="text-cyan-400" />
                             {pkg.location?.city}, {pkg.location?.region}
                         </p>
-                        <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
+                        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 flex items-center gap-2 sm:gap-3 flex-wrap">
                             {pkg.title}
                             {pkg.status === false && (
-                                <span className="bg-rose-500/90 text-white text-sm font-bold px-3 py-1.5 rounded-full">
-                                    <Icon name="x-circle" size={14} className="inline mr-1" />
+                                <span className="bg-rose-500/90 text-white text-xs sm:text-sm font-bold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full">
+                                    <Icon name="x-circle" size={12} sm:size={14} className="inline mr-1" />
                                     No disponible
                                 </span>
                             )}
                             {pkg.status === true && (
-                                <span className="bg-emerald-500/90 text-white text-sm font-bold px-3 py-1.5 rounded-full">
-                                    <Icon name="check-circle" size={14} className="inline mr-1" />
+                                <span className="bg-emerald-500/90 text-white text-xs sm:text-sm font-bold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full">
+                                    <Icon name="check-circle" size={12} sm:size={14} className="inline mr-1" />
                                     Activo
                                 </span>
                             )}

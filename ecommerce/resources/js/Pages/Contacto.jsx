@@ -56,16 +56,16 @@ export default function Contacto() {
             <Navbar />
             <Head title="Contacto - ESKY TRIPS" />
 
-            <main className="mx-auto max-w-7xl px-6 py-14 lg:py-16">
-                <section className="mb-12 text-center">
-                    <p className="flex items-center justify-center gap-2 mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
-                        <Icon name="headphones" size={16} />
+            <main className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-14 lg:py-16">
+                <section className="mb-8 sm:mb-12 text-center">
+                    <p className="flex items-center justify-center gap-2 mb-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-cyan-400">
+                        <Icon name="headphones" size={14} sm:size={16} />
                         Estamos aquí para ayudarte
                     </p>
-                    <h1 className="mb-4 text-4xl font-extrabold tracking-tight sm:text-5xl text-white">
+                    <h1 className="mb-4 text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white">
                         Contáctanos
                     </h1>
-                    <p className="mx-auto max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">
+                    <p className="mx-auto max-w-2xl text-xs sm:text-sm leading-6 text-slate-400">
                         ¿Tienes alguna pregunta sobre nuestros paquetes turísticos? Escríbenos y te respondemos a la brevedad.
                     </p>
                 </section>

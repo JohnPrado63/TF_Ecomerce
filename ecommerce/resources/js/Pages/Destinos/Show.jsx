@@ -1,30 +1,35 @@
 import { Head, Link } from '@inertiajs/react';
+import { useState } from 'react';
 import Icon from '@/Components/Icon';
 import Navbar from '@/Components/Navbar';
+import MapView from '@/Components/MapView';
 import SectionHeader from '@/Components/SectionHeader';
 
 export default function Show({ destination, packages }) {
+    const [showMap, setShowMap] = useState(false);
+
     return (
         <div className="min-h-screen bg-slate-950 text-white">
             <Navbar />
             <Head title={`${destination.name} - Destinos Ayacucho`} />
 
-            <div className="container mx-auto px-6 py-10">
-                <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between mb-10">
+            <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-10">
                     <div>
-                        <p className="flex items-center gap-2 text-sm uppercase tracking-[0.3em] text-cyan-400">
-                            <Icon name="map-pin" size={14} />
+                        <p className="flex items-center gap-2 text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-cyan-400">
+                            <Icon name="map-pin" size={12} sm:size={14} />
                             Destino Ayacucho
                         </p>
-                        <h1 className="mt-3 text-4xl font-bold text-white">{destination.name}</h1>
-                        <p className="mt-3 max-w-2xl text-slate-400">{destination.description}</p>
+                        <h1 className="mt-2 sm:mt-3 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">{destination.name}</h1>
+                        <p className="mt-2 sm:mt-3 max-w-2xl text-slate-400 text-sm">{destination.description}</p>
                     </div>
                     <Link
                         href="/"
-                        className="inline-flex items-center gap-2 rounded-xl bg-slate-900/80 border border-slate-800/80 px-5 py-3 text-sm font-semibold text-slate-300 hover:bg-slate-800 hover:border-slate-700 transition"
+                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900/80 border border-slate-800/80 px-4 sm:px-5 py-2.5 sm:py-3 text-sm font-semibold text-slate-300 hover:bg-slate-800 hover:border-slate-700 transition w-full sm:w-auto"
                     >
                         <Icon name="arrow-left" size={16} />
-                        Volver al inicio
+                        <span className="sm:hidden">Volver</span>
+                        <span className="hidden sm:inline">Volver al inicio</span>
                     </Link>
                 </div>
 
@@ -34,9 +39,25 @@ export default function Show({ destination, packages }) {
                         <h2 className="text-2xl font-bold text-white mb-4">{destination.name}</h2>
                         <p className="text-slate-400 mb-6">{destination.summary}</p>
                         <div className="space-y-3">
-                            <div className="flex items-center gap-2 text-sm text-slate-400">
-                                <Icon name="map-pin" size={15} className="text-cyan-400" />
-                                Región: Ayacucho
+                            <div className="flex items-center justify-between text-sm text-slate-400">
+                                <div className="flex items-center gap-2">
+                                    <Icon name="map-pin" size={15} className="text-cyan-400" />
+                                    Región: Ayacucho
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        setShowMap(!showMap);
+                                        setTimeout(() => {
+                                            if (!showMap) {
+                                                document.getElementById('map-section')?.scrollIntoView({ behavior: 'smooth' });
+                                            }
+                                        }, 100);
+                                    }}
+                                    className="flex items-center gap-1.5 text-cyan-400 hover:text-cyan-300 font-medium transition text-xs bg-cyan-500/10 border border-cyan-500/30 px-3 py-1.5 rounded-full hover:bg-cyan-500/20"
+                                >
+                                    <Icon name="map" size={12} />
+                                    {showMap ? 'Ocultar' : 'Ver'} mapa
+                                </button>
                             </div>
                             <div className="flex items-center gap-2 text-sm text-slate-400">
                                 <Icon name="compass" size={15} className="text-cyan-400" />
@@ -79,6 +100,21 @@ export default function Show({ destination, packages }) {
                         </div>
                     </div>
                 </div>
+
+                {showMap && (
+                    <div id="map-section" className="mb-10 rounded-2xl border border-cyan-500/30 bg-slate-900/80 p-6 shadow-xl shadow-cyan-500/10">
+                        <h2 className="flex items-center gap-2 text-xl font-semibold text-white mb-4">
+                            <Icon name="map" size={20} className="text-cyan-400" />
+                            Ubicación de {destination.name}
+                        </h2>
+                        <MapView
+                            latitude={destination.location?.latitude}
+                            longitude={destination.location?.longitude}
+                            title={destination.name}
+                            city="Ayacucho"
+                        />
+                    </div>
+                )}
 
                 <div className="mb-10 rounded-2xl border border-slate-800/80 bg-slate-900/80 p-6 shadow-xl">
                     <h2 className="flex items-center gap-2 text-xl font-semibold text-white mb-4">

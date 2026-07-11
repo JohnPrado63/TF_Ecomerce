@@ -45,11 +45,11 @@ export default function OfferCard({ offer, onEdit, onDelete }) {
             </div>
 
             {/* Content */}
-            <div className="pr-24 mb-4">
-                <h3 className="text-xl font-bold text-white mb-2 line-clamp-1">
+            <div className="pr-16 sm:pr-24 mb-4">
+                <h3 className="text-lg sm:text-xl font-bold text-white mb-2 line-clamp-1">
                     {offer.title}
                 </h3>
-                <p className="text-slate-400 text-sm leading-relaxed">
+                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
                     {offer.description}
                 </p>
             </div>

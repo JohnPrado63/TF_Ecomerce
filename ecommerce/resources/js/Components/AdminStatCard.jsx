@@ -60,7 +60,7 @@ export default function AdminStatCard({ icon, label, value, trend, trendUp = tru
                 relative overflow-hidden
                 bg-gradient-to-br ${colors.gradient}, from-slate-900 to-slate-900/80
                 border border-slate-700 ${colors.borderGlow}
-                rounded-2xl p-6
+                rounded-2xl p-4 sm:p-6
                 transition-all duration-300 ease-out
                 hover:shadow-lg hover:shadow-slate-950/50
                 group
@@ -69,23 +69,23 @@ export default function AdminStatCard({ icon, label, value, trend, trendUp = tru
             {/* Icon Container */}
             <div
                 className={`
-                    w-12 h-12 rounded-xl
+                    w-10 h-10 sm:w-12 sm:h-12 rounded-xl
                     ${colors.iconBg} ${colors.iconBorder}
                     border flex items-center justify-center
-                    mb-4
+                    mb-3 sm:mb-4
                     transition-transform duration-300 group-hover:scale-110
                 `}
             >
-                <Icon name={icon} size={22} className={`${colors.iconText}`} />
+                <Icon name={icon} size={20} sm:size={22} className={`${colors.iconText}`} />
             </div>
 
             {/* Label */}
-            <p className="text-slate-400 text-sm font-medium mb-1 uppercase tracking-wide">
+            <p className="text-slate-400 text-xs sm:text-sm font-medium mb-1 uppercase tracking-wide">
                 {label}
             </p>
 
             {/* Value */}
-            <p className={`text-4xl font-bold ${colors.valueText} mb-2`}>
+            <p className={`text-2xl sm:text-3xl lg:text-4xl font-bold ${colors.valueText} mb-1 sm:mb-2`}>
                 {value}
             </p>
 

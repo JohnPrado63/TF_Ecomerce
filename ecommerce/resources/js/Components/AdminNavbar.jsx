@@ -36,7 +36,7 @@ export default function AdminNavbar() {
                     </span>
                 </Link>
 
-                <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto rounded-xl border border-slate-800/60 bg-slate-900/40 p-1 text-sm whitespace-nowrap">
+                <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto rounded-xl border border-slate-800/60 bg-slate-900/40 p-1 text-sm whitespace-nowrap scrollbar-hide">
                     {links.map((link) => {
                         const isActive = url.startsWith(link.href);
 
@@ -46,12 +46,12 @@ export default function AdminNavbar() {
                                 href={link.href}
                                 className={
                                     isActive
-                                        ? 'flex items-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500/90 to-cyan-400/80 px-3 py-2 font-semibold text-slate-950 shadow-lg shadow-cyan-500/20 transition-all'
-                                        : 'flex items-center gap-2 rounded-lg px-3 py-2 text-slate-400 transition-all hover:bg-slate-800/60 hover:text-slate-200'
+                                        ? 'flex items-center gap-1 sm:gap-2 rounded-lg bg-gradient-to-r from-cyan-500/90 to-cyan-400/80 px-2 sm:px-3 py-2 font-semibold text-slate-950 shadow-lg shadow-cyan-500/20 transition-all'
+                                        : 'flex items-center gap-1 sm:gap-2 rounded-lg px-2 sm:px-3 py-2 text-slate-400 transition-all hover:bg-slate-800/60 hover:text-slate-200'
                                 }
                             >
                                 <Icon name={link.icon} size={15} />
-                                {link.label}
+                                <span className="hidden md:inline">{link.label}</span>
                             </Link>
                         );
                     })}

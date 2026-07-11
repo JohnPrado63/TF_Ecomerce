@@ -89,26 +89,26 @@ export default function Packages({ packages, locations, categories }) {
             <Head title="Gestión de Paquetes - Admin" />
             <AdminNavbar />
 
-            <div className="container mx-auto px-6 py-10">
+            <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10">
                 {/* Header */}
-                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
                     <div>
-                        <h1 className="text-3xl font-bold text-white">Gestión de Paquetes</h1>
+                        <h1 className="text-2xl sm:text-3xl font-bold text-white">Gestión de Paquetes</h1>
                         <p className="text-slate-400 text-sm mt-1">
                             {sortedPackages.length} paquete(s) en total
                         </p>
                     </div>
                     <Link
                         href="/admin/packages/create"
-                        className="inline-flex items-center gap-2 rounded-xl bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-slate-950 hover:bg-cyan-400 transition shadow-lg shadow-cyan-500/20"
+                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 sm:px-5 py-2.5 text-sm font-semibold text-slate-950 hover:bg-cyan-400 transition shadow-lg shadow-cyan-500/20 w-full sm:w-auto"
                     >
-                        <Icon name="plus" size={18} /> Nuevo paquete
+                        <Icon name="plus" size={18} /> <span className="sm:hidden">Nuevo</span><span className="hidden sm:inline">Nuevo paquete</span>
                     </Link>
                 </div>
 
                 {/* Filtros */}
                 <div className="bg-gradient-to-br from-slate-900 to-slate-900/80 border border-slate-700 rounded-2xl p-4 mb-6">
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                         <div className="relative md:col-span-2">
                             <input
                                 type="text"

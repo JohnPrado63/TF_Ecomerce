@@ -46,7 +46,7 @@ export default function Show({ booking, payment }) {
             <Navbar />
             <Head title="Pagar Reserva - ESKY TRIPS" />
 
-            <div className="container mx-auto px-6 py-10 max-w-4xl">
+            <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10 max-w-4xl">
 
                 <Link href="/bookings" className="text-cyan-400 hover:text-cyan-300 text-sm mb-6 inline-block">
                     ← Volver a mis reservas

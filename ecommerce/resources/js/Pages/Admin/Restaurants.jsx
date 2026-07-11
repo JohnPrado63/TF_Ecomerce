@@ -55,7 +55,7 @@ export default function Restaurants({ restaurants, locations }) {
             <Head title="Restaurantes - Admin" />
             <AdminNavbar />
 
-            <div className="container mx-auto px-6 py-10">
+            <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                     <div>

@@ -4,23 +4,23 @@ import Icon from '@/Components/Icon';
 
 export default function NotFound() {
     return (
-        <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center px-6">
+        <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center px-4">
             <Head title="Página no encontrada - ESKY TRIPS" />
 
-            <div className="text-center max-w-lg">
+            <div className="text-center max-w-lg px-4">
 
                 <div className="relative mb-6">
-                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-cyan-500/20 to-slate-800 border border-cyan-500/30 flex items-center justify-center mx-auto mb-4">
-                        <Icon name="compass" size={48} className="text-cyan-400" />
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-cyan-500/20 to-slate-800 border border-cyan-500/30 flex items-center justify-center mx-auto mb-4">
+                        <Icon name="compass" size={40} sm:size={48} className="text-cyan-400" />
                     </div>
                 </div>
 
                 <div className="relative mb-6">
-                    <p className="text-[150px] font-black text-slate-800 leading-none select-none">
+                    <p className="text-[80px] sm:text-[120px] lg:text-[150px] font-black text-slate-800 leading-none select-none">
                         404
                     </p>
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <p className="text-2xl font-bold text-cyan-400">
+                        <p className="text-lg sm:text-xl lg:text-2xl font-bold text-cyan-400 px-4">
                             ¡Te perdiste en el viaje!
                         </p>
                     </div>

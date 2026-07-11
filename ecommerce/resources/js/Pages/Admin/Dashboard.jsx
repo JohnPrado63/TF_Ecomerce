@@ -9,19 +9,19 @@ export default function Dashboard({ stats, reservasRecientes }) {
             <Head title="Panel Admin - ESKY TRIPS" />
             <AdminNavbar />
 
-            <div className="container mx-auto px-6 py-10">
+            <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10">
                 {/* Header */}
-                <div className="mb-10">
-                    <h1 className="text-4xl font-bold text-white mb-2">
+                <div className="mb-6 sm:mb-10">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
                         Panel de Administración
                     </h1>
-                    <p className="text-slate-400">
+                    <p className="text-slate-400 text-sm sm:text-base">
                         Bienvenido de vuelta · Resumen de tu negocio
                     </p>
                 </div>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-10">
                     <AdminStatCard
                         icon="compass"
                         label="Total Paquetes"

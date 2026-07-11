@@ -8,7 +8,7 @@ export default function Terminos() {
             <Navbar />
             <Head title="Términos y Condiciones - ESKY TRIPS" />
 
-            <div className="container mx-auto px-6 py-16 max-w-4xl">
+            <div className="container mx-auto px-4 sm:px-6 py-10 sm:py-16 max-w-4xl">
                 <div className="text-center mb-12">
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 mb-4">
                         <Icon name="file-text" size={32} className="text-cyan-400" />

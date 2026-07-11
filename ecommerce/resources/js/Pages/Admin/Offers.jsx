@@ -72,7 +72,7 @@ export default function Offers({ offers }) {
             <Head title="Ofertas - Admin" />
             <AdminNavbar />
 
-            <div className="container mx-auto px-6 py-10">
+            <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10">
                 <SectionHeader
                     title="Ofertas y Promociones"
                     description="Gestiona las ofertas especiales y códigos de descuento"

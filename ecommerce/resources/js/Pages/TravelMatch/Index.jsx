@@ -1,5 +1,6 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import { useState, useEffect, useRef, Suspense, lazy } from 'react';
+import axios from 'axios';
 import Icon from '@/Components/Icon';
 import Navbar from '@/Components/Navbar';
 import StarRating from '@/Components/StarRating';
@@ -78,16 +79,16 @@ export default function Index({ recommendations, preference, behavioralProfile }
             <Navbar />
             <Head title="Travel Match - ESKY TRIPS" />
 
-            <div className="container mx-auto px-6 py-10">
+            <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10">
 
-                <div className="bg-gradient-to-br from-cyan-900/20 to-slate-900 border border-cyan-500/20 rounded-2xl p-6 mb-8">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="bg-gradient-to-br from-cyan-900/20 to-slate-900 border border-cyan-500/20 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
-                            <p className="flex items-center gap-2 text-sm uppercase tracking-[0.3em] text-cyan-400 mb-2">
-                                <Icon name="target" size={16} />
+                            <p className="flex items-center gap-2 text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-cyan-400 mb-2">
+                                <Icon name="target" size={14} sm:size={16} />
                                 Travel Match
                             </p>
-                            <h1 className="text-3xl font-bold text-white mb-3">Tu próximo destino te espera</h1>
+                            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-3">Tu próximo destino te espera</h1>
                             <div className="flex flex-wrap items-center gap-2 text-sm">
                                 <span className="flex items-center gap-1.5 bg-slate-800/50 border border-slate-700/50 px-3 py-1.5 rounded-lg text-slate-300">
                                     <Icon name="wallet" size={14} className="text-cyan-400" />

@@ -17,16 +17,16 @@ export default function Dashboard({ auth, bookings, stats }) {
 
             <div className="space-y-8">
 
-                <div className="bg-gradient-to-br from-cyan-900/20 to-slate-900 border border-cyan-500/20 rounded-2xl p-6">
-                    <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-slate-800 border border-cyan-500/30 flex items-center justify-center">
-                            <Icon name="compass" size={28} className="text-cyan-400" />
+                <div className="bg-gradient-to-br from-cyan-900/20 to-slate-900 border border-cyan-500/20 rounded-2xl p-4 sm:p-6">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-slate-800 border border-cyan-500/30 flex items-center justify-center">
+                            <Icon name="compass" size={24} className="text-cyan-400 sm:w-7 sm:h-7" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold text-white mb-1">
+                            <h1 className="text-xl sm:text-2xl font-bold text-white mb-1">
                                 ¡Bienvenido, {auth.user.name}!
                             </h1>
-                            <p className="text-slate-400 text-sm">
+                            <p className="text-slate-400 text-xs sm:text-sm">
                                 Gestiona tus reservas y explora nuevos destinos en Ayacucho.
                             </p>
                         </div>

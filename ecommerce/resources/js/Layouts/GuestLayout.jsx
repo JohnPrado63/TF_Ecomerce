@@ -40,23 +40,23 @@ export default function Guest({ children }) {
                 <div className="particle animate-float opacity-15" style={{ width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(219,39,119,0.15) 0%, transparent 70%)', borderRadius: '50%', bottom: '-50px', right: '-50px', animationDelay: '2s' }}></div>
             </div>
 
-            <div className="relative z-10 w-full sm:max-w-md animate-slide-up">
-                <div className="flex justify-center mb-8">
-                    <Link href="/" className="group flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-slate-900 border border-cyan-500/30 flex items-center justify-center">
-                            <Icon name="compass" size={22} className="text-cyan-400" />
+            <div className="relative z-10 w-full sm:max-w-md animate-slide-up px-4 sm:px-0">
+                <div className="flex justify-center mb-6 sm:mb-8">
+                    <Link href="/" className="group flex items-center gap-2 sm:gap-3">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-slate-900 border border-cyan-500/30 flex items-center justify-center">
+                            <Icon name="compass" size={18} className="text-cyan-400 sm:w-[22px] sm:h-[22px]" />
                         </div>
                         <div>
-                            <div className="text-3xl font-bold tracking-tight text-white group-hover:text-cyan-300 transition duration-300">
+                            <div className="text-2xl sm:text-3xl font-bold tracking-tight text-white group-hover:text-cyan-300 transition duration-300">
                                 ESKY TRIPS
                             </div>
-                            <div className="text-[10px] text-slate-500 tracking-[0.2em] uppercase">Travel Experience</div>
+                            <div className="text-[8px] sm:text-[10px] text-slate-500 tracking-[0.2em] uppercase">Travel Experience</div>
                         </div>
                     </Link>
                 </div>
 
-                <div className="rounded-[2rem] border border-slate-800/80 bg-gradient-to-b from-slate-900/95 to-slate-900/90 shadow-2xl shadow-slate-950/50 overflow-hidden backdrop-blur-sm hover:border-cyan-500/20 transition-all duration-500 animate-glow">
-                    <div className="px-8 py-10">
+                <div className="rounded-2xl sm:rounded-[2rem] border border-slate-800/80 bg-gradient-to-b from-slate-900/95 to-slate-900/90 shadow-2xl shadow-slate-950/50 overflow-hidden backdrop-blur-sm hover:border-cyan-500/20 transition-all duration-500 animate-glow">
+                    <div className="px-6 py-8 sm:px-8 sm:py-10">
                         {children}
                     </div>
                 </div>
