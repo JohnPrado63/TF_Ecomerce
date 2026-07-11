@@ -59,7 +59,7 @@ export default function Guest({ children }) {
                     </div>
                 </div>
 
-                <div className="mt-8 text-center text-sm text-slate-400 hover:text-slate-300 transition duration-300">
+                <div className="mt-8 text-center text-sm text-slate-400 hover:text-slate-400 transition duration-300">
                     <p>© 2026 ESKY TRIPS. Todos los derechos reservados.</p>
                 </div>
             </div>

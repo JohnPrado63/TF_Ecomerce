@@ -74,14 +74,14 @@ export default function Hotels({ hotels, locations }) {
                         <h2 className="text-lg font-bold mb-4">{editing ? 'Editar hotel' : 'Nuevo hotel'}</h2>
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Nombre</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Nombre</label>
                                 <input type="text" value={data.nombre} onChange={e => setData('nombre', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Nombre del hotel" />
                                 {errors.nombre && <p className="text-red-400 text-xs mt-1">{errors.nombre}</p>}
                             </div>
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Ubicación</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Ubicación</label>
                                 <select value={data.location_id} onChange={e => setData('location_id', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500">
                                     <option value="">Selecciona ubicación</option>
@@ -91,7 +91,7 @@ export default function Hotels({ hotels, locations }) {
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Estrellas</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Estrellas</label>
                                 <select value={data.estrellas} onChange={e => setData('estrellas', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500">
                                     {[1,2,3,4,5].map(n => (
@@ -100,19 +100,19 @@ export default function Hotels({ hotels, locations }) {
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Precio por noche (S/.)</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Precio por noche (S/.)</label>
                                 <input type="number" value={data.precio_por_noche} onChange={e => setData('precio_por_noche', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="0.00" min="0" step="0.01" />
                             </div>
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Dirección</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Dirección</label>
                                 <input type="text" value={data.direccion} onChange={e => setData('direccion', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Jr. Lima 123" />
                             </div>
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Teléfono</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Teléfono</label>
                                 <input type="text" value={data.telefono} onChange={e => setData('telefono', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="066 123456" />

@@ -18,31 +18,34 @@ export default function Navbar() {
                 </Link>
 
                 {/* Links centro */}
-                <div className="hidden md:flex items-center gap-6">
-                    <Link href="/" className="text-slate-300 hover:text-white text-sm font-medium transition">
+                <div className="hidden md:flex items-center gap-2">
+                    <Link href="/" className="px-4 py-2 text-slate-300 hover:text-white hover:shadow-lg rounded-xl text-sm font-medium transition-all duration-200">
                         Inicio
                     </Link>
-                    <Link href="/packages" className="text-slate-300 hover:text-white text-sm font-medium transition">
+                    <Link href="/packages" className="px-4 py-2 text-slate-300 hover:text-white hover:shadow-lg rounded-xl text-sm font-medium transition-all duration-200">
                         Paquetes
                     </Link>
-                    <Link
-                        href="/contacto"
-                        className="text-slate-300 hover:text-white text-sm font-medium transition"
-                    >
+                    <Link href="/?#destinos" className="px-4 py-2 text-slate-300 hover:text-white hover:shadow-lg rounded-xl text-sm font-medium transition-all duration-200">
+                        Destinos
+                    </Link>
+                    <Link href="/?#ofertas" className="px-4 py-2 text-slate-300 hover:text-white hover:shadow-lg rounded-xl text-sm font-medium transition-all duration-200">
+                        Ofertas
+                    </Link>
+                    <Link href="/contacto" className="px-4 py-2 text-slate-300 hover:text-white hover:shadow-lg rounded-xl text-sm font-medium transition-all duration-200">
                         Contacto
                     </Link>
                     {auth?.user && (
                         auth.user.rol === 'admin' ? (
-                            <Link href="/admin/dashboard" className="text-slate-300 hover:text-white text-sm font-medium transition">
+                            <Link href="/admin/dashboard" className="px-4 py-2 text-slate-300 hover:text-white hover:shadow-lg rounded-xl text-sm font-medium transition-all duration-200">
                                 Panel Admin
                             </Link>
                         ) : (
                             <>
-                            <Link href="/bookings" className="text-slate-300 hover:text-white text-sm font-medium transition">
+                            <Link href="/bookings" className="px-4 py-2 text-slate-300 hover:text-white hover:shadow-lg rounded-xl text-sm font-medium transition-all duration-200">
                                 Mis Reservas
                             </Link>
-                            <Link href="/travel-match" className="text-slate-300 hover:text-white text-sm font-medium transition">
-                                🎯 Travel Match
+                            <Link href="/travel-match" className="px-4 py-2 text-cyan-400 hover:text-cyan-300 hover:shadow-lg rounded-xl text-sm font-medium transition-all duration-200">
+                                Travel Match
                             </Link> 
                             </>
                         )
@@ -92,6 +95,8 @@ export default function Navbar() {
                 {/* Botón menú móvil */}
                 <button
                     onClick={() => setMenuOpen(!menuOpen)}
+                    aria-label={menuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
+                    aria-expanded={menuOpen}
                     className="md:hidden p-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition"
                 >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

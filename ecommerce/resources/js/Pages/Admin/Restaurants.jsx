@@ -70,14 +70,14 @@ export default function Restaurants({ restaurants, locations }) {
                         <h2 className="text-lg font-bold mb-4">{editing ? 'Editar restaurante' : 'Nuevo restaurante'}</h2>
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Nombre</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Nombre</label>
                                 <input type="text" value={data.nombre} onChange={e => setData('nombre', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Nombre del restaurante" />
                                 {errors.nombre && <p className="text-red-400 text-xs mt-1">{errors.nombre}</p>}
                             </div>
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Ubicación</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Ubicación</label>
                                 <select value={data.location_id} onChange={e => setData('location_id', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500">
                                     <option value="">Selecciona ubicación</option>
@@ -87,13 +87,13 @@ export default function Restaurants({ restaurants, locations }) {
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Tipo de comida</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Tipo de comida</label>
                                 <input type="text" value={data.tipo_comida} onChange={e => setData('tipo_comida', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Ej: Gastronomía ayacuchana" />
                             </div>
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Dirección</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Dirección</label>
                                 <input type="text" value={data.direccion} onChange={e => setData('direccion', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Jr. Lima 123" />

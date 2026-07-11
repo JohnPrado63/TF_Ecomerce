@@ -34,7 +34,7 @@ export default function CookieBanner() {
                 <div className="flex gap-3">
                     <button
                         onClick={reject}
-                        className="px-5 py-2 rounded-xl border border-slate-600 text-slate-300 hover:bg-slate-800 transition text-sm font-semibold"
+                        className="px-5 py-2 rounded-xl border border-slate-600 text-slate-400 hover:bg-slate-800 transition text-sm font-semibold"
                     >
                         Rechazar
                     </button>

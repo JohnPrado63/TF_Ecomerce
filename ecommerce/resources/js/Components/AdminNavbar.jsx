@@ -54,7 +54,7 @@ export default function AdminNavbar() {
 
                 <Link
                     href="/"
-                    className="flex flex-shrink-0 items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm font-medium text-slate-300 transition hover:border-cyan-400/40 hover:bg-cyan-400/10 hover:text-cyan-200"
+                    className="flex flex-shrink-0 items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm font-medium text-slate-400 transition hover:border-cyan-400/40 hover:bg-cyan-400/10 hover:text-cyan-200"
                     title="Volver al sitio"
                 >
                     <span aria-hidden="true">←</span>

@@ -65,7 +65,12 @@ export default function MapView({ latitude, longitude, title, city }) {
 
     return (
         <div className="relative w-full h-72 rounded-2xl overflow-hidden border border-slate-700">
-            <div ref={mapRef} className="w-full h-full z-10" />
+            <div 
+                ref={mapRef} 
+                className="w-full h-full z-10" 
+                role="application"
+                aria-label={`Mapa interactivo de ${title} en ${city}, Ayacucho`}
+            />
         </div>
     );
 }

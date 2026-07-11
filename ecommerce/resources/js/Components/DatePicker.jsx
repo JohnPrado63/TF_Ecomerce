@@ -170,7 +170,7 @@ export default function DatePicker({ value, onChange, min, className = '' }) {
                                             ? 'bg-cyan-500 text-slate-900 shadow-lg shadow-cyan-500/50'
                                             : isToday
                                             ? 'bg-slate-800 text-cyan-400 border border-cyan-500'
-                                            : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                                            : 'text-slate-400 hover:bg-slate-800 hover:text-white'
                                         }
                                     `}
                                 >

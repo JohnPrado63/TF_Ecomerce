@@ -97,6 +97,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/preferences', [PreferenceController::class, 'update'])->name('preferences.update');
 
     Route::get('/travel-match', [RecommendationController::class, 'index'])->name('travel-match');
+    Route::post('/travel-match/track', [RecommendationController::class, 'track'])->name('travel-match.track');
+    Route::get('/travel-match/similar/{packageId}', [RecommendationController::class, 'similar'])->name('travel-match.similar');
 });
 
 // ============================================================

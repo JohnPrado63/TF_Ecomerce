@@ -85,7 +85,7 @@ export default function Create({ package: pkg, offer }) {
 
                             {/* Fecha */}
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2 flex items-center gap-2">
+                                <label className="block text-slate-400 text-sm font-medium mb-2 flex items-center gap-2">
                                     <Icon name="calendar" size={16} />
                                     Fecha de viaje
                                 </label>
@@ -103,7 +103,7 @@ export default function Create({ package: pkg, offer }) {
 
                             {/* Personas */}
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2 flex items-center gap-2">
+                                <label className="block text-slate-400 text-sm font-medium mb-2 flex items-center gap-2">
                                     <Icon name="users" size={16} />
                                     Número de personas
                                 </label>
@@ -126,7 +126,7 @@ export default function Create({ package: pkg, offer }) {
                             <div>
                                 <div className="flex items-center justify-between mb-3">
                                     <div>
-                                        <label className="block text-slate-300 text-sm font-medium mb-1 flex items-center gap-2">
+                                        <label className="block text-slate-400 text-sm font-medium mb-1 flex items-center gap-2">
                                             <Icon name="hotel" size={16} />
                                             Selecciona un hotel
                                         </label>
@@ -193,7 +193,7 @@ export default function Create({ package: pkg, offer }) {
                             {/* Guía */}
                             {pkg.guias?.length > 0 && (
                                 <div>
-                                    <label className="block text-slate-300 text-sm font-medium mb-2 flex items-center gap-2">
+                                    <label className="block text-slate-400 text-sm font-medium mb-2 flex items-center gap-2">
                                         <Icon name="sparkles" size={16} />
                                         Elige tu guía turístico
                                     </label>
@@ -231,7 +231,7 @@ export default function Create({ package: pkg, offer }) {
 
                             {/* Restaurante */}
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">
+                                <label className="block text-slate-400 text-sm font-medium mb-2">
                                     🍽️ Selecciona un restaurante
                                 </label>
                                 <p className="text-slate-500 text-xs mb-3">
@@ -289,7 +289,7 @@ export default function Create({ package: pkg, offer }) {
 
                         {/* Info del paquete */}
                         <div className="bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden">
-                            <img src={pkg.image_url} alt={pkg.title} className="w-full h-40 object-cover"/>
+                            <img src={pkg.image_url} alt={pkg.title} loading="lazy" decoding="async" className="w-full h-40 object-cover"/>
                             <div className="p-4">
                                 <p className="text-slate-400 text-sm flex items-center gap-1"><Icon name="map-pin" size={14} /> {pkg.location?.city}, {pkg.location?.region}</p>
                                 <h3 className="text-white font-bold text-lg">{pkg.title}</h3>
@@ -304,14 +304,14 @@ export default function Create({ package: pkg, offer }) {
                             <div className="space-y-3 text-sm">
 
                                 {/* Paquete base */}
-                                <div className="flex justify-between text-slate-300">
+                                <div className="flex justify-between text-slate-400">
                                     <span>Paquete base × {data.persons_quantity}</span>
                                     <span>S/. {baseTotal.toFixed(2)}</span>
                                 </div>
 
                                 {/* Hotel */}
                                 {data.include_hotel && selectedHotel && (
-                                    <div className="flex justify-between text-slate-300">
+                                    <div className="flex justify-between text-slate-400">
                                         <span className="flex items-center gap-1"><Icon name="hotel" size={14} /> {selectedHotel.nombre} × {data.persons_quantity}</span>
                                         <span>S/. {hotelExtra.toFixed(2)}</span>
                                     </div>
@@ -319,7 +319,7 @@ export default function Create({ package: pkg, offer }) {
 
                                 {/* Restaurante */}
                                 {selectedRestaurant && restaurantExtra > 0 && (
-                                    <div className="flex justify-between text-slate-300">
+                                    <div className="flex justify-between text-slate-400">
                                         <span>🍽️ {selectedRestaurant.nombre} × {data.persons_quantity}</span>
                                         <span>S/. {restaurantExtra.toFixed(2)}</span>
                                     </div>

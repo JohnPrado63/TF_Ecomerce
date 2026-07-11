@@ -89,7 +89,7 @@ export default function Payments({ payments = [] }) {
                                                     <p className="text-slate-500 text-xs font-normal">{payment.booking?.order_number}</p>
                                                 </div>
                                             </td>
-                                            <td className="p-4 text-slate-300 text-sm">
+                                            <td className="p-4 text-slate-400 text-sm">
                                                 {payment.booking?.client?.first_name || 'Anónimo'}
                                             </td>
                                             <td className="p-4 text-sm">

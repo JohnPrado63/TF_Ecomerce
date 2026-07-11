@@ -75,32 +75,32 @@ export default function Guides({ guides }) {
                         </h2>
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Nombre</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Nombre</label>
                                 <input type="text" value={data.nombre} onChange={e => setData('nombre', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Nombre del guía" />
                                 {errors.nombre && <p className="text-red-400 text-xs mt-1">{errors.nombre}</p>}
                             </div>
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Apellido</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Apellido</label>
                                 <input type="text" value={data.apellido} onChange={e => setData('apellido', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Apellido del guía" />
                             </div>
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Idiomas</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Idiomas</label>
                                 <input type="text" value={data.idiomas} onChange={e => setData('idiomas', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="Español, Inglés, Quechua" />
                             </div>
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Teléfono</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Teléfono</label>
                                 <input type="text" value={data.telefono} onChange={e => setData('telefono', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="+51 999 999 999" />
                             </div>
                             <div>
-                                <label className="block text-slate-300 text-sm font-medium mb-2">Credencial N°</label>
+                                <label className="block text-slate-400 text-sm font-medium mb-2">Credencial N°</label>
                                 <input type="text" value={data.credencial_nro} onChange={e => setData('credencial_nro', e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
                                     placeholder="GTA-001" />

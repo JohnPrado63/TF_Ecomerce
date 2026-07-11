@@ -8,20 +8,60 @@ use Illuminate\Database\Eloquent\Model;
 class Recommendation extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'client_id', 'package_id',
-        'score', 'viewed'
+        'client_id', 'package_id', 'score',
+        'viewed', 'interaction_type', 'session_id', 'view_duration'
     ];
 
-    // Una recomendación pertenece a un cliente
+    protected $casts = [
+        'viewed' => 'boolean',
+    ];
+
     public function client()
     {
         return $this->belongsTo(Client::class);
     }
 
-    // Una recomendación pertenece a un paquete
     public function tourPackage()
     {
         return $this->belongsTo(TourPackage::class, 'package_id');
+    }
+
+    public function markAsViewed($sessionId = null, $duration = null)
+    {
+        $this->update([
+            'viewed' => true,
+            'interaction_type' => 'view',
+            'session_id' => $sessionId,
+            'view_duration' => $duration,
+        ]);
+    }
+
+    public function markAsClicked($sessionId = null)
+    {
+        $this->update([
+            'interaction_type' => 'click',
+            'session_id' => $sessionId,
+        ]);
+    }
+
+    public function markAsSaved($sessionId = null)
+    {
+        $this->update([
+            'interaction_type' => 'save',
+            'session_id' => $sessionId,
+        ]);
+    }
+
+    public function getScoreLevelAttribute()
+    {
+        if ($this->score >= 70) {
+            return 'excellent';
+        }
+        if ($this->score >= 40) {
+            return 'good';
+        }
+        return 'low';
     }
 }

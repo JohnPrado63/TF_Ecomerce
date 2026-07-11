@@ -1,8 +1,9 @@
-@import url('https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700&display=swap');
-
+/* stylelint-disable at-rule-no-unknown */
 @tailwind base;
+/* stylelint-disable-next-line at-rule-no-unknown */
 @tailwind components;
 @tailwind utilities;
+/* stylelint-enable at-rule-no-unknown */
 
 @layer base {
   body {

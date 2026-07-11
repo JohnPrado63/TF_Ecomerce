@@ -182,7 +182,7 @@ export default function Show({ booking, payment }) {
                         {/* Efectivo s*/}
                         {data.method === 'efectivo' && (
                             <div className="bg-slate-800 rounded-xl p-4 text-center">
-                                <p className="text-slate-300 text-sm">
+                                <p className="text-slate-400 text-sm">
                                     Acércate a nuestras oficinas para realizar el pago en efectivo.
                                 </p>
                                 <p className="text-slate-400 text-xs mt-2 flex items-center gap-1">
@@ -224,7 +224,7 @@ export default function Show({ booking, payment }) {
                             <h3 className="font-bold mb-4">Resumen de reserva</h3>
                             <div className="flex gap-3 mb-4">
                                 <img src={booking.tour_package?.image_url} alt={booking.tour_package?.title}
-                                    className="w-16 h-16 rounded-xl object-cover" />
+                                    loading="lazy" decoding="async" className="w-16 h-16 rounded-xl object-cover" />
                                 <div>
                                     <p className="font-semibold">{booking.tour_package?.title}</p>
                                     <p className="text-slate-400 text-sm flex items-center gap-1">
@@ -248,7 +248,7 @@ export default function Show({ booking, payment }) {
                                 <form onSubmit={handleSubmit} className="space-y-4">
 
                                     <div>
-                                        <label className="block text-slate-300 text-sm font-medium mb-2 flex items-center gap-2">
+                                        <label className="block text-slate-400 text-sm font-medium mb-2 flex items-center gap-2">
                                             <Icon name="file-text" size={16} />
                                             Referencia del pago (opcional)
                                         </label>
@@ -260,7 +260,7 @@ export default function Show({ booking, payment }) {
                                     </div>
 
                                     <div>
-                                        <label className="block text-slate-300 text-sm font-medium mb-2">
+                                        <label className="block text-slate-400 text-sm font-medium mb-2">
                                             Captura del pago
                                         </label>
                                         <input type="file" accept="image/*"

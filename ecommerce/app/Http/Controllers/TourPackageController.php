@@ -11,17 +11,76 @@ use Inertia\Inertia;
 class TourPackageController extends Controller
 {
     // Lista todos los paquetes
-    public function index()
+    public function index(Request $request)
     {
-        $packages = TourPackage::with(['category', 'location'])
+        $query = TourPackage::with(['category', 'location'])
             ->withAvg('reviews', 'rating')
             ->withCount('reviews')
-            ->where('status', true)
-            ->get();
+            ->where('status', true);
 
+        // Filtro por búsqueda (título o descripción)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Filtro por categoría
+        if ($request->filled('categoria')) {
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('name', $request->categoria);
+            });
+        }
+
+        // Filtro por ubicación
+        if ($request->filled('ubicacion')) {
+            $query->whereHas('location', function ($q) use ($request) {
+                $q->where('city', $request->ubicacion);
+            });
+        }
+
+        // Filtro por duración
+        if ($request->filled('duracion')) {
+            $duracion = $request->duracion;
+            if ($duracion === '1') {
+                $query->where('duration_days', 1);
+            } elseif ($duracion === '2-3') {
+                $query->whereBetween('duration_days', [2, 3]);
+            } elseif ($duracion === '4-7') {
+                $query->whereBetween('duration_days', [4, 7]);
+            } elseif ($duracion === '8+') {
+                $query->where('duration_days', '>=', 8);
+            }
+        }
+
+        // Orden
+        $orden = $request->get('orden', 'recientes');
+        if ($orden === 'precio-bajo') {
+            $query->orderBy('price', 'asc');
+        } elseif ($orden === 'precio-alto') {
+            $query->orderBy('price', 'desc');
+        } elseif ($orden === 'duracion') {
+            $query->orderBy('duration_days', 'asc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $packages = $query->get();
+
+        $locations = Location::orderBy('city')->get();
 
         return Inertia::render('Packages/Index', [
             'packages' => $packages,
+            'locations' => $locations,
+            'filters' => [
+                'search' => $request->search,
+                'categoria' => $request->categoria,
+                'ubicacion' => $request->ubicacion,
+                'duracion' => $request->duracion,
+                'orden' => $orden,
+            ],
         ]);
     }
 
@@ -39,6 +98,14 @@ class TourPackageController extends Controller
         ->withAvg('reviews', 'rating')
         ->withCount('reviews')
         ->findOrFail($id);
+
+        $similarPackages = $package->getSimilarPackages(4);
+
+        $similarPackages = $similarPackages->map(function ($pkg) use ($package) {
+            $pkg->similarity_score = $package->getSimilarityScore($pkg);
+            return $pkg;
+        })->sortByDesc('similarity_score')->values();
+
         //restaurantes de la misma ubicacion que no esten asignados ya directamente al paquete
         $assignedIds=$package->restaurantes->pluck('id')->toArray();
         $nearbyRestaurants = \App\Models\Restaurante::where('location_id', $package->location_id)
@@ -49,12 +116,13 @@ class TourPackageController extends Controller
         $nearbyHotels = \App\Models\Hotel::where('location_id', $package->location_id)
             ->whereNotIn('id', $assignedHotelIds)
             ->get();
-    
+
 
         return Inertia::render('Packages/Show', [
             'package' => $package,
             'nearbyRestaurants' => $nearbyRestaurants,
             'nearbyHotels' => $nearbyHotels,
+            'similarPackages' => $similarPackages,
         ]);
     }
 

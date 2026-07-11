@@ -11,7 +11,7 @@ export default function Terminos() {
                 <h1 className="text-4xl font-bold mb-2">Términos y Condiciones</h1>
                 <p className="text-slate-400 mb-10">Última actualización: Junio 2026</p>
 
-                <div className="space-y-8 text-slate-300 leading-relaxed">
+                <div className="space-y-8 text-slate-400 leading-relaxed">
 
                     <section>
                         <h2 className="text-xl font-bold text-white mb-3">1. Aceptación de términos</h2>
@@ -36,7 +36,7 @@ export default function Terminos() {
                         <h2 className="text-xl font-bold text-white mb-3">4. Política contra Deepfakes y contenido generado por IA</h2>
                         <div className="bg-red-900/20 border border-red-700/50 rounded-xl p-5">
                             <p className="text-red-300 font-semibold mb-2">⚠️ Prohibición expresa</p>
-                            <p className="text-slate-300 mb-3">
+                            <p className="text-slate-400 mb-3">
                                 Queda estrictamente prohibido a los usuarios subir, publicar o compartir en nuestra plataforma cualquier contenido generado o manipulado mediante Inteligencia Artificial (deepfakes, imágenes sintéticas, reseñas falsas generadas por IA) que:
                             </p>
                             <ul className="list-disc list-inside space-y-2 text-slate-400">
