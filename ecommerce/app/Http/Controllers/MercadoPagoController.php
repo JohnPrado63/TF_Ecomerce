@@ -74,17 +74,19 @@ class MercadoPagoController extends Controller
                 ],
                 'external_reference'  => $booking->order_number,
                 'statement_descriptor'=> 'ESKYTRIPS',
-            ];
-
-            if (app()->environment('production')) {
-                $preferenceData['back_urls'] = [
+                'back_urls' => [
                     'success' => $backUrlsSuccess,
                     'failure' => $backUrlsFailure,
                     'pending' => $backUrlsPending,
-                ];
+                ],
+            ];
+
+            if (app()->environment('production')) {
                 $preferenceData['auto_return'] = 'approved';
                 $preferenceData['notification_url'] = url('/payments/mp/webhook');
             }
+
+            \Log::info('MercadoPago - Preference data being sent', $preferenceData);
 
             $preference = $preferenceClient->create($preferenceData);
 
@@ -108,6 +110,14 @@ class MercadoPagoController extends Controller
             return response()->json([
                 'error' => 'Error al crear preferencia: ' . $e->getMessage(),
                 'details' => $errorDetails,
+            ], 500);
+        } catch (\Exception $e) {
+            \Log::error('MercadoPago Unexpected Error: ' . $e->getMessage() . ' | File: ' . $e->getFile() . ' | Line: ' . $e->getLine());
+
+            return response()->json([
+                'error' => 'Error inesperado: ' . $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
             ], 500);
         }
     }

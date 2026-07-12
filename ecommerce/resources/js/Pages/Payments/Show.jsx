@@ -22,7 +22,9 @@ export default function Show({ booking, payment }) {
 
             const result = response.data;
 
-            if (result.sandbox_init_point) {
+            if (result.init_point) {
+                window.location.href = result.init_point;
+            } else if (result.sandbox_init_point) {
                 window.location.href = result.sandbox_init_point;
             } else {
                 alert('Error al procesar el pago');
