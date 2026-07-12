@@ -144,7 +144,7 @@ export default function Privacidad() {
             <Navbar />
             <Head title="Política de Privacidad - ESKY TRIPS" />
 
-            <div className="container mx-auto px-6 py-16 max-w-5xl">
+            <div className="container mx-auto px-4 sm:px-6 py-10 sm:py-16 max-w-5xl">
                 <div className="text-center mb-12">
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 mb-4">
                         <svg className="w-8 h-8 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
+import Icon from '@/Components/Icon';
 
 export default function Authenticated({ user, header, children }) {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -7,71 +8,73 @@ export default function Authenticated({ user, header, children }) {
     return (
         <div className="min-h-screen bg-slate-950 text-white">
 
-            {/* Navbar */}
-            <nav className="bg-slate-900 border-b border-slate-800 px-6 py-4">
+            <nav className="sticky top-0 z-50 bg-slate-950/95 border-b border-slate-800/60 px-6 py-4 backdrop-blur-xl">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
 
-                    {/* Logo */}
-                    <Link href="/" className="text-xl font-bold text-cyan-400 hover:text-cyan-300 transition">
-                        ESKY TRIPS
+                    <Link href="/" className="group flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-500/20 to-slate-900 border border-cyan-500/30 flex items-center justify-center">
+                            <Icon name="compass" size={18} className="text-cyan-400" />
+                        </div>
+                        <span className="text-xl font-bold text-white group-hover:text-cyan-300 transition">
+                            ESKY TRIPS
+                        </span>
                     </Link>
 
-                    {/* Links del centro */}
-                    <div className="hidden md:flex items-center gap-6">
+                    <div className="hidden md:flex items-center gap-2">
                         <Link
                             href="/"
-                            className="text-slate-300 hover:text-white text-sm font-medium transition"
+                            className="px-4 py-2 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl text-sm font-medium transition-all"
                         >
                             Inicio
                         </Link>
                         <Link
                             href="/packages"
-                            className="text-slate-300 hover:text-white text-sm font-medium transition"
+                            className="px-4 py-2 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl text-sm font-medium transition-all"
                         >
                             Paquetes
                         </Link>
-                        {user?.rol === 'admin' ? (
+                        {user?.role === 'admin' ? (
                             <Link
                                 href="/admin/dashboard"
-                                className="text-slate-300 hover:text-white text-sm font-medium transition"
+                                className="px-4 py-2 text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10 rounded-xl text-sm font-medium transition-all flex items-center gap-2"
                             >
+                                <Icon name="layout-dashboard" size={15} />
                                 Panel Admin
                             </Link>
                         ) : (
                             <Link
                                 href="/bookings"
-                                className="text-slate-300 hover:text-white text-sm font-medium transition"
+                                className="px-4 py-2 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl text-sm font-medium transition-all flex items-center gap-2"
                             >
+                                <Icon name="calendar" size={15} />
                                 Mis Reservas
                             </Link>
                         )}
                     </div>
 
-                    {/* Usuario y logout */}
                     <div className="hidden md:flex items-center gap-4">
                         <Link
                             href="/profile"
-                            className="flex items-center gap-2 px-4 py-2 rounded-full border border-slate-700 bg-slate-800 hover:bg-slate-700 transition text-sm font-semibold"
+                            className="flex items-center gap-3 px-4 py-2 rounded-xl border border-slate-800/60 bg-slate-900/50 hover:bg-slate-800/50 hover:border-slate-700 transition-all text-sm font-medium"
                         >
-                            <div className="w-7 h-7 rounded-full bg-cyan-500 flex items-center justify-center text-slate-900 font-bold text-xs">
+                            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-cyan-500 to-cyan-400 flex items-center justify-center text-slate-950 font-bold text-xs">
                                 {user?.name?.charAt(0).toUpperCase()}
                             </div>
-                            {user?.name}
+                            <span className="text-slate-300">{user?.name}</span>
                         </Link>
                         <Link
                             href="/logout"
                             method="post"
                             as="button"
-                            className="text-sm text-red-400 hover:text-red-300 transition font-medium"
+                            className="flex items-center gap-2 px-3 py-2 text-sm text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all"
                         >
-                            Salir
+                            <Icon name="log-out" size={15} />
                         </Link>
                     </div>
 
-                    {/* Botón menú móvil */}
                     <button
                         onClick={() => setMenuOpen(!menuOpen)}
-                        className="md:hidden p-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition"
+                        className="md:hidden p-2 rounded-lg bg-slate-800/50 hover:bg-slate-800 transition"
                     >
                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -80,50 +83,53 @@ export default function Authenticated({ user, header, children }) {
                     </button>
                 </div>
 
-                {/* Menú móvil */}
                 {menuOpen && (
-                    <div className="md:hidden mt-4 border-t border-slate-800 pt-4 space-y-2">
-                        <Link href="/" className="block px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-sm">
+                    <div className="md:hidden mt-4 border-t border-slate-800/60 pt-4 space-y-2">
+                        <Link href="/" className="flex items-center gap-3 block px-4 py-3 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition text-sm">
+                            <Icon name="home" size={16} />
                             Inicio
                         </Link>
-                        <Link href="/packages" className="block px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-sm">
+                        <Link href="/packages" className="flex items-center gap-3 block px-4 py-3 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition text-sm">
+                            <Icon name="package" size={16} />
                             Paquetes
                         </Link>
-                        {user?.rol === 'admin' ? (
-                            <Link href="/admin/dashboard" className="block px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-sm">
+                        {user?.role === 'admin' ? (
+                            <Link href="/admin/dashboard" className="flex items-center gap-3 block px-4 py-3 text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10 rounded-xl transition text-sm">
+                                <Icon name="layout-dashboard" size={16} />
                                 Panel Admin
                             </Link>
                         ) : (
-                            <Link href="/bookings" className="block px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-sm">
+                            <Link href="/bookings" className="flex items-center gap-3 block px-4 py-3 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition text-sm">
+                                <Icon name="calendar" size={16} />
                                 Mis Reservas
                             </Link>
                         )}
-                        <Link href="/profile" className="block px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-sm">
+                        <Link href="/profile" className="flex items-center gap-3 block px-4 py-3 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-xl transition text-sm">
+                            <Icon name="user" size={16} />
                             Mi Perfil
                         </Link>
                         <Link
                             href="/logout"
                             method="post"
                             as="button"
-                            className="block w-full text-left px-4 py-2 text-red-400 hover:text-red-300 hover:bg-slate-800 rounded-lg transition text-sm"
+                            className="flex items-center gap-3 w-full text-left px-4 py-3 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition text-sm"
                         >
+                            <Icon name="log-out" size={16} />
                             Cerrar sesión
                         </Link>
                     </div>
                 )}
             </nav>
 
-            {/* Header opcional */}
             {header && (
-                <header className="bg-slate-900 border-b border-slate-800 py-4 px-6">
+                <header className="bg-slate-950/95 border-b border-slate-800/60 py-4 px-6 backdrop-blur-xl">
                     <div className="max-w-7xl mx-auto">
                         {header}
                     </div>
                 </header>
             )}
 
-            {/* Contenido principal */}
-            <main className="max-w-7xl mx-auto px-6 py-8">
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {children}
             </main>
 

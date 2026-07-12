@@ -35,7 +35,7 @@ class AdminController extends Controller
             'stats' => [
                 'paquetes'  => $totalPaquetes,
                 'reservas'  => $totalReservas,
-                'users'  => $totalUsers,
+                'usuarios'  => $totalUsers,
                 'ingresos'  => $totalIngresos,
             ],
             'reservasRecientes' => $reservasRecientes,
@@ -51,6 +51,8 @@ class AdminController extends Controller
 
         return Inertia::render('Admin/Packages', [
             'packages' => $packages,
+            'locations' => Location::orderBy('city')->get(),
+            'categories' => Category::orderBy('name')->get(),
         ]);
     }
 

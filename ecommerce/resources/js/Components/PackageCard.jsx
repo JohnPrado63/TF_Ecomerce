@@ -36,7 +36,12 @@ export default function PackageCard({ pkg, showSimilarButton = false, onSimilarC
         }
 
         try {
-            navigator.sendBeacon('/travel-match/track', JSON.stringify(data));
+            fetch('/travel-match/track', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content },
+                body: JSON.stringify(data),
+                keepalive: true,
+            });
         } catch (e) {
             // Silent fail for tracking
         }
@@ -82,9 +87,20 @@ export default function PackageCard({ pkg, showSimilarButton = false, onSimilarC
                     <img
                         src={pkg.image_url}
                         alt={pkg.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                        className={`w-full h-full object-cover group-hover:scale-105 transition duration-500 ${pkg.status === false ? 'opacity-50' : ''}`}
                     />
                 </Link>
+
+                {pkg.status === false && (
+                    <div className="absolute top-3 left-3 bg-red-600/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1">
+                        No disponible
+                    </div>
+                )}
+                {pkg.status === true && (
+                    <div className="absolute top-3 left-3 bg-emerald-600/80 backdrop-blur-sm text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1">
+                        ✓ Activo
+                    </div>
+                )}
 
                 {matchScore && (
                     <div className={`absolute top-3 right-3 backdrop-blur-sm border rounded-full px-3 py-1 text-xs font-bold ${getScoreColor(matchScore)}`}>
@@ -150,13 +166,22 @@ export default function PackageCard({ pkg, showSimilarButton = false, onSimilarC
                         </p>
                     </div>
                     <div className="flex gap-2">
-                        <Link
-                            href={`/packages/${pkg.id}`}
-                            onClick={handleClick}
-                            className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold px-4 py-2 rounded-xl transition text-sm"
-                        >
-                            Ver más
-                        </Link>
+                        {pkg.status === false ? (
+                            <button
+                                disabled
+                                className="bg-slate-700 text-slate-500 font-bold px-4 py-2 rounded-xl transition text-sm cursor-not-allowed"
+                            >
+                                No disponible
+                            </button>
+                        ) : (
+                            <Link
+                                href={`/packages/${pkg.id}`}
+                                onClick={handleClick}
+                                className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold px-4 py-2 rounded-xl transition text-sm"
+                            >
+                                Ver más
+                            </Link>
+                        )}
                         <button
                             onClick={handleSave}
                             className="bg-slate-700 hover:bg-slate-600 text-slate-300 p-2 rounded-xl transition text-sm"

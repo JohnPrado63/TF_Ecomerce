@@ -2,6 +2,8 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import Icon from '@/Components/Icon';
 import AdminNavbar from '@/Components/AdminNavbar';
+import OfferCard from '@/Components/OfferCard';
+import SectionHeader from '@/Components/SectionHeader';
 
 export default function Offers({ offers }) {
     const [showForm, setShowForm] = useState(false);
@@ -70,23 +72,26 @@ export default function Offers({ offers }) {
             <Head title="Ofertas - Admin" />
             <AdminNavbar />
 
-            <div className="container mx-auto px-6 py-10">
-                <div className="flex items-center justify-between mb-8">
-                    <h1 className="text-3xl font-bold">Gestión de Ofertas</h1>
-                    <button
-                        onClick={handleCreate}
-                        className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold px-5 py-2 rounded-xl transition"
-                    >
-                        + Nueva oferta
-                    </button>
-                </div>
+            <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10">
+                <SectionHeader
+                    title="Ofertas y Promociones"
+                    description="Gestiona las ofertas especiales y códigos de descuento"
+                    actionLabel="+ Nueva oferta"
+                    onAction={handleCreate}
+                    icon="tag"
+                />
 
                 {showForm && (
-                    <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 mb-8">
-                        <h2 className="text-lg font-bold mb-4">
-                            {editing ? 'Editar oferta' : 'Nueva oferta'}
-                        </h2>
-                        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-gradient-to-br from-slate-900 to-slate-900/80 border border-slate-700 rounded-2xl p-6 mb-8">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center">
+                                <Icon name={editing ? 'edit-2' : 'plus'} size={20} className="text-cyan-400" />
+                            </div>
+                            <h2 className="text-xl font-bold text-white">
+                                {editing ? 'Editar oferta' : 'Nueva oferta'}
+                            </h2>
+                        </div>
+                        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-slate-400 text-sm font-medium mb-2">Título</label>
                                 <input
@@ -96,7 +101,7 @@ export default function Offers({ offers }) {
                                         setData('title', e.target.value);
                                         if (!editing) setData('slug', generateSlug(e.target.value));
                                     }}
-                                    className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
+                                    className="w-full bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition"
                                     placeholder="Ej: Descuento de Verano"
                                 />
                                 {errors.title && <p className="text-red-400 text-xs mt-1">{errors.title}</p>}
@@ -108,7 +113,7 @@ export default function Offers({ offers }) {
                                     type="text"
                                     value={data.code}
                                     onChange={e => setData('code', e.target.value.toUpperCase())}
-                                    className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
+                                    className="w-full bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition"
                                     placeholder="Ej: VERANO25"
                                 />
                             </div>
@@ -119,7 +124,7 @@ export default function Offers({ offers }) {
                                     type="number"
                                     value={data.discount_percentage}
                                     onChange={e => setData('discount_percentage', e.target.value)}
-                                    className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
+                                    className="w-full bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition"
                                     placeholder="Ej: 20"
                                     min="1"
                                     max="100"
@@ -132,7 +137,7 @@ export default function Offers({ offers }) {
                                     type="text"
                                     value={data.description}
                                     onChange={e => setData('description', e.target.value)}
-                                    className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
+                                    className="w-full bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition"
                                     placeholder="Descripción breve"
                                 />
                             </div>
@@ -143,7 +148,7 @@ export default function Offers({ offers }) {
                                     type="date"
                                     value={data.start_date}
                                     onChange={e => setData('start_date', e.target.value)}
-                                    className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
+                                    className="w-full bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition"
                                 />
                             </div>
 
@@ -153,7 +158,7 @@ export default function Offers({ offers }) {
                                     type="date"
                                     value={data.end_date}
                                     onChange={e => setData('end_date', e.target.value)}
-                                    className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
+                                    className="w-full bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition"
                                 />
                             </div>
 
@@ -163,23 +168,23 @@ export default function Offers({ offers }) {
                                     id="active"
                                     checked={data.active}
                                     onChange={e => setData('active', e.target.checked)}
-                                    className="w-4 h-4"
+                                    className="w-4 h-4 accent-cyan-500"
                                 />
                                 <label htmlFor="active" className="text-slate-400 text-sm">Oferta activa</label>
                             </div>
 
-                            <div className="md:col-span-2 flex gap-3">
+                            <div className="md:col-span-2 flex gap-4">
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold px-6 py-2 rounded-xl transition"
+                                    className="bg-gradient-to-r from-cyan-500 to-cyan-400 hover:from-cyan-400 hover:to-cyan-300 text-slate-900 font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-cyan-500/20"
                                 >
-                                    {editing ? 'Actualizar' : 'Crear'}
+                                    {editing ? 'Actualizar' : 'Crear'} oferta
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => { setShowForm(false); reset(); setEditing(null); }}
-                                    className="bg-slate-700 hover:bg-slate-600 text-white font-bold px-6 py-2 rounded-xl transition"
+                                    className="bg-slate-700 hover:bg-slate-600 text-white font-bold px-6 py-3 rounded-xl transition"
                                 >
                                     Cancelar
                                 </button>
@@ -188,87 +193,32 @@ export default function Offers({ offers }) {
                     </div>
                 )}
 
-                <div className="bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden">
-                    <table className="w-full">
-                        <thead>
-                            <tr className="border-b border-slate-700 text-slate-400 text-sm">
-                                <th className="text-left p-4">Oferta</th>
-                                <th className="text-left p-4">Código</th>
-                                <th className="text-left p-4">Descuento</th>
-                                <th className="text-left p-4">Vigencia</th>
-                                <th className="text-left p-4">Estado</th>
-                                <th className="text-left p-4">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {offers.length === 0 ? (
-                                <tr>
-                                    <td colSpan="6" className="text-center p-8 text-slate-400">
-                                        No hay ofertas creadas aún
-                                    </td>
-                                </tr>
-                            ) : (
-                                offers.map((offer) => {
-                                    const isValid = offer.active
-                                        && new Date(offer.start_date) <= new Date()
-                                        && new Date(offer.end_date) >= new Date();
-
-                                    return (
-                                        <tr key={offer.id} className="border-b border-slate-800 hover:bg-slate-800/50 transition">
-                                            <td className="p-4">
-                                                <p className="font-semibold">{offer.title}</p>
-                                                <p className="text-slate-500 text-xs">{offer.description}</p>
-                                            </td>
-                                            <td className="p-4">
-                                                <span className="bg-slate-800 text-cyan-400 font-black text-sm px-3 py-1 rounded-lg tracking-widest">
-                                                    {offer.code || '-'}
-                                                </span>
-                                            </td>
-                                            <td className="p-4">
-                                                <span className="bg-red-900/50 text-red-300 font-black text-sm px-3 py-1 rounded-full">
-                                                    -{offer.discount_percentage}%
-                                                </span>
-                                            </td>
-                                            <td className="p-4 text-slate-400 text-sm">
-                                                <p>{offer.start_date}</p>
-                                                <p>→ {offer.end_date}</p>
-                                            </td>
-                                            <td className="p-4">
-                                                <span className={`text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 ${
-                                                    isValid
-                                                        ? 'bg-green-900/50 text-green-300'
-                                                        : 'bg-slate-800 text-slate-500'
-                                                }`}>
-                                                    {isValid ? (
-                                                        <><Icon name="check-circle" size={12} /> Activa</>
-                                                    ) : (
-                                                        <><Icon name="x-circle" size={12} /> Inactiva</>
-                                                    )}
-                                                </span>
-                                            </td>
-                                            <td className="p-4">
-                                                <div className="flex gap-2">
-                                                    <button
-                                                        onClick={() => handleEdit(offer)}
-                                                        className="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg transition"
-                                                    >
-                                                        ✏️ Editar
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDelete(offer.id)}
-                                                        className="text-xs bg-red-900 hover:bg-red-800 text-red-300 px-3 py-1 rounded-lg transition"
-                                                    >
-                                                        🗑️ Eliminar
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                {offers.length === 0 ? (
+                    <div className="bg-gradient-to-br from-slate-900 to-slate-900/80 border border-slate-700 rounded-2xl p-12 text-center">
+                        <div className="w-20 h-20 rounded-full bg-slate-800/50 flex items-center justify-center mx-auto mb-4">
+                            <Icon name="tag" size={40} className="text-slate-600" />
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-2">No hay ofertas creadas</h3>
+                        <p className="text-slate-500 mb-6">Crea tu primera oferta para atraer más clientes</p>
+                        <button
+                            onClick={handleCreate}
+                            className="bg-gradient-to-r from-cyan-500 to-cyan-400 hover:from-cyan-400 hover:to-cyan-300 text-slate-900 font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-cyan-500/20"
+                        >
+                            + Crear primera oferta
+                        </button>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {offers.map((offer) => (
+                            <OfferCard
+                                key={offer.id}
+                                offer={offer}
+                                onEdit={handleEdit}
+                                onDelete={handleDelete}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );
