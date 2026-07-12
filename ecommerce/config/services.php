@@ -25,11 +25,6 @@ return [
         'token' => env('POSTMARK_TOKEN'),
     ],
 
-    'ses' => [
-        'key' => env('AWS_ACCESS_KEY_ID'),
-        'secret' => env('AWS_SECRET_ACCESS_KEY'),
-        'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
-    ],
     'mercadopago' => [
         'public_key'     => env('MP_PUBLIC_KEY'),
         'access_token'   => env('MP_ACCESS_TOKEN'),
