@@ -22,7 +22,7 @@ services:
       - eskytrips
 
   mysql:
-    image: mysql:8.0
+    image: mariadb:10.11
     container_name: eskytrips_mysql
     restart: unless-stopped
     environment:
