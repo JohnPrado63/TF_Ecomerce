@@ -1,10 +1,6 @@
-FROM php:8.2-fpm-alpine
+FROM dunglas/frankenphp:php8.2-alpine
 
 RUN apk add --no-cache \
-    nginx \
-    supervisor \
-    fcgi \
-    envsubst \
     git \
     curl \
     libpng-dev \
@@ -14,19 +10,18 @@ RUN apk add --no-cache \
     unzip \
     mysql-client
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-RUN mkdir -p /var/run/php /var/cache/nginx /var/log/nginx /var/www/html/storage /var/www/html/bootstrap/cache
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-COPY nginx.conf /etc/nginx/http.d/default.conf
-COPY php.ini /usr/local/etc/php/conf.d/local.ini
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache
 
-COPY composer.json composer.lock* ./
+COPY composer.json composer.lock* /var/www/html/
 
-RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs --no-scripts \
+WORKDIR /var/www/html
+
+RUN composer require laravel/octane --no-interaction \
+    && composer install --no-dev --optimize-autoloader --ignore-platform-reqs --no-scripts \
     && composer clear-cache
 
 COPY . .
@@ -36,12 +31,11 @@ RUN composer dump-autoload --optimize \
     && php artisan route:cache \
     && php artisan view:cache
 
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chown -R www-data:www-data /var/cache/nginx /var/log/nginx
+RUN chown -R nobody:nobody /var/www/html/storage /var/www/html/bootstrap/cache
 
-EXPOSE 80
+EXPOSE 20180
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost/ || exit 1
+    CMD curl -f http://localhost:20180/health || exit 1
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["php", "artisan", "octane:frankenphp", "--port=20180", "--host=0.0.0.0"]

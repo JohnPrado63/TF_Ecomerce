@@ -6,7 +6,7 @@ services:
     container_name: eskytrips_app
     restart: unless-stopped
     ports:
-      - "20080:80"
+      - "20180:20180"
     volumes:
       - storage:/var/www/html/storage
       - bootstrap_cache:/var/www/html/bootstrap/cache
@@ -14,7 +14,7 @@ services:
       mysql:
         condition: service_started
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:20180/health"]
       interval: 30s
       timeout: 10s
       retries: 3
