@@ -19,10 +19,10 @@ COPY . /var/www/html/
 
 WORKDIR /var/www/html
 
-RUN printf '<?php http_response_code(200); echo "ok";' > health.php
-
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs --no-scripts \
     && composer clear-cache
+
+RUN php -r 'file_put_contents("/var/www/html/health.php", "<?php http_response_code(200); echo \"ok\";");'
 
 RUN chown -R nobody:nobody /var/www/html/storage /var/www/html/bootstrap/cache
 
