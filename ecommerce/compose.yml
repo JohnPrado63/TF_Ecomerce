@@ -12,7 +12,7 @@ services:
       - bootstrap_cache:/var/www/html/bootstrap/cache
     depends_on:
       mysql:
-        condition: service_healthy
+        condition: service_started
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/health"]
       interval: 30s
@@ -25,7 +25,6 @@ services:
     image: mysql:8.0
     container_name: eskytrips_mysql
     restart: unless-stopped
-    command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_DATABASE: ${DB_DATABASE:-ecommerce_db}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
@@ -35,12 +34,6 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - eskytrips
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 10
-      start_period: 90s
 
   queue:
     build:
@@ -54,7 +47,7 @@ services:
       - bootstrap_cache:/var/www/html/bootstrap/cache
     depends_on:
       mysql:
-        condition: service_healthy
+        condition: service_started
     networks:
       - eskytrips
 
@@ -70,7 +63,7 @@ services:
       - bootstrap_cache:/var/www/html/bootstrap/cache
     depends_on:
       mysql:
-        condition: service_healthy
+        condition: service_started
     networks:
       - eskytrips
 
