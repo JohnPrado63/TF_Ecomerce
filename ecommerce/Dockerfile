@@ -18,7 +18,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-RUN mkdir -p /var/run/php /var/cache/nginx /var/log/nginx
+RUN mkdir -p /var/run/php /var/cache/nginx /var/log/nginx /var/www/html/storage /var/www/html/bootstrap/cache
 
 COPY nginx.conf /etc/nginx/http.d/default.conf
 COPY php.ini /usr/local/etc/php/conf.d/local.ini
@@ -31,13 +31,10 @@ RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs --no-
 
 COPY . .
 
-RUN cp .env.production .env 2>/dev/null || true
-
 RUN composer dump-autoload --optimize \
     && php artisan config:cache \
     && php artisan route:cache \
-    && php artisan view:cache \
-    && rm -f .env
+    && php artisan view:cache
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chown -R www-data:www-data /var/cache/nginx /var/log/nginx
