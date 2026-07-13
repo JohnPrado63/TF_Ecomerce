@@ -37,7 +37,7 @@ RUN composer dump-autoload --optimize \
     && php artisan config:cache \
     && php artisan route:cache \
     && php artisan view:cache \
-    && rm .env
+    && rm -f .env
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chown -R www-data:www-data /var/cache/nginx /var/log/nginx
