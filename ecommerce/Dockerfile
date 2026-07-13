@@ -14,6 +14,8 @@ RUN apk add --no-cache \
     unzip \
     mysql-client
 
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 RUN mkdir -p /var/run/php /var/cache/nginx /var/log/nginx
