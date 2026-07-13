@@ -3,18 +3,36 @@ x-env: &env
   APP_ENV: ${APP_ENV}
   APP_DEBUG: ${APP_DEBUG}
   APP_URL: ${APP_URL}
-  DB_CONNECTION: ${DB_CONNECTION:-mysql}
-  DB_HOST: ${DB_HOST}
-  DB_PORT: ${DB_PORT:-3306}
-  DB_DATABASE: ${DB_DATABASE}
-  DB_USERNAME: ${DB_USERNAME}
-  DB_PASSWORD: ${DB_PASSWORD}
+  DB_CONNECTION: pgsql
+  DB_HOST: postgres
+  DB_PORT: 5432
+  DB_DATABASE: ${DB_DATABASE:-eskytrips_db}
+  DB_USERNAME: ${DB_USERNAME:-eskytrips_db}
+  DB_PASSWORD: ${DB_PASSWORD:-eskytrips_db}
   CACHE_DRIVER: ${CACHE_DRIVER:-file}
   SESSION_DRIVER: ${SESSION_DRIVER:-file}
   QUEUE_CONNECTION: ${QUEUE_CONNECTION:-database}
   LOG_CHANNEL: ${LOG_CHANNEL:-stack}
 
 services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: eskytrips_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-eskytrips_db}
+      POSTGRES_USER: ${DB_USERNAME:-eskytrips_db}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-eskytrips_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-eskytrips_db} -d ${DB_DATABASE:-eskytrips_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - eskytrips
+
   app:
     build:
       context: ./ecommerce
@@ -35,9 +53,11 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - eskytrips
-      - dokploy-network
 
   queue:
     build:
@@ -48,9 +68,12 @@ services:
     command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
     environment:
       <<: *env
+      SERVICE_NAME: queue
     healthcheck:
       disable: true
     depends_on:
+      postgres:
+        condition: service_healthy
       app:
         condition: service_healthy
     volumes:
@@ -58,7 +81,6 @@ services:
       - bootstrap_cache:/var/www/html/bootstrap/cache
     networks:
       - eskytrips
-      - dokploy-network
 
   scheduler:
     build:
@@ -69,9 +91,12 @@ services:
     command: sh -c "while true; do php artisan schedule:run; sleep 60; done"
     environment:
       <<: *env
+      SERVICE_NAME: scheduler
     healthcheck:
       disable: true
     depends_on:
+      postgres:
+        condition: service_healthy
       app:
         condition: service_healthy
     volumes:
@@ -79,14 +104,12 @@ services:
       - bootstrap_cache:/var/www/html/bootstrap/cache
     networks:
       - eskytrips
-      - dokploy-network
 
 networks:
   eskytrips:
     driver: bridge
-  dokploy-network:
-    external: true
 
 volumes:
   storage:
   bootstrap_cache:
+  postgres_data:

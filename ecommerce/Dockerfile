@@ -5,15 +5,16 @@ COPY package.json package-lock.json ./
 RUN npm ci --legacy-peer-deps
 COPY resources/ resources/
 COPY vite.config.js ./
+COPY tailwind.config.js postcss.config.js ./
 RUN npm run build
 
 # ===== Etapa 2: PHP =====
 FROM php:8.2-cli-alpine
 
 RUN apk add --no-cache \
-    git curl wget libpng-dev oniguruma-dev libxml2-dev zip unzip mysql-client
+    git curl wget libpng-dev oniguruma-dev libxml2-dev zip unzip mysql-client postgresql-client postgresql-dev
 
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
