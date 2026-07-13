@@ -6,9 +6,9 @@ x-env: &env
   DB_CONNECTION: pgsql
   DB_HOST: postgres
   DB_PORT: 5432
-  DB_DATABASE: ${DB_DATABASE:-eskytrips_db}
-  DB_USERNAME: ${DB_USERNAME:-eskytrips_db}
-  DB_PASSWORD: ${DB_PASSWORD:-eskytrips_db}
+  DB_DATABASE: ${DB_DATABASE:-eskytrips-db}
+  DB_USERNAME: ${DB_USERNAME:-eskytrips-db}
+  DB_PASSWORD: ${DB_PASSWORD:-eskytrips-db}
   CACHE_DRIVER: ${CACHE_DRIVER:-file}
   SESSION_DRIVER: ${SESSION_DRIVER:-file}
   QUEUE_CONNECTION: ${QUEUE_CONNECTION:-database}
@@ -17,16 +17,20 @@ x-env: &env
 services:
   postgres:
     image: postgres:18-alpine
-    container_name: eskytrips_postgres
+    container_name: eskytrips-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${DB_DATABASE:-eskytrips_db}
-      POSTGRES_USER: ${DB_USERNAME:-eskytrips_db}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-eskytrips_db}
+      POSTGRES_DB: ${DB_DATABASE:-eskytrips-db}
+      POSTGRES_USER: ${DB_USERNAME:-eskytrips-db}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-eskytrips-db}
     volumes:
       - postgres_data:/var/lib/postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-eskytrips_db} -d ${DB_DATABASE:-eskytrips_db}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DB_USERNAME:-eskytrips-db} -d ${DB_DATABASE:-eskytrips-db}",
+        ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -37,7 +41,7 @@ services:
     build:
       context: ./ecommerce
       dockerfile: Dockerfile
-    container_name: eskytrips_app
+    container_name: eskytrips-app
     restart: unless-stopped
     environment:
       <<: *env
@@ -63,7 +67,7 @@ services:
     build:
       context: ./ecommerce
       dockerfile: Dockerfile
-    container_name: eskytrips_queue
+    container_name: eskytrips-queue
     restart: unless-stopped
     command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
     environment:
@@ -86,7 +90,7 @@ services:
     build:
       context: ./ecommerce
       dockerfile: Dockerfile
-    container_name: eskytrips_scheduler
+    container_name: eskytrips-scheduler
     restart: unless-stopped
     command: sh -c "while true; do php artisan schedule:run; sleep 60; done"
     environment:
