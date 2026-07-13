@@ -19,7 +19,7 @@ COPY . /var/www/html/
 
 WORKDIR /var/www/html
 
-RUN echo '<?php http_response_code(200); echo "ok";' > /var/www/html/health.php
+RUN printf '<?php http_response_code(200); echo "ok";' > health.php
 
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs --no-scripts \
     && composer clear-cache
@@ -31,4 +31,4 @@ EXPOSE 9000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD wget -qO- http://localhost:8080/health.php || exit 1
 
-CMD sh -c "php -S 0.0.0.0:8080 -t /var/www/html/public & php-fpm & wait"
+CMD sh -c "php -S 0.0.0.0:8080 -t public & php-fpm & wait"
