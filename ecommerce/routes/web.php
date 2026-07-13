@@ -21,9 +21,7 @@ use Inertia\Inertia;
 |--------------------------------------------------------------------------
 */
 
-// ============================================================
-// PÁGINA PRINCIPAL
-// ============================================================
+Route::get('/health', fn () => response()->json(['status' => 'ok']));
 
 Route::get('/', function () {
     $packages = \App\Models\TourPackage::with(['category', 'location'])

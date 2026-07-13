@@ -6,15 +6,21 @@ services:
     container_name: eskytrips_app
     restart: unless-stopped
     env_file:
-      - .env.production
+      - path: .env.production
+        required: true
     ports:
-      - "80:80"
+      - "20080:80"
     volumes:
       - ./storage:/var/www/html/storage
       - ./bootstrap/cache:/var/www/html/bootstrap/cache
     depends_on:
-      - mysql
-      - redis
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - eskytrips
 
@@ -23,7 +29,8 @@ services:
     container_name: eskytrips_mysql
     restart: unless-stopped
     env_file:
-      - .env.production
+      - path: .env.production
+        required: true
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
@@ -33,15 +40,11 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - eskytrips
-
-  redis:
-    image: redis:7-alpine
-    container_name: eskytrips_redis
-    restart: unless-stopped
-    volumes:
-      - redis_data:/data
-    networks:
-      - eskytrips
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   queue:
     build:
@@ -50,14 +53,15 @@ services:
     container_name: eskytrips_queue
     restart: unless-stopped
     env_file:
-      - .env.production
-    command: php artisan queue:work --sleep=3 --tries=3
+      - path: .env.production
+        required: true
+    command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
     volumes:
       - ./storage:/var/www/html/storage
       - ./bootstrap/cache:/var/www/html/bootstrap/cache
     depends_on:
-      - mysql
-      - redis
+      mysql:
+        condition: service_healthy
     networks:
       - eskytrips
 
@@ -68,14 +72,15 @@ services:
     container_name: eskytrips_scheduler
     restart: unless-stopped
     env_file:
-      - .env.production
+      - path: .env.production
+        required: true
     command: sh -c "while true; do php artisan schedule:run; sleep 60; done"
     volumes:
       - ./storage:/var/www/html/storage
       - ./bootstrap/cache:/var/www/html/bootstrap/cache
     depends_on:
-      - mysql
-      - redis
+      mysql:
+        condition: service_healthy
     networks:
       - eskytrips
 
@@ -85,4 +90,3 @@ networks:
 
 volumes:
   mysql_data:
-  redis_data:
