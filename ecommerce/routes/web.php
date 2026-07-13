@@ -21,7 +21,9 @@ use Inertia\Inertia;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/health', fn () => response()->json(['status' => 'ok']));
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok'], 200);
+})->withoutMiddleware(\App\Http\Middleware\TrustProxies::class);
 
 Route::get('/', function () {
     $packages = \App\Models\TourPackage::with(['category', 'location'])
