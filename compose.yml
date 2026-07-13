@@ -17,15 +17,14 @@ x-env: &env
 
 services:
   app:
-    <<: *env
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: eskytrips_app
-    restart: unless-stopped
     environment:
       <<: *env
       RUN_MIGRATIONS: "true"
+    build:
+      context: ./ecommerce
+      dockerfile: Dockerfile
+    container_name: eskytrips_app
+    restart: unless-stopped
     ports:
       - "20180:8080"
     volumes:
@@ -40,15 +39,17 @@ services:
       - eskytrips
 
   queue:
-    <<: *env
+    environment:
+      <<: *env
     build:
-      context: .
+      context: ./ecommerce
       dockerfile: Dockerfile
     container_name: eskytrips_queue
     restart: unless-stopped
     command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
     depends_on:
-      - app
+      app:
+        condition: service_healthy
     volumes:
       - storage:/var/www/html/storage
       - bootstrap_cache:/var/www/html/bootstrap/cache
@@ -56,15 +57,17 @@ services:
       - eskytrips
 
   scheduler:
-    <<: *env
+    environment:
+      <<: *env
     build:
-      context: .
+      context: ./ecommerce
       dockerfile: Dockerfile
     container_name: eskytrips_scheduler
     restart: unless-stopped
     command: sh -c "while true; do php artisan schedule:run; sleep 60; done"
     depends_on:
-      - app
+      app:
+        condition: service_healthy
     volumes:
       - storage:/var/www/html/storage
       - bootstrap_cache:/var/www/html/bootstrap/cache
