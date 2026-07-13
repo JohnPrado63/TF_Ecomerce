@@ -25,13 +25,11 @@ WORKDIR /var/www/html
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs --no-scripts \
     && composer clear-cache
 
-RUN if [ ! -f /var/www/html/.env ]; then \
-    cp /var/www/html/.env.example /var/www/html/.env; \
-    fi && \
+RUN cp /var/www/html/.env.example /var/www/html/.env 2>/dev/null || true; \
     if [ -z "$APP_KEY" ]; then \
     php artisan key:generate --force; \
     else \
-    php -r "file_put_contents('/var/www/html/.env', preg_replace('/^APP_KEY=.*/m', 'APP_KEY=${APP_KEY}', file_get_contents('/var/www/html/.env'))); \
+    sed -i "s/^APP_KEY=.*/APP_KEY=${APP_KEY}/" /var/www/html/.env; \
     fi
 
 RUN php -r 'file_put_contents("/var/www/html/public/health.php", "<?php http_response_code(200); echo \"ok\";");'
