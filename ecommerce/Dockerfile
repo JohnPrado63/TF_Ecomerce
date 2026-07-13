@@ -16,10 +16,7 @@ RUN apk add --no-cache \
 
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-RUN mkdir -p /var/run/php \
-    && chown -R www-data:www-data /var/www/html \
-    && chown -R www-data:www-data /var/cache/nginx \
-    && chown -R www-data:www-data /var/log/nginx
+RUN mkdir -p /var/run/php /var/cache/nginx /var/log/nginx
 
 COPY nginx.conf /etc/nginx/http.d/default.conf
 COPY php.ini /usr/local/etc/php/conf.d/local.ini
@@ -40,7 +37,8 @@ RUN composer dump-autoload --optimize \
     && php artisan view:cache \
     && rm .env
 
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chown -R www-data:www-data /var/cache/nginx /var/log/nginx
 
 EXPOSE 80
 
