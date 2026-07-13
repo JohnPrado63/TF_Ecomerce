@@ -1,3 +1,13 @@
+# ===== Etapa 1: Build de assets con Vite =====
+FROM node:20-alpine AS node_builder
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY resources/ resources/
+COPY vite.config.js ./
+RUN npm run build
+
+# ===== Etapa 2: PHP =====
 FROM php:8.2-cli-alpine
 
 RUN apk add --no-cache \
@@ -13,6 +23,9 @@ WORKDIR /var/www/html
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs --no-scripts \
     && composer clear-cache
 
+# Copia los assets ya compilados desde el stage de Node
+COPY --from=node_builder /app/public/build ./public/build
+
 RUN php -r 'file_put_contents("/var/www/html/public/health.php", "<?php http_response_code(200); echo \"ok\";");'
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
@@ -22,7 +35,7 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 8080
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=10s --timeout=10s --start-period=30s --retries=5 \
     CMD wget -qO- http://localhost:8080/health.php || exit 1
 
 ENTRYPOINT ["entrypoint.sh"]

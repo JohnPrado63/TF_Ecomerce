@@ -48,6 +48,8 @@ services:
     command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
     environment:
       <<: *env
+    healthcheck:
+      disable: true
     depends_on:
       app:
         condition: service_healthy
@@ -67,6 +69,8 @@ services:
     command: sh -c "while true; do php artisan schedule:run; sleep 60; done"
     environment:
       <<: *env
+    healthcheck:
+      disable: true
     depends_on:
       app:
         condition: service_healthy
