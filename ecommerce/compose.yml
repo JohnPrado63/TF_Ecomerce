@@ -6,7 +6,7 @@ services:
     container_name: eskytrips_app
     restart: unless-stopped
     env_file:
-      - path: .env.production
+      - path: .env
         required: true
     ports:
       - "20080:80"
@@ -29,7 +29,7 @@ services:
     container_name: eskytrips_mysql
     restart: unless-stopped
     env_file:
-      - path: .env.production
+      - path: .env
         required: true
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
@@ -53,7 +53,7 @@ services:
     container_name: eskytrips_queue
     restart: unless-stopped
     env_file:
-      - path: .env.production
+      - path: .env
         required: true
     command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
     volumes:
@@ -72,7 +72,7 @@ services:
     container_name: eskytrips_scheduler
     restart: unless-stopped
     env_file:
-      - path: .env.production
+      - path: .env
         required: true
     command: sh -c "while true; do php artisan schedule:run; sleep 60; done"
     volumes:
