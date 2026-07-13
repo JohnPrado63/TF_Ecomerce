@@ -14,20 +14,15 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache
-
-COPY composer.json composer.lock* /var/www/html/
+COPY . /var/www/html/
 
 WORKDIR /var/www/html
 
-RUN composer require laravel/octane --no-interaction \
-    && composer install --no-dev --optimize-autoloader --ignore-platform-reqs --no-scripts \
+RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs --no-scripts \
+    && composer require laravel/octane --no-interaction \
     && composer clear-cache
 
-COPY . .
-
-RUN composer dump-autoload --optimize \
-    && php artisan config:cache \
+RUN php artisan config:cache \
     && php artisan route:cache \
     && php artisan view:cache
 
