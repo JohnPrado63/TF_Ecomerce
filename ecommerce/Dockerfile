@@ -1,8 +1,9 @@
-FROM dunglas/frankenphp:php8.2-alpine
+FROM php:8.2-fpm-alpine
 
 RUN apk add --no-cache \
     git \
     curl \
+    wget \
     libpng-dev \
     oniguruma-dev \
     libxml2-dev \
@@ -19,7 +20,6 @@ COPY . /var/www/html/
 WORKDIR /var/www/html
 
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs --no-scripts \
-    && composer require laravel/octane --no-interaction \
     && composer clear-cache
 
 RUN php artisan config:cache \
@@ -28,9 +28,10 @@ RUN php artisan config:cache \
 
 RUN chown -R nobody:nobody /var/www/html/storage /var/www/html/bootstrap/cache
 
-EXPOSE 20180
+EXPOSE 9000
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:20180/health || exit 1
+    CMD wget -qO- http://localhost:8080/health || exit 1
 
-CMD ["php", "artisan", "octane:frankenphp", "--port=20180", "--host=0.0.0.0"]
+# Health server on port 8080, php-fpm on 9000
+CMD sh -c "php -S 0.0.0.0:8080 -t /var/www/html/public & php-fpm & wait"
