@@ -10,28 +10,11 @@ services:
     volumes:
       - storage:/var/www/html/storage
       - bootstrap_cache:/var/www/html/bootstrap/cache
-    depends_on:
-      mysql:
-        condition: service_started
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8080/health.php"]
       interval: 30s
       timeout: 10s
       retries: 3
-    networks:
-      - eskytrips
-
-  mysql:
-    image: mariadb:10.11
-    container_name: eskytrips_mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-ecommerce_db}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
-      MYSQL_USER: ${DB_USERNAME:-root}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-root}
-    volumes:
-      - mysql_data:/var/lib/mysql
     networks:
       - eskytrips
 
@@ -45,9 +28,6 @@ services:
     volumes:
       - storage:/var/www/html/storage
       - bootstrap_cache:/var/www/html/bootstrap/cache
-    depends_on:
-      mysql:
-        condition: service_started
     networks:
       - eskytrips
 
@@ -61,9 +41,6 @@ services:
     volumes:
       - storage:/var/www/html/storage
       - bootstrap_cache:/var/www/html/bootstrap/cache
-    depends_on:
-      mysql:
-        condition: service_started
     networks:
       - eskytrips
 
@@ -72,6 +49,5 @@ networks:
     driver: bridge
 
 volumes:
-  mysql_data:
   storage:
   bootstrap_cache:
